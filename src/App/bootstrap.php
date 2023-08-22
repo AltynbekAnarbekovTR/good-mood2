@@ -13,4 +13,6 @@ $app = new App();
 
 $app->get('/', [HomeController::class, 'home']);
 
+$app->addMiddleware(TemplateDataMiddleware::class);
+
 return $app;
