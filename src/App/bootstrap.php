@@ -9,7 +9,7 @@ if (!defined('AUTOLOADER_INITIALIZED')) {
 use Framework\App;
 use App\Controllers\HomeController;
 
-$app = new App();
+$app = new App(Paths::SOURCE . "App/container-definitions.php");
 
 $app->get('/', [HomeController::class, 'home']);
 
