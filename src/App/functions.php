@@ -1,12 +1,13 @@
 <?php
 
-function dump_and_die($value)
+declare(strict_types=1);
+
+function dd(mixed $value)
 {
-    echo '<br>';
-    echo '<pre>';
-    var_dump($value);
-    echo '</pre>';
-    die();
+  echo "<pre>";
+  var_dump($value);
+  echo "</pre>";
+  die();
 }
 
 function e(mixed $value): string
