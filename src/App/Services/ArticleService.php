@@ -17,7 +17,7 @@ class ArticleService
     public function create(array $formData)
     {
         $receiptFile = $_FILES['receipt'] ?? null;
-//      $this->receiptService->validateFile($receiptFile);
+      $this->receiptService->validateFile($receiptFile);
 
         $fileExtension = pathinfo($receiptFile['name'], PATHINFO_EXTENSION);
         $newFilename = bin2hex(random_bytes(16)) . "." . $fileExtension;

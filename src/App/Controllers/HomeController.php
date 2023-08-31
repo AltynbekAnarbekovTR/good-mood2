@@ -42,7 +42,6 @@ class HomeController
             ),
             $pages
         );
-
         echo $this->view->render(
             "index.php",
             [
