@@ -32,7 +32,6 @@ class Container
     }
 
     $params = $constructor->getParameters();
-
     if (count($params) === 0) {
       return new $className;
     }
@@ -53,7 +52,6 @@ class Container
 
       $dependencies[] = $this->get($type->getName());
     }
-
     return $reflectionClass->newInstanceArgs($dependencies);
   }
 
@@ -68,10 +66,9 @@ class Container
     }
 
     $factory = $this->definitions[$id];
-    $dependency = $factory();
+    $dependency = $factory($this);
 
     $this->resolved[$id] = $dependency;
-
     return $dependency;
   }
 }
