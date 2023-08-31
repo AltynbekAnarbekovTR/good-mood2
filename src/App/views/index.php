@@ -1,336 +1,264 @@
-<?php include $this->resolve("partials/_header.php"); ?>
+<?php
+use App\Config\Paths;
 
+include $this->resolve("partials/_header.php"); ?>
 
-    <main>
-      <div class="wrapper">
-        <div class="container">
-          <div class="main__article">
-            <a
-              href="https://www.positive.news/society/electric-van-summer-holidays-with-children/"
-              class="card__image__link col--7 col--12--bp3"
-            >
-              <img
-                src="https://www.positive.news/wp-content/uploads/2023/07/1-4-1320x880-c-center.jpg"
-                class="card__image main__article--img img100"
-                alt="Image for How an electric van changed our summer holidays forever"
-              />
+<!-- Start Main Content Area -->
+<body>
+<section class="container mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
+  <div class="flex items-center justify-between border-b border-gray-200 pb-4">
+    <h4 class="font-medium">Articles List</h4>
+    <div class="flex space-x-4">
+      <a href="/article" class="flex items-center p-2 bg-sky-50 text-xs text-sky-900 hover:bg-sky-500 hover:text-white transition rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        New Article
+      </a>
+    </div>
+  </div>
+  <!-- Search Form -->
+  <form method="GET" class="mt-4 w-full">
+    <div class="flex">
+      <input value="<?php echo e((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
+      <button type="submit" class="rounded-r-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Search
+      </button>
+    </div>
+  </form>
+  <!-- Articles List -->
+  <table class="table-auto min-w-full divide-y divide-gray-300 mt-6">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="p-4 text-left text-sm font-semibold text-gray-900">
+          Title
+        </th>
+        <th class="p-4 text-left text-sm font-semibold text-gray-900">
+          Description
+        </th>
+        <th class="p-4 text-left text-sm font-semibold text-gray-900">
+          Receipt(s)
+        </th>
+        <th class="p-4 text-left text-sm font-semibold text-gray-900">
+          Date
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <!-- Article Table Body -->
+    <tbody class="divide-y divide-gray-200 bg-white">
+      <?php foreach ($articles as $article) : ?>
+        <tr>
+          <!-- Title -->
+          <td class="p-4 text-sm text-gray-600">
+            <?php echo e($article['title']); ?>
+          </td>
+          <!-- Description -->
+          <td class="p-4 text-sm text-gray-600">
+            <?php echo e($article['description']); ?>
+          </td>
+
+          <!-- Receipt List -->
+          <td class="p-4 text-sm text-gray-600">
+            <?php foreach ($article['receipts'] as $receipt) : ?>
+              <div class="inline-block relative cursor-pointer">
+                <a href="/article/<?php echo e($article['id']); ?>/receipt/<?php echo e($receipt['id']); ?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(109 40 217)" class="w-10 h-10">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
+                </a>
+                <form action="/article/<?php echo e($article['id']); ?>/receipt/<?php echo e($receipt['id']); ?>" method="POST">
+                  <?php include $this->resolve("partials/_csrf.php"); ?>
+                  <input type="hidden" name="_METHOD" value="DELETE" />
+                  <button type="submit" class="absolute -top-1 -right-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            <?php endforeach; ?>
+          </td>
+          <!-- Date -->
+          <td class="p-4 text-sm text-gray-600">
+            <?php echo e($article['formatted_date']); ?>
+          </td>
+          <!-- Actions -->
+          <td class="p-4 text-sm text-gray-600 flex justify-center space-x-2">
+            <a href="/article/<?php echo e($article['id']); ?>/receipt" class="p-2 bg-amber-50 text-xs text-amber-900 hover:bg-amber-500 hover:text-white transition rounded">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" />
+              </svg>
             </a>
+            <a href="/article/<?php echo e($article['id']); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+              </svg>
+            </a>
+            <form action="/article/<?php echo e($article['id']); ?>" method="POST">
+              <input type="hidden" name="_METHOD" value="DELETE" />
 
-            <div class="card__content col--5--last col--12--bp3">
-              <a
-                href="https://www.positive.news/society/electric-van-summer-holidays-with-children/"
-                class="card__title h2"
-                >How an electric van changed our summer holidays forever</a
-              >
-              <p>
-                An electric Nissan has put a spark in summer holidays for one
-                cash-strapped family, who share their tips for travelling by van
-              </p>
-              <a
-                href="https://www.positive.news/category/environment/"
-                class="card__category"
-                >Environment</a
-              >
-              <a
-                href="https://www.positive.news/category/lifestyle/"
-                class="card__category"
-                >Lifestyle</a
-              >
-              <a
-                href="https://www.positive.news/category/society/"
-                class="card__category"
-                >Society</a
-              >
-              <a
-                href="https://www.positive.news/category/lifestyle/travel/"
-                class="card__category"
-                >Travel</a
-              >
-            </div>
-          </div>
-          <div class="latest__articles cols--3--2--2">
-            <div class="column card">
-              <a
-                href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
-                class="card__image__link"
-              >
-                <img
-                  src="./img/1200-×-800px-58-740x492-c-center.jpg"
-                  class="card__image main__article--img img100"
-                  alt="Image for How to live longer: eight habits that could add years to your life"
-                />
-              </a>
+              <?php include $this->resolve("partials/_csrf.php"); ?>
 
-              <div class="card__content">
-                <a
-                  href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
-                  class="card__title h3"
-                  >How to live longer: eight habits that could add years to your
-                  life</a
-                >
-                <span class="card__text">
-                  These lifestyle habits could extend your life by decades,
-                  according to new research. Even doing a few could help
-                </span>
-                <a
-                  href="https://www.positive.news/category/lifestyle/body-mind/"
-                  class="card__category"
-                  >Body &amp; Mind</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/health/"
-                  class="card__category"
-                  >Health</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/"
-                  class="card__category"
-                  >Lifestyle</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/wellbeing/"
-                  class="card__category"
-                  >Wellbeing</a
-                >
-              </div>
-            </div>
+              <button type="submit" class="p-2 bg-red-50 text-xs text-red-900 hover:bg-red-500 hover:text-white transition rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+              </button>
+            </form>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+  <nav class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 mt-6">
+    <!-- Previous Page Link -->
+    <div class="-mt-px flex w-0 flex-1">
+      <?php if ($currentPage > 1) : ?>
+        <a href="/?<?php echo e($previousPageQuery); ?>" class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+          <svg class="mr-3 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z" clip-rule="evenodd" />
+          </svg>
+          Previous
+        </a>
+      <?php endif; ?>
+    </div>
+    <!-- Pages Link -->
+    <div class="hidden md:-mt-px md:flex">
+      <?php foreach ($pageLinks as $pageNum => $query) : ?>
+        <a href="/?<?php echo e($query); ?>" class="<?php echo $pageNum + 1 === $currentPage ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"; ?>inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium">
+          <?php echo $pageNum + 1; ?>
+        </a>
+      <?php endforeach; ?>
+      <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
+    </div>
+    <!-- Next Page Link -->
+    <div class="-mt-px flex w-0 flex-1 justify-end">
+      <?php if ($currentPage < $lastPage) : ?>
+        <a href="/?<?php echo e($nextPageQuery); ?>" class="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+          Next
+          <svg class="ml-3 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      <?php endif; ?>
+    </div>
+  </nav>
+</section>
+<main>
+  <div class="wrapper">
+    <div class="container">
+      <div class="main__article">
+        <a
+          href="https://www.positive.news/society/electric-van-summer-holidays-with-children/"
+          class="card__image__link col--7 col--12--bp3"
+        >
+          <img
+            src="https://www.positive.news/wp-content/uploads/2023/07/1-4-1320x880-c-center.jpg"
+            class="card__image main__article--img img100"
+            alt="Image for How an electric van changed our summer holidays forever"
+          />
+        </a>
 
-            <div class="column card">
-              <a
-                href="https://www.positive.news/lifestyle/zimbabwe-friendship-benches-are-coming-to-a-city-near-you/"
-                class="card__image__link"
-              >
-                <img
-                  src="./img/1200-×-800px-41-740x492-c-center.jpg"
-                  class="card__image main__article--img img100"
-                  alt="Image for Zimbabwe’s therapeutic ‘friendship benches’, coming to a city near you"
-                />
-              </a>
-
-              <div class="card__content">
-                <a
-                  href="https://www.positive.news/lifestyle/zimbabwe-friendship-benches-are-coming-to-a-city-near-you/"
-                  class="card__title h3"
-                  >Zimbabwe’s therapeutic ‘friendship benches’, coming to a city
-                  near you</a
-                >
-                <span class="card__text">
-                  A Zimbabwean project that employs grandmothers to deliver
-                  therapy is being rolled out globally. Up next? London
-                </span>
-                <a
-                  href="https://www.positive.news/category/lifestyle/health/"
-                  class="card__category"
-                  >Health</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/"
-                  class="card__category"
-                  >Lifestyle</a
-                >
-                <a
-                  href="https://www.positive.news/category/society/"
-                  class="card__category"
-                  >Society</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/wellbeing/"
-                  class="card__category"
-                  >Wellbeing</a
-                >
-                <a
-                  href="https://www.positive.news/category/world/"
-                  class="card__category"
-                  >World</a
-                >
-              </div>
-            </div>
-
-            <div class="column card">
-              <a
-                href="https://www.positive.news/lifestyle/zimbabwe-friendship-benches-are-coming-to-a-city-near-you/"
-                class="card__image__link"
-              >
-                <img
-                  src="./img/1200-×-800px-41-740x492-c-center.jpg"
-                  class="card__image main__article--img img100"
-                  alt="Image for Zimbabwe’s therapeutic ‘friendship benches’, coming to a city near you"
-                />
-              </a>
-
-              <div class="card__content">
-                <a
-                  href="https://www.positive.news/lifestyle/zimbabwe-friendship-benches-are-coming-to-a-city-near-you/"
-                  class="card__title h3"
-                  >Zimbabwe’s therapeutic ‘friendship benches’, coming to a city
-                  near you</a
-                >
-                <span class="card__text">
-                  A Zimbabwean project that employs grandmothers to deliver
-                  therapy is being rolled out globally. Up next? London
-                </span>
-                <a
-                  href="https://www.positive.news/category/lifestyle/health/"
-                  class="card__category"
-                  >Health</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/"
-                  class="card__category"
-                  >Lifestyle</a
-                >
-                <a
-                  href="https://www.positive.news/category/society/"
-                  class="card__category"
-                  >Society</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/wellbeing/"
-                  class="card__category"
-                  >Wellbeing</a
-                >
-                <a
-                  href="https://www.positive.news/category/world/"
-                  class="card__category"
-                  >World</a
-                >
-              </div>
-            </div>
-
-            <div class="column card">
-              <a
-                href="https://www.positive.news/environment/spains-latest-weapon-against-wildfires-wild-horses/"
-                class="card__image__link"
-              >
-                <img
-                  src="./img/iStock-873336362-min-e1690293152202-740x492-c-center.jpg"
-                  class="card__image main__article--img img100"
-                  alt="Image for Spain’s latest weapon against wildfires? Wild horses"
-                />
-              </a>
-
-              <div class="card__content">
-                <a
-                  href="https://www.positive.news/environment/spains-latest-weapon-against-wildfires-wild-horses/"
-                  class="card__title h3"
-                  >Spain’s latest weapon against wildfires? Wild horses</a
-                >
-                <span class="card__text">
-                  Horses are the latest line of defence against wildfires in
-                  Spain. The animals could bring many other benefits besides
-                </span>
-                <a
-                  href="https://www.positive.news/category/environment/conservation/"
-                  class="card__category"
-                  >Conservation</a
-                >
-                <a
-                  href="https://www.positive.news/category/environment/"
-                  class="card__category"
-                  >Environment</a
-                >
-                <a
-                  href="https://www.positive.news/category/world/"
-                  class="card__category"
-                  >World</a
-                >
-              </div>
-            </div>
-
-            <div class="column card">
-              <a
-                href="https://www.positive.news/lifestyle/meet-the-young-graduate-who-decided-to-live-in-a-nursing-home/"
-                class="card__image__link"
-              >
-                <img
-                  src="./img/1-2-740x492-c-center.jpg"
-                  class="card__image main__article--img img100"
-                  alt="Image for Meet the young graduate who lives in a nursing home"
-                />
-              </a>
-
-              <div class="card__content">
-                <a
-                  href="https://www.positive.news/lifestyle/meet-the-young-graduate-who-decided-to-live-in-a-nursing-home/"
-                  class="card__title h3"
-                  >Meet the young graduate who lives in a nursing home</a
-                >
-                <span class="card__text">
-                  Teun Toebes, 24, willingly moved into a care home three years
-                  ago. It changed his life, and the lives of his housemates
-                </span>
-                <a
-                  href="https://www.positive.news/category/lifestyle/"
-                  class="card__category"
-                  >Lifestyle</a
-                >
-                <a
-                  href="https://www.positive.news/category/society/"
-                  class="card__category"
-                  >Society</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/wellbeing/"
-                  class="card__category"
-                  >Wellbeing</a
-                >
-              </div>
-            </div>
-
-            <div class="column card">
-              <a
-                href="https://www.positive.news/lifestyle/zimbabwe-friendship-benches-are-coming-to-a-city-near-you/"
-                class="card__image__link"
-              >
-                <img
-                  src="./img/1200-×-800px-41-740x492-c-center.jpg"
-                  class="card__image main__article--img img100"
-                  alt="Image for Zimbabwe’s therapeutic ‘friendship benches’, coming to a city near you"
-                />
-              </a>
-
-              <div class="card__content">
-                <a
-                  href="https://www.positive.news/lifestyle/zimbabwe-friendship-benches-are-coming-to-a-city-near-you/"
-                  class="card__title h3"
-                  >Zimbabwe’s therapeutic ‘friendship benches’, coming to a city
-                  near you</a
-                >
-                <span class="card__text">
-                  A Zimbabwean project that employs grandmothers to deliver
-                  therapy is being rolled out globally. Up next? London
-                </span>
-                <a
-                  href="https://www.positive.news/category/lifestyle/health/"
-                  class="card__category"
-                  >Health</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/"
-                  class="card__category"
-                  >Lifestyle</a
-                >
-                <a
-                  href="https://www.positive.news/category/society/"
-                  class="card__category"
-                  >Society</a
-                >
-                <a
-                  href="https://www.positive.news/category/lifestyle/wellbeing/"
-                  class="card__category"
-                  >Wellbeing</a
-                >
-                <a
-                  href="https://www.positive.news/category/world/"
-                  class="card__category"
-                  >World</a
-                >
-              </div>
-            </div>
-          </div>
+        <div class="card__content col--5--last col--12--bp3">
+          <a
+            href="https://www.positive.news/society/electric-van-summer-holidays-with-children/"
+            class="card__title h2"
+            >How an electric van changed our summer holidays forever</a
+          >
+          <p>
+            An electric Nissan has put a spark in summer holidays for one
+            cash-strapped family, who share their tips for travelling by van
+          </p>
+          <a
+            href="https://www.positive.news/category/environment/"
+            class="card__category"
+            >Environment</a
+          >
+          <a
+            href="https://www.positive.news/category/lifestyle/"
+            class="card__category"
+            >Lifestyle</a
+          >
+          <a
+            href="https://www.positive.news/category/society/"
+            class="card__category"
+            >Society</a
+          >
+          <a
+            href="https://www.positive.news/category/lifestyle/travel/"
+            class="card__category"
+            >Travel</a
+          >
         </div>
       </div>
-    </main>
+    <form method="GET" class="mt-4 w-full">
+    <div class="flex">
+      <input value="<?php echo e((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
+      <button type="submit" class="rounded-r-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Search
+      </button>
+    </div>
+  </form>
+      <div class="latest__articles cols--3--2--2">
+        <?php foreach ($articles as $article) : ?>
+          <div class="column card">
+          <a
+            href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
+            class="card__image__link">
+            <?php $bom =$article['b64image'];
+            echo "<img
+          src='data:image/png;base64,$bom'
+              class='card__image main__article--img img100'
+              alt='Image for How to live longer: eight habits that could add years to your life'
+            />" ?>
+          </a>
 
+          <div class="card__content">
+            <a
+              href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
+              class="card__title h3"
+              ><?php echo e($article['title']); ?></a
+            >
+            <span class="card__text">
+              <?php echo e($article['description']); ?>
+            </span>
+              <span class="card__text">
+              <?php echo e($article['article_text']); ?>
+            </span>
+            <a
+              href="https://www.positive.news/category/lifestyle/body-mind/"
+              class="card__category"
+              >Body &amp; Mind</a
+            >
+            <a
+              href="https://www.positive.news/category/lifestyle/health/"
+              class="card__category"
+              >Health</a
+            >
+            <a
+              href="https://www.positive.news/category/lifestyle/"
+              class="card__category"
+              >Lifestyle</a
+            >
+            <a
+              href="https://www.positive.news/category/lifestyle/wellbeing/"
+              class="card__category"
+              >Wellbeing</a
+            >
+          </div>
+        </div>
+          <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+</main>
+    
+  </body>
+  <script
+    src="https://kit.fontawesome.com/c1ac078dcd.js"
+    crossorigin="anonymous"
+  ></script>
+<!-- End Main Content Area -->
 
 <?php include $this->resolve("partials/_footer.php"); ?>
