@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Config\Paths;
 use Framework\Database;
-use Framework\Exceptions\ValidationException;
 
 class ArticleService
 {
@@ -20,7 +19,6 @@ class ArticleService
 
         $fileExtension = pathinfo($receiptFile['name'], PATHINFO_EXTENSION);
         $newFilename = bin2hex(random_bytes(16)) . "." . $fileExtension;
-
         $this->db->query(
             "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type)
       VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
