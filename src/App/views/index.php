@@ -1,5 +1,4 @@
 <?php
-use App\Config\Paths;
 
 include $this->resolve("partials/_header.php"); ?>
 
