@@ -10,7 +10,7 @@ class RequiredRule implements RuleInterface
 {
   public function validate(array $data, string $field, array $params): bool
   {
-    return !empty($data[$field]);
+    return !empty(trim($data[$field]));
   }
 
   public function getMessage(array $data, string $field, array $params): string
