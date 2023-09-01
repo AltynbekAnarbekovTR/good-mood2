@@ -24,7 +24,6 @@ use App\Controllers\{
     AboutController,
     AuthController,
     ArticleController,
-    ReceiptController
   };
 
 $app = new App(Paths::SOURCE . "App/container-definitions.php");
@@ -41,10 +40,6 @@ $app->get('/', [HomeController::class, 'home'])->add(AuthRequiredMiddleware::cla
   $app->get('/article/{article}', [ArticleController::class, 'editView'])->add(AuthRequiredMiddleware::class);
   $app->post('/article/{article}', [ArticleController::class, 'edit'])->add(AuthRequiredMiddleware::class);
   $app->delete('/article/{article}', [ArticleController::class, 'delete'])->add(AuthRequiredMiddleware::class);
-  $app->get('/article/{article}/receipt', [ReceiptController::class, 'uploadView'])->add(AuthRequiredMiddleware::class);
-  $app->post('/article/{article}/receipt', [ReceiptController::class, 'upload'])->add(AuthRequiredMiddleware::class);
-  $app->get('/article/{article}/receipt/{receipt}', [ReceiptController::class, 'download'])->add(AuthRequiredMiddleware::class);
-  $app->delete('/article/{article}/receipt/{receipt}', [ReceiptController::class, 'delete'])->add(AuthRequiredMiddleware::class);
 
 $app->addMiddleware(CsrfGuardMiddleware::class);
 $app->addMiddleware(CsrfTokenMiddleware::class);
