@@ -1,4 +1,3 @@
-<?php include $this->resolve("partials/_header.php"); ?>
 <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
   <form method="POST" class="grid grid-cols-1 gap-6">
     <?php include $this->resolve('partials/_csrf.php'); ?>
@@ -39,5 +38,3 @@
     </button>
   </form>
 </section>
-
-<?php include $this->resolve("partials/_footer.php"); ?>

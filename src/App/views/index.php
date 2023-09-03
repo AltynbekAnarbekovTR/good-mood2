@@ -1,22 +1,15 @@
-<?php
-
-include $this->resolve("partials/_header.php"); ?>
-
-<!-- Start Main Content Area -->
-<body>
 <section class="container mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
   <div class="flex items-center justify-between border-b border-gray-200 pb-4">
-    <h4 class="font-medium">Articles List</h4>
+    <h4 class="font-medium">Articles list</h4>
     <div class="flex space-x-4">
       <a href="/article" class="flex items-center p-2 bg-sky-50 text-xs text-sky-900 hover:bg-sky-500 hover:text-white transition rounded">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        New Article
+        new Article
       </a>
     </div>
   </div>
-  <!-- Search Form -->
   <form method="GET" class="mt-4 w-full">
     <div class="flex">
       <input value="<?php echo e((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
@@ -25,7 +18,7 @@ include $this->resolve("partials/_header.php"); ?>
       </button>
     </div>
   </form>
-  <!-- Articles List -->
+  <!-- Articles list -->
   <table class="table-auto min-w-full divide-y divide-gray-300 mt-6">
     <thead class="bg-gray-50">
       <tr>
@@ -56,7 +49,6 @@ include $this->resolve("partials/_header.php"); ?>
           <td class="p-4 text-sm text-gray-600">
             <?php echo e($article['description']); ?>
           </td>
-
           <!-- Receipt List -->
           <td class="p-4 text-sm text-gray-600">
             <?php foreach ($article['receipts'] as $receipt) : ?>
@@ -252,12 +244,4 @@ include $this->resolve("partials/_header.php"); ?>
     </div>
   </div>
 </main>
-    
-  </body>
-  <script
-    src="https://kit.fontawesome.com/c1ac078dcd.js"
-    crossorigin="anonymous"
-  ></script>
 <!-- End Main Content Area -->
-
-<?php include $this->resolve("partials/_footer.php"); ?>

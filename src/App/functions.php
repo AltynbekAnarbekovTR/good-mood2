@@ -8,6 +8,7 @@ function dd(mixed $value)
   var_dump($value);
   echo "</pre>";
   echo '-------------------';
+  die();
 }
 
 function e(mixed $value): string

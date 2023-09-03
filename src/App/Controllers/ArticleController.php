@@ -39,7 +39,7 @@ class ArticleController
             redirectTo('/');
         }
 
-        echo $this->view->render(
+        $this->view->render(
             'articles/edit.php',
             [
                 'article' => $article
