@@ -16,12 +16,12 @@ class ArticleController
     ) {
     }
 
-    public function createView()
+    public function renderCreateArticle()
     {
-        echo $this->view->render("articles/create.php");
+        $this->view->render("articles/create.php");
     }
 
-    public function create()
+    public function createArticle()
     {
         $this->validatorService->validateArticle($_POST);
         $this->articleService->create($_POST);
@@ -29,7 +29,7 @@ class ArticleController
         redirectTo('/');
     }
 
-    public function editView(array $params)
+    public function renderEditArticle(array $params)
     {
         $article = $this->articleService->getUserArticle(
             $params['article']
@@ -47,7 +47,7 @@ class ArticleController
         );
     }
 
-    public function edit(array $params)
+    public function editArticle(array $params)
     {
         $article = $this->articleService->getUserArticle(
             $params['article']
@@ -64,7 +64,7 @@ class ArticleController
         redirectTo($_SERVER['HTTP_REFERER']);
     }
 
-    public function delete(array $params)
+    public function deleteArticle(array $params)
     {
         $this->articleService->delete((int)$params['article']);
 

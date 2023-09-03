@@ -43,22 +43,22 @@
         <tr>
           <!-- Title -->
           <td class="p-4 text-sm text-gray-600">
-            <?php echo e($article['title']); ?>
+            <?php echo escape($article['title']); ?>
           </td>
           <!-- Description -->
           <td class="p-4 text-sm text-gray-600">
-            <?php echo e($article['description']); ?>
+            <?php echo escape($article['description']); ?>
           </td>
           <!-- Receipt List -->
           <td class="p-4 text-sm text-gray-600">
             <?php foreach ($article['receipts'] as $receipt) : ?>
               <div class="inline-block relative cursor-pointer">
-                <a href="/article/<?php echo e($article['id']); ?>/receipt/<?php echo e($receipt['id']); ?>">
+                <a href="/article/<?php echo escape($article['id']); ?>/receipt/<?php echo escape($receipt['id']); ?>">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(109 40 217)" class="w-10 h-10">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
                 </a>
-                <form action="/article/<?php echo e($article['id']); ?>/receipt/<?php echo e($receipt['id']); ?>" method="POST">
+                <form action="/article/<?php echo escape($article['id']); ?>/receipt/<?php echo escape($receipt['id']); ?>" method="POST">
                   <?php include $this->resolve("partials/_csrf.php"); ?>
                   <input type="hidden" name="_METHOD" value="DELETE" />
                   <button type="submit" class="absolute -top-1 -right-1">
@@ -72,21 +72,21 @@
           </td>
           <!-- Date -->
           <td class="p-4 text-sm text-gray-600">
-            <?php echo e($article['formatted_date']); ?>
+            <?php echo escape($article['formatted_date']); ?>
           </td>
           <!-- Actions -->
           <td class="p-4 text-sm text-gray-600 flex justify-center space-x-2">
-            <a href="/article/<?php echo e($article['id']); ?>/receipt" class="p-2 bg-amber-50 text-xs text-amber-900 hover:bg-amber-500 hover:text-white transition rounded">
+            <a href="/article/<?php echo escape($article['id']); ?>/receipt" class="p-2 bg-amber-50 text-xs text-amber-900 hover:bg-amber-500 hover:text-white transition rounded">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" />
               </svg>
             </a>
-            <a href="/article/<?php echo e($article['id']); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
+            <a href="/article/<?php echo escape($article['id']); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
               </svg>
             </a>
-            <form action="/article/<?php echo e($article['id']); ?>" method="POST">
+            <form action="/article/<?php echo escape($article['id']); ?>" method="POST">
               <input type="hidden" name="_METHOD" value="DELETE" />
 
               <?php include $this->resolve("partials/_csrf.php"); ?>
@@ -106,7 +106,7 @@
     <!-- Previous Page Link -->
     <div class="-mt-px flex w-0 flex-1">
       <?php if ($currentPage > 1) : ?>
-        <a href="/?<?php echo e($previousPageQuery); ?>" class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+        <a href="/?<?php echo escape($previousPageQuery); ?>" class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
           <svg class="mr-3 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z" clip-rule="evenodd" />
           </svg>
@@ -117,7 +117,7 @@
     <!-- Pages Link -->
     <div class="hidden md:-mt-px md:flex">
       <?php foreach ($pageLinks as $pageNum => $query) : ?>
-        <a href="/?<?php echo e($query); ?>" class="<?php echo $pageNum + 1 === $currentPage ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"; ?>inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium">
+        <a href="/?<?php echo escape($query); ?>" class="<?php echo $pageNum + 1 === $currentPage ? "border-indigo-500 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"; ?>inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium">
           <?php echo $pageNum + 1; ?>
         </a>
       <?php endforeach; ?>
@@ -126,7 +126,7 @@
     <!-- Next Page Link -->
     <div class="-mt-px flex w-0 flex-1 justify-end">
       <?php if ($currentPage < $lastPage) : ?>
-        <a href="/?<?php echo e($nextPageQuery); ?>" class="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+        <a href="/?<?php echo escape($nextPageQuery); ?>" class="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
           Next
           <svg class="ml-3 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z" clip-rule="evenodd" />
@@ -209,13 +209,13 @@
             <a
               href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
               class="card__title h3"
-              ><?php echo e($article['title']); ?></a
+              ><?php echo escape($article['title']); ?></a
             >
             <span class="card__text">
-              <?php echo e($article['description']); ?>
+              <?php echo escape($article['description']); ?>
             </span>
               <span class="card__text">
-              <?php echo e($article['article_text']); ?>
+              <?php echo escape($article['article_text']); ?>
             </span>
             <a
               href="https://www.positive.news/category/lifestyle/body-mind/"

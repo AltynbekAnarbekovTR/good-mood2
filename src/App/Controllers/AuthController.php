@@ -16,12 +16,12 @@ class AuthController
     ) {
     }
 
-    public function registerView()
+    public function renderRegisterUser()
     {
         $this->view->render("register.php");
     }
 
-    public function register()
+    public function registerUser()
     {
         $this->validatorService->validateRegister($_POST);
 
@@ -31,9 +31,9 @@ class AuthController
         redirectTo('/');
     }
 
-    public function loginView()
+    public function renderLoginUser()
     {
-        echo $this->view->render("login.php");
+        $this->view->render("login.php");
     }
 
     public function login()

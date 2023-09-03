@@ -16,7 +16,7 @@ class HomeController
     ) {
     }
 
-    public function home()
+    public function renderHome()
     {
         $page = $_GET['p'] ?? 1;
         $page = (int)$page;
