@@ -18,6 +18,7 @@ class TemplateEngine
         extract($this->globalTemplateData, EXTR_SKIP);
 
         ob_start();
+      echo $_SESSION['user'];
         include $this->resolve($template);
         $content = ob_get_contents();
         ob_end_clean();

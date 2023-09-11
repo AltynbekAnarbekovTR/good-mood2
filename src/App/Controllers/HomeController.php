@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Config\Paths;
 use Framework\TemplateEngine;
-use App\Services\ArticleService;
+use App\Models\Articles\ArticleModel;
 
 class HomeController
 {
     public function __construct(
         private TemplateEngine $view,
-        private ArticleService $articleService
+        private ArticleModel $articleModel
     ) {
     }
 
@@ -24,11 +23,10 @@ class HomeController
         $offset = ($page - 1) * $length;
         $searchTerm = $_GET['s'] ?? null;
 
-        [$articles, $count] = $this->articleService->getUserArticles(
+        [$articles, $count] = $this->articleModel->getUserArticles(
             $length,
             $offset
         );
-
 
         $lastPage = ceil($count / $length);
         $pages = $lastPage ? range(1, $lastPage) : [];
@@ -43,7 +41,7 @@ class HomeController
             $pages
         );
         $this->view->render(
-            "index.php",
+            'index.php',
             [
                 'articles' => $articles,
                 'currentPage' => $page,

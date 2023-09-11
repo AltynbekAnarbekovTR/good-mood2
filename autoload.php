@@ -11,7 +11,9 @@ $classmap = [
     'App'.DIRECTORY_SEPARATOR.'Config' => __DIR__ . '/src/App/Config',
     'App'.DIRECTORY_SEPARATOR.'Middleware' => __DIR__ . '/src/App/Middleware',
     'App'.DIRECTORY_SEPARATOR.'Services' => __DIR__ . '/src/App/Services',
-    'App'.DIRECTORY_SEPARATOR.'Exceptions' => __DIR__ . '/src/App/Exceptions'
+    'App'.DIRECTORY_SEPARATOR.'Exceptions' => __DIR__ . '/src/App/Exceptions',
+    'App'.DIRECTORY_SEPARATOR.'Models'.DIRECTORY_SEPARATOR.'Users' => __DIR__.'/src/App/Models/Users',
+    'App'.DIRECTORY_SEPARATOR.'Models'.DIRECTORY_SEPARATOR.'Articles' => __DIR__.'/src/App/Models/Articles'
 ];
 
 spl_autoload_register(
