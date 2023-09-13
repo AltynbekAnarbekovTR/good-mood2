@@ -17,8 +17,7 @@
 <!-- End Header -->
 
 <!-- Start Main Content -->
-<?php
-echo $content; ?>
+<?php echo $content; ?>
 <!-- End Main Content -->
 
 <!-- Start Footer -->

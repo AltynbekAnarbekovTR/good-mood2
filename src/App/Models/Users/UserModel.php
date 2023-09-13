@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Users;
 
+use App\Config\Paths;
 use Framework\Database;
 use Framework\Exceptions\ValidationException;
 
@@ -11,9 +12,9 @@ use Framework\Model;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
-require __DIR__.'/../../PHPMailer/src/Exception.php';
-require __DIR__.'/../../PHPMailer/src/PHPMailer.php';
-require __DIR__.'/../../PHPMailer/src/SMTP.php';
+require __DIR__.'/../../../PHPMailer/src/Exception.php';
+require __DIR__.'/../../../PHPMailer/src/PHPMailer.php';
+require __DIR__.'/../../../PHPMailer/src/SMTP.php';
 
 class UserModel extends Model
 {
@@ -40,9 +41,20 @@ class UserModel extends Model
   public function create(array $formData)
   {
     $password = password_hash($formData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
+    $this->db->query(
+            "INSERT INTO users(email,password) VALUES(:email, :password )",
+            [
+                    'email'    => $formData['email'],
+                    'password' => $password
+            ]
+    );
+    session_regenerate_id();
+    $_SESSION['user'] = $this->db->lastInsertId();
+  }
 
+  public function sendVerificationEmail(string $authCode, string $email)
+  {
     $mail = new PHPMailer(true);
-
     try {
       $mail->SMTPDebug = 0;
       $mail->isSMTP();
@@ -53,28 +65,58 @@ class UserModel extends Model
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $mail->Port = 587;
       $mail->setFrom('altynbek290697@gmail.com', 'localhost');
-      $mail->addAddress('altyn_312@mail.ru', 'Yo');
+      $mail->addAddress($email);
       $mail->isHTML(true);
-      $verification_code = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
-      $mail->Subject = 'Email verification from Positive News';
-      $verify_token = md5((string)rand());
-      $mail->Body = "<p>Your verification code is: <b style='font-size: 30px;'>$verification_code</b></p><br/><a href='http://localhost/verify-email.php?token=$verify_token'>Click to verify your email</a>";
+      $mail->Subject = 'Email verification from Good Mood';
+      $mail->Body = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verifyAccount?code=$authCode&email=$email'>Click to verify your email</a>";
       $mail->send();
     } catch (Exception $e) {
       echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
+  }
 
+  public function setAuthCode(string $authCode, string $email)
+  {
+    $lastCreatedUser = $this->db->lastInsertId();
     $this->db->query(
-            "INSERT INTO users(email,password) VALUES(:email, :password )",
+            "INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code )",
             [
-                    'email'    => $formData['email'],
-                    'password' => $password,
+                    'user_id' => $lastCreatedUser,
+                    'email' => $email,
+                    'code'  => $authCode,
             ]
     );
+  }
+
+  public function getAuthCode($email)
+  {
+    $accountVerificationRow = $this->db->query(
+            "SELECT * FROM auth_codes WHERE email = :email",
+            [
+                    'email' => $email,
+            ]
+    )->find();
+    return $accountVerificationRow['code'];
+  }
+
+  public function verifyAccount($email)
+  {
+    $this->db->query(
+            "UPDATE users SET email_verified = 1 WHERE email =:email",
+            [
+                    'email' => $email,
+            ]
+    )->find();
+
+    $user = $this->db->query(
+            "SELECT * FROM users WHERE email = :email",
+            [
+                    'email' => $email,
+            ]
+    )->find();
 
     session_regenerate_id();
-
-    $_SESSION['user'] = $this->db->id();
+    $_SESSION['user'] = $user;
   }
 
   public function login(array $formData)
@@ -85,6 +127,9 @@ class UserModel extends Model
                     'email' => $formData['email'],
             ]
     )->find();
+    if (!$user['email_verified']) {
+      throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
+    }
 
     $passwordsMatch = password_verify(
             $formData['password'],
@@ -96,8 +141,9 @@ class UserModel extends Model
     }
 
     session_regenerate_id();
+    $_SESSION['user'] = $user;
 
-    $_SESSION['user'] = $user['id'];
+    return $user;
   }
 
   public function logout()
@@ -105,5 +151,32 @@ class UserModel extends Model
     unset($_SESSION['user']);
 
     session_regenerate_id();
+  }
+
+  public function getAllUsers(int $length = 3, int $offset = 0): array
+  {
+    $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
+    $params = [
+
+            'description' => "%{$searchTerm}%",
+    ];
+
+    $users = $this->db->query(
+            "SELECT *
+      FROM users 
+      WHERE description LIKE :description
+      LIMIT {$length} OFFSET {$offset}",
+            $params
+    )->findAll();
+
+
+    $userCount = $this->db->query(
+            "SELECT COUNT(*)
+      FROM users 
+      WHERE description LIKE :description",
+            $params
+    )->count();
+
+    return [$users, $userCount];
   }
 }

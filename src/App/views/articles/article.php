@@ -17,30 +17,13 @@
           </h1>
         </div>
         <div class="container">
-          <div class="intro__paragraph pb--medium show--bp3">
-            <p>
-              A legacy of poverty, genocide and dictatorship left Zimbabwe
-              struggling with an epidemic of depression, colloquially known as
-              kufungisisa, or ‘thinking too much’. Enter the Friendship Bench: a
-              landmark project that employs grandmothers to deliver therapy in
-              their neighbourhoods, which is coming to cities around the world.
-              Up next? London
-            </p>
-          </div>
-
           <div class="article">
-            <!-- sidebar right -->
-
             <!-- main content -->
             <div class="article__content col--8--last col--12--bp3">
               <div class="intro__paragraph pb--medium">
                 <p>
-                  A legacy of poverty, genocide and dictatorship left Zimbabwe
-                  struggling with an epidemic of depression, colloquially known
-                  as kufungisisa, or ‘thinking too much’. Enter the Friendship
-                  Bench: a landmark project that employs grandmothers to deliver
-                  therapy in their neighbourhoods, which is coming to cities
-                  around the world. Up next? London
+                  <?php
+                  echo escape($article['description']); ?>
                 </p>
               </div>
 

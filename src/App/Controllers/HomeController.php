@@ -23,7 +23,7 @@ class HomeController
         $offset = ($page - 1) * $length;
         $searchTerm = $_GET['s'] ?? null;
 
-        [$articles, $count] = $this->articleModel->getUserArticles(
+        [$articles, $count] = $this->articleModel->getAllArticles(
             $length,
             $offset
         );

@@ -20,6 +20,13 @@
         </div>
       <?php endif; ?>
     </label>
+      <label class="block">
+          <?php if (array_key_exists('otherLoginErrors', $errors)) : ?>
+            <div class="bg-gray-100 mt-2 p-2 text-red-500">
+              <?php echo escape($errors['otherLoginErrors'][0]); ?>
+            </div>
+        <?php endif; ?>
+      </label>
     <button type="submit" class="block w-full py-2 bg-indigo-600 text-white rounded">
       Submit
     </button>
