@@ -10,15 +10,19 @@
       </a>
     </div>
   </div>
+
   <form method="GET" class="mt-4 w-full">
     <div class="flex">
-      <input value="<?php echo e((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
+
+      <input value="<?php echo escape((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
+
       <button type="submit" class="rounded-r-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Search
       </button>
     </div>
   </form>
   <!-- Articles list -->
+
   <table class="table-auto min-w-full divide-y divide-gray-300 mt-6">
     <thead class="bg-gray-50">
       <tr>
@@ -185,7 +189,7 @@
       </div>
     <form method="GET" class="mt-4 w-full">
     <div class="flex">
-      <input value="<?php echo e((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
+      <input value="<?php echo escape((string) $searchTerm); ?>" name="s" type="text" class="w-full rounded-l-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter search term" />
       <button type="submit" class="rounded-r-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Search
       </button>
@@ -194,16 +198,15 @@
       <div class="latest__articles cols--3--2--2">
         <?php foreach ($articles as $article) : ?>
           <div class="column card">
-          <a
-            href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
-            class="card__image__link">
-            <?php $bom =$article['b64image'];
-            echo "<img
-          src='data:image/png;base64,$bom'
+              <a
+                      href="https://www.positive.news/lifestyle/how-to-live-longer-eight-habits-that-could-add-years-to-your-life/"
+                      class="card__image__link">
+                <?php $image = $article['b64image'] ?? '';
+                echo "<img  src='data:image/png;base64,$image'
               class='card__image main__article--img img100'
               alt='Image for How to live longer: eight habits that could add years to your life'
             />" ?>
-          </a>
+              </a>
 
           <div class="card__content">
             <a

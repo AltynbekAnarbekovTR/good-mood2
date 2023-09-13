@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Models\Articles\ArticleModel;
 use Framework\TemplateEngine;
-use App\Services\{ValidatorService, ArticleService};
+use App\Services\{ValidatorService};
 
 class ArticleController
 {
     public function __construct(
         private TemplateEngine $view,
         private ValidatorService $validatorService,
-        private ArticleService $articleService
+        private ArticleModel $articleModel
     ) {
     }
 
@@ -24,14 +25,14 @@ class ArticleController
     public function createArticle()
     {
         $this->validatorService->validateArticle($_POST);
-        $this->articleService->create($_POST);
+        $this->articleModel->create($_POST);
 
         redirectTo('/');
     }
 
     public function renderEditArticle(array $params)
     {
-        $article = $this->articleService->getUserArticle(
+        $article = $this->articleModel->getUserArticle(
             $params['article']
         );
 
@@ -49,7 +50,7 @@ class ArticleController
 
     public function editArticle(array $params)
     {
-        $article = $this->articleService->getUserArticle(
+        $article = $this->articleModel->getUserArticle(
             $params['article']
         );
 
@@ -59,14 +60,14 @@ class ArticleController
 
         $this->validatorService->validateArticle($_POST);
 
-        $this->articleService->update($_POST, $article['id']);
+        $this->articleModel->update($_POST, $article['id']);
 
         redirectTo($_SERVER['HTTP_REFERER']);
     }
 
     public function deleteArticle(array $params)
     {
-        $this->articleService->delete((int)$params['article']);
+        $this->articleModel->delete((int)$params['article']);
 
         redirectTo('/');
     }
