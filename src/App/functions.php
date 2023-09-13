@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-function dd(mixed $value)
+function customDump(mixed $value)
 {
   echo "<pre>";
   var_dump($value);
   echo "</pre>";
   echo '-------------------';
+//  die();
 }
 
 function escape(mixed $value): string

@@ -36,7 +36,6 @@ class Database
     {
         $this->stmt = $this->connection->prepare($query);
         $this->stmt->execute($params);
-
         return $this;
     }
 
@@ -50,7 +49,7 @@ class Database
         return $this->stmt->fetch();
     }
 
-    public function id()
+    public function lastInsertId()
     {
         return $this->connection->lastInsertId();
     }
