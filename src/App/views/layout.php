@@ -17,7 +17,7 @@
 <!-- End Header -->
 
 <!-- Start Main Content -->
-<?php echo $content; ?>
+<?php include $this->resolve($template); ?>
 <!-- End Main Content -->
 
 <!-- Start Footer -->

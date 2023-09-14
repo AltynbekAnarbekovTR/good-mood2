@@ -6,13 +6,14 @@ namespace App\Controllers;
 
 use App\Models\Articles\ArticleModel;
 use Framework\TemplateEngine;
-use App\Services\{ValidatorService};
+use App\Services\{UploadFileService, FormValidatorService};
 
 class ArticleController
 {
   public function __construct(
           private TemplateEngine $view,
-          private ValidatorService $validatorService,
+          private FormValidatorService $formValidatorService,
+          private UploadFileService $uploadFileService,
           private ArticleModel $articleModel
   ) {
   }
@@ -71,7 +72,8 @@ class ArticleController
 
   public function createArticle()
   {
-    $this->validatorService->validateArticle($_POST);
+    $this->formValidatorService->validateArticle($_POST);
+    $this->uploadFileService->checkUploadIsImage($_FILES);
     $this->articleModel->create($_POST);
     redirectTo('/manageArticles');
   }
@@ -104,7 +106,7 @@ class ArticleController
       redirectTo('/');
     }
 
-    $this->validatorService->validateArticle($_POST);
+    $this->formValidatorService->validateArticle($_POST);
 
     $this->articleModel->update($_POST, $article['id']);
 
@@ -118,16 +120,15 @@ class ArticleController
     redirectTo('/manageArticles');
   }
 
-  public function renderReadArticle() {
-//    $article = $this->articleModel->getUserArticle(
-//            $params['article']
-//    );
-//    customDump($article);
+  public function renderReadArticle($params) {
+    $article = $this->articleModel->getUserArticle(
+            $params['article']
+    );
     $this->view->render(
             'articles/article.php',
-//            [
-//                    'article' => $article,
-//            ]
+            [
+                    'article' => $article,
+            ]
     );
   }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use Framework\TemplateEngine;
-use App\Services\ValidatorService;
+use App\Services\FormValidatorService;
 use App\Models\Users\UserModel;
 
 
@@ -13,7 +13,7 @@ class AuthController
 {
   public function __construct(
           private TemplateEngine $view,
-          private ValidatorService $validatorService,
+          private FormValidatorService $formValidatorService,
           private UserModel $userModel
   ) {
   }
@@ -25,7 +25,7 @@ class AuthController
 
   public function registerUser()
   {
-    $this->validatorService->validateRegister($_POST);
+    $this->formValidatorService->validateRegister($_POST);
     $this->userModel->isEmailTaken($_POST['email']);
     $this->userModel->create($_POST);
     $authenticationCode = md5((string)rand());
@@ -41,7 +41,7 @@ class AuthController
 
   public function login()
   {
-    $this->validatorService->validateLogin($_POST);
+    $this->formValidatorService->validateLogin($_POST);
 
     $user = $this->userModel->login($_POST);
 

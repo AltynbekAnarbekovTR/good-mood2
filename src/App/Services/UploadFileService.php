@@ -14,7 +14,7 @@ class UploadFileService
     {
     }
 
-    public function validateFile(?array $file)
+    public function checkUploadIsImage(?array $file)
     {
         if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
             throw new ValidationException(
@@ -45,7 +45,7 @@ class UploadFileService
         }
 
         $clientMimeType = $file['type'];
-        $allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        $allowedMimeTypes = ['image/jpeg', 'image/png'];
 
         if (!in_array($clientMimeType, $allowedMimeTypes)) {
             throw new ValidationException(

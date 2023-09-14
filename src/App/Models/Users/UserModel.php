@@ -18,11 +18,12 @@ require __DIR__.'/../../../PHPMailer/src/SMTP.php';
 
 class UserModel extends Model
 {
+  public int $id;
   public string $email;
-  public string $name;
   public string $password;
   public string $role;
-  public int $id;
+  public string $createdAt;
+  public integer $emailVerified;
 
   public function isEmailTaken(string $email)
   {
@@ -127,6 +128,11 @@ class UserModel extends Model
                     'email' => $formData['email'],
             ]
     )->find();
+    foreach ($user as $prop) {
+      customDump(getType($prop));
+    }
+
+    die();
     if (!$user['email_verified']) {
       throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
     }
