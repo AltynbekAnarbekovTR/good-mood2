@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
-use App\Services\{FormValidatorService, UploadFileService};
+use App\Services\{FormValidatorService, UploadFileService, EmailService};
 use App\Models\Users\UserModel;
 use App\Models\Articles\ArticleModel;
 return [
         TemplateEngine::class       => fn() => new TemplateEngine(Paths::VIEW),
         FormValidatorService::class => fn() => new FormValidatorService(),
+        EmailService::class => fn() => new EmailService(),
         Database::class             => fn() => new Database(
                 'mysql', [
                 'host'   => 'localhost',
@@ -32,4 +33,5 @@ return [
 
           return new UploadFileService($db);
         },
+
 ];

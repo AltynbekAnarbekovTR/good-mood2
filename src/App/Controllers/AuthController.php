@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use Framework\TemplateEngine;
-use App\Services\FormValidatorService;
+use App\Services\{FormValidatorService, EmailService};
 use App\Models\Users\UserModel;
 
 
@@ -14,7 +14,8 @@ class AuthController
   public function __construct(
           private TemplateEngine $view,
           private FormValidatorService $formValidatorService,
-          private UserModel $userModel
+          private UserModel $userModel,
+          private EmailService $emailService
   ) {
   }
 
@@ -30,7 +31,7 @@ class AuthController
     $this->userModel->create($_POST);
     $authenticationCode = md5((string)rand());
     $this->userModel->setAuthCode($authenticationCode, $_POST['email']);
-    $this->userModel->sendVerificationEmail($authenticationCode, $_POST['email']);
+    $this->emailService->sendVerificationEmail($authenticationCode, $_POST['email']);
     redirectTo('/');
   }
 
