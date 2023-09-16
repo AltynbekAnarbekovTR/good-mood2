@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models\Users;
 
-use App\Config\Paths;
-use Framework\Database;
 use Framework\Exceptions\ValidationException;
 use Framework\Model;
 

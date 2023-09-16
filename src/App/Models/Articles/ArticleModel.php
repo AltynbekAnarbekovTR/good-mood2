@@ -5,11 +5,21 @@ declare(strict_types=1);
 namespace App\Models\Articles;
 
 use App\Config\Paths;
-use Framework\Database;
 use Framework\Model;
 
 class ArticleModel extends Model
 {
+  public int $id;
+  public string $title;
+  public string $description;
+  public string $articleText;
+  public string $createdAt;
+  public string $updatedAt;
+  public int $userId;
+  public string $originalFilename;
+  public string $storageFilename;
+  public string $mediaType;
+
   public function create(array $formData, $coverImage = null)
   {
     $fileExtension = pathinfo($coverImage['name'], PATHINFO_EXTENSION);
