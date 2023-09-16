@@ -23,11 +23,11 @@ class EmailService
       $mail->isSMTP();
       $mail->Host = 'smtp.gmail.com';
       $mail->SMTPAuth = true;
-      $mail->Username = 'altynbek290697@gmail.com';
-      $mail->Password = 'tetkmlmuirvbzwwj';
+      $mail->Username = getenv('EMAIL_NAME');
+      $mail->Password = getenv('EMAIL_PASSWORD');
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $mail->Port = 587;
-      $mail->setFrom('altynbek290697@gmail.com', 'localhost');
+      $mail->setFrom(getenv('EMAIL_NAME'), getenv('EMAIL_FROM'));
       $mail->addAddress($email);
       $mail->isHTML(true);
       $mail->Subject = 'Email verification from Good Mood';

@@ -98,9 +98,6 @@ class UserModel extends Model
                     'email' => $formData['email'],
             ]
     )->find();
-    if (!$user['email_verified']) {
-      throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
-    }
 
     $passwordsMatch = password_verify(
             $formData['password'],
@@ -109,6 +106,10 @@ class UserModel extends Model
 
     if (!$user || !$passwordsMatch) {
       throw new ValidationException(['password' => ['Invalid credentials']]);
+    }
+
+    if (!$user['email_verified']) {
+      throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
     }
 
     session_regenerate_id();

@@ -12,15 +12,14 @@ return [
         FormValidatorService::class => fn() => new FormValidatorService(),
         EmailService::class => fn() => new EmailService(),
         Database::class             => fn() => new Database(
-                'mysql', [
-                'host'   => 'localhost',
-                'port'   => 3306,
-                'dbname' => 'good_mood2',
-        ], 'root', 'root'
+                getenv('DRIVER'), [
+                'host'   => getenv('HOST'),
+                'port'   => getenv('PORT'),
+                'dbname' => getenv('DBNAME'),
+        ], getenv('USERNAME'), getenv('PASSWORD')
         ),
         UserModel::class            => function (Container $container) {
           $db = $container->get(Database::class);
-
           return new UserModel($db);
         },
         ArticleModel::class   => function (Container $container) {

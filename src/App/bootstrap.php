@@ -3,9 +3,14 @@
 declare(strict_types=1);
 
 if (!defined('AUTOLOADER_INITIALIZED')) {
-  require __DIR__.'/../../autoload.php';
+  require __DIR__ . '/../../autoload.php';
 }
 
+require __DIR__ . '/utilityFunctions.php';
+require __DIR__ . '/../../env.php';
+if (getenv('APP_MODE') === 'development') {
+  require __DIR__ . '/devOnlyFunctions.php';
+}
 
 use Framework\App;
 use App\Config\Paths;
