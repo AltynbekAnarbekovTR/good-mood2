@@ -1,1 +1,1 @@
-<input value="<?php echo escape($csrfToken); ?>" name="token" type="hidden" />
+<input value="<?php echo escapeInjection($csrfToken); ?>" name="token" type="hidden" />

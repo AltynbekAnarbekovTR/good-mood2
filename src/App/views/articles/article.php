@@ -23,7 +23,7 @@
               <div class="intro__paragraph pb--medium">
                 <p>
                   <?php
-                  echo escape($article['description']); ?>
+                  echo escapeInjection($article['description']); ?>
                 </p>
               </div>
 

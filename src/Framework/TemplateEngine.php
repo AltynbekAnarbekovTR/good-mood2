@@ -16,7 +16,7 @@ class TemplateEngine
     {
         extract($data, EXTR_SKIP);
         extract($this->globalTemplateData, EXTR_SKIP);
-        require $this->resolve('layout.php');
+        require $this->resolve('layout/layout.php');
     }
 
     public function resolve(string $path)

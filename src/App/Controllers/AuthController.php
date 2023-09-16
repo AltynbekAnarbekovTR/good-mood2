@@ -20,7 +20,7 @@ class AuthController
 
   public function renderRegisterUser()
   {
-    $this->view->render("register.php");
+    $this->view->render("auth/register.php");
   }
 
   public function registerUser()
@@ -36,7 +36,7 @@ class AuthController
 
   public function renderLoginUser()
   {
-    $this->view->render("login.php");
+    $this->view->render("auth/login.php");
   }
 
   public function login()
