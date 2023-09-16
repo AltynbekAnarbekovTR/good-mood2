@@ -16,10 +16,11 @@ class UploadFileService
 
     public function checkUploadIsImage(?array $file)
     {
-        if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
+
+        if (!$file || !empty($file['error'])) {
             throw new ValidationException(
                 [
-                    'receipt' => ['Failed to upload file']
+                    'cover' => ['Failed to upload file']
                 ]
             );
         }
@@ -29,7 +30,7 @@ class UploadFileService
         if ($file['size'] > $maxFileSizeMB) {
             throw new ValidationException(
                 [
-                    'receipt' => ['File upload is too large']
+                    'cover' => ['File upload is too large']
                 ]
             );
         }
@@ -39,18 +40,18 @@ class UploadFileService
         if (!preg_match('/^[A-za-z0-9\s._-]+$/', $originalFileName)) {
             throw new ValidationException(
                 [
-                    'receipt' => ['Invalid filename']
+                    'cover' => ['Invalid filename']
                 ]
             );
         }
 
         $clientMimeType = $file['type'];
-        $allowedMimeTypes = ['image/jpeg', 'image/png'];
+        $allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 
         if (!in_array($clientMimeType, $allowedMimeTypes)) {
             throw new ValidationException(
                 [
-                    'receipt' => ['Invalid file type']
+                    'cover' => ['Invalid file type']
                 ]
             );
         }

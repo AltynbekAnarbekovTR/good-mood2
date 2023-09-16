@@ -10,13 +10,14 @@ use Framework\Model;
 
 class ArticleModel extends Model
 {
-
-
-  public function create(array $formData)
+  public function create(array $formData, $coverImage = null)
   {
-    $receiptFile = $_FILES['receipt'] ?? null;
-    $fileExtension = pathinfo($receiptFile['name'], PATHINFO_EXTENSION);
+    $fileExtension = pathinfo($coverImage['name'], PATHINFO_EXTENSION);
     $newFilename = bin2hex(random_bytes(16)).".".$fileExtension;
+    $uploadPath = Paths::STORAGE_UPLOADS . "/" . $newFilename;
+    if (!move_uploaded_file($coverImage['tmp_name'], $uploadPath)) {
+      throw new ValidationException(['cover' => ['Failed to upload file']]);
+    }
     $this->db->query(
             "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type) 
             VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
@@ -25,9 +26,9 @@ class ArticleModel extends Model
                     'title'             => $formData['title'],
                     'description'       => $formData['description'],
                     'article_text'      => $formData['article_text'],
-                    'original_filename' => $receiptFile['name'],
+                    'original_filename' => $coverImage['name'],
                     'storage_filename'  => $newFilename,
-                    'media_type'        => $receiptFile['type'],
+                    'media_type'        => $coverImage['type'],
             ]
     );
   }

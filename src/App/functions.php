@@ -8,10 +8,9 @@ function customDump(mixed $value)
   var_dump($value);
   echo "</pre>";
   echo '-------------------';
-//  die();
 }
 
-function escape(mixed $value): string
+function escapeInjection(mixed $value): string
 {
   return htmlspecialchars((string) $value);
 }

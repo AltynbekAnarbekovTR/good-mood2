@@ -23,7 +23,7 @@ class UserModel extends Model
   public string $password;
   public string $role;
   public string $createdAt;
-  public integer $emailVerified;
+  public int $emailVerified;
 
   public function isEmailTaken(string $email)
   {
@@ -128,11 +128,6 @@ class UserModel extends Model
                     'email' => $formData['email'],
             ]
     )->find();
-    foreach ($user as $prop) {
-      customDump(getType($prop));
-    }
-
-    die();
     if (!$user['email_verified']) {
       throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
     }

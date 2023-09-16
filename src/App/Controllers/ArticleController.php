@@ -73,8 +73,10 @@ class ArticleController
   public function createArticle()
   {
     $this->formValidatorService->validateArticle($_POST);
-    $this->uploadFileService->checkUploadIsImage($_FILES);
-    $this->articleModel->create($_POST);
+    if ($_FILES['cover']) {
+      $this->uploadFileService->checkUploadIsImage($_FILES['cover']);
+    }
+    $this->articleModel->create($_POST, $_FILES['cover']);
     redirectTo('/manageArticles');
   }
 
