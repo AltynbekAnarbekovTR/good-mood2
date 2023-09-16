@@ -7,14 +7,7 @@ namespace App\Models\Users;
 use App\Config\Paths;
 use Framework\Database;
 use Framework\Exceptions\ValidationException;
-
 use Framework\Model;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
-
-require __DIR__.'/../../../PHPMailer/src/Exception.php';
-require __DIR__.'/../../../PHPMailer/src/PHPMailer.php';
-require __DIR__.'/../../../PHPMailer/src/SMTP.php';
 
 class UserModel extends Model
 {
@@ -51,29 +44,6 @@ class UserModel extends Model
     );
     session_regenerate_id();
     $_SESSION['user'] = $this->db->lastInsertId();
-  }
-
-  public function sendVerificationEmail(string $authCode, string $email)
-  {
-    $mail = new PHPMailer(true);
-    try {
-      $mail->SMTPDebug = 0;
-      $mail->isSMTP();
-      $mail->Host = 'smtp.gmail.com';
-      $mail->SMTPAuth = true;
-      $mail->Username = 'altynbek290697@gmail.com';
-      $mail->Password = 'tetkmlmuirvbzwwj';
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      $mail->Port = 587;
-      $mail->setFrom('altynbek290697@gmail.com', 'localhost');
-      $mail->addAddress($email);
-      $mail->isHTML(true);
-      $mail->Subject = 'Email verification from Good Mood';
-      $mail->Body = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verifyAccount?code=$authCode&email=$email'>Click to verify your email</a>";
-      $mail->send();
-    } catch (Exception $e) {
-      echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    }
   }
 
   public function setAuthCode(string $authCode, string $email)
@@ -128,9 +98,6 @@ class UserModel extends Model
                     'email' => $formData['email'],
             ]
     )->find();
-    if (!$user['email_verified']) {
-      throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
-    }
 
     $passwordsMatch = password_verify(
             $formData['password'],
@@ -139,6 +106,10 @@ class UserModel extends Model
 
     if (!$user || !$passwordsMatch) {
       throw new ValidationException(['password' => ['Invalid credentials']]);
+    }
+
+    if (!$user['email_verified']) {
+      throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
     }
 
     session_regenerate_id();
