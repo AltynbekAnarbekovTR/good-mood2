@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use Framework\TemplateEngine;
-use App\Config\Paths;
 
 class AboutController
 {
@@ -16,8 +15,7 @@ class AboutController
   public function renderAbout()
   {
     $this->view->render('about.php', [
-      'title' => 'About',
-      'dangerousData' => '<script>alert(123)</script>'
+      'title' => 'About'
     ]);
   }
 }

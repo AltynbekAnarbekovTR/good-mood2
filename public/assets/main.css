@@ -979,6 +979,17 @@ a:hover img {
 .card__category:last-of-type:after {
   display: none;
 }
+.about {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.about__text {
+  max-width: 500px;
+  text-align: left;
+}
 .main__article {
   clear: both;
   display: inline-block;
