@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-function dd(mixed $value)
+function customDump(mixed $value)
 {
   echo "<pre>";
   var_dump($value);
@@ -10,7 +10,7 @@ function dd(mixed $value)
   echo '-------------------';
 }
 
-function escape(mixed $value): string
+function escapeInjection(mixed $value): string
 {
   return htmlspecialchars((string) $value);
 }

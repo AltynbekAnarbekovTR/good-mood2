@@ -6,6 +6,6 @@
   <hr />
 
   <!-- Escaping Data -->
-  <p>Escaping Data: <?php echo escape($dangerousData); ?></p>
+  <p>Escaping Data: <?php echo escapeInjection($dangerousData); ?></p>
 </section>
 <!-- End Main Content Area -->

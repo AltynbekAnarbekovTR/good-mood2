@@ -33,31 +33,120 @@ class Router
         return $path;
     }
 
-    public function dispatch(string $path, string $method, Container $container = null)
-    {
-        $path = $this->normalizePath($path);
-        $method = strtoupper($_POST['_METHOD'] ?? $method);
+//    public function dispatch(string $path, string $method, Container $container = null)
+//    {
+//        $path = $this->normalizePath($path);
+//        $method = strtoupper($_POST['_METHOD'] ?? $method);
+//
+//        $matchingRoutes = array_filter(
+//            $this->routes,
+//            function ($route) use ($path, $method) {
+//                return preg_match("#^{$route['regexPath']}$#", $path, $paramValues) && $route['method'] === $method;
+//            }
+//        );
+//
+//        if (!empty($matchingRoutes)) {
+//            $route = reset($matchingRoutes);
+//            preg_match_all('#{([^/]+)}#', $route['path']);
+//            [$class, $function] = $route['controller'];
+//            $controllerInstance = $container ? $container->resolve($class) : new $class;
+//            $action = fn() => $controllerInstance->{$function}();
+//            $allMiddleware = [...$route['middlewares'], ...$this->middlewares];
+//            foreach ($allMiddleware as $middleware) {
+//                $middlewareInstance = $container ? $container->resolve($middleware) : new $middleware;
+//                $action = fn() => $middlewareInstance->process($action);
+//            }
+//            $action();
+//        }
+//    }
 
-        $matchingRoutes = array_filter(
-            $this->routes,
-            function ($route) use ($path, $method) {
-                return preg_match("#^{$route['regexPath']}$#", $path,) && $route['method'] === $method;
-            }
-        );
-        if (!empty($matchingRoutes)) {
-            $route = reset($matchingRoutes);
-            preg_match_all('#{([^/]+)}#', $route['path']);
-            [$class, $function] = $route['controller'];
-            $controllerInstance = $container ? $container->resolve($class) : new $class;
-            $action = fn() => $controllerInstance->{$function}();
-            $allMiddleware = [...$route['middlewares'], ...$this->middlewares];
-            foreach ($allMiddleware as $middleware) {
-                $middlewareInstance = $container ? $container->resolve($middleware) : new $middleware;
-                $action = fn() => $middlewareInstance->process($action);
-            }
-            $action();
-        }
+//  public function dispatch(string $path, string $method, Container $container = null)
+//  {
+//    $path = $this->normalizePath($path);
+//    $method = strtoupper($_POST['_METHOD'] ?? $method);
+//
+//    foreach ($this->routes as $route) {
+//      if (
+//              !preg_match("#^{$route['regexPath']}$#", $path, $paramValues) ||
+//              $route['method'] !== $method
+//      ) {
+//        continue;
+//      }
+//
+//      array_shift($paramValues);
+//
+//      preg_match_all('#{([^/]+)}#', $route['path'], $paramKeys);
+//
+//      $paramKeys = $paramKeys[1];
+//
+//      $params = array_combine($paramKeys, $paramValues);
+//
+//      [$class, $function] = $route['controller'];
+//
+//      $controllerInstance = $container ?
+//              $container->resolve($class) :
+//              new $class;
+//
+//      $action = fn () => $controllerInstance->{$function}($params);
+//
+//      $allMiddleware = [...$route['middlewares'], ...$this->middlewares];
+//
+//      foreach ($allMiddleware as $middleware) {
+//        $middlewareInstance = $container ?
+//                $container->resolve($middleware) :
+//                new $middleware;
+//        $action = fn () => $middlewareInstance->process($action);
+//      }
+//
+//      $action();
+//
+//      return;
+//    }
+//  }
+
+  public function dispatch(string $path, string $method, Container $container = null)
+  {
+    $path = $this->normalizePath($path);
+    $method = strtoupper($_POST['_METHOD'] ?? $method);
+
+    foreach ($this->routes as $route) {
+      if (
+              !preg_match("#^{$route['regexPath']}$#", $path, $paramValues) ||
+              $route['method'] !== $method
+      ) {
+        continue;
+      }
+
+      array_shift($paramValues);
+
+      preg_match_all('#{([^/]+)}#', $route['path'], $paramKeys);
+
+      $paramKeys = $paramKeys[1];
+
+      $params = array_combine($paramKeys, $paramValues);
+
+      [$class, $function] = $route['controller'];
+
+      $controllerInstance = $container ?
+              $container->resolve($class) :
+              new $class;
+
+      $action = fn () => $controllerInstance->{$function}($params);
+
+      $allMiddleware = [...$route['middlewares'], ...$this->middlewares];
+
+      foreach ($allMiddleware as $middleware) {
+        $middlewareInstance = $container ?
+                $container->resolve($middleware) :
+                new $middleware;
+        $action = fn () => $middlewareInstance->process($action);
+      }
+
+      $action();
+
+      return;
     }
+  }
 
     public function addMiddleware(string $middleware)
     {

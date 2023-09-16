@@ -16,13 +16,7 @@ class TemplateEngine
     {
         extract($data, EXTR_SKIP);
         extract($this->globalTemplateData, EXTR_SKIP);
-
-        ob_start();
-      echo $_SESSION['user'];
-        include $this->resolve($template);
-        $content = ob_get_contents();
-        ob_end_clean();
-        require $this->resolve('layout.php');
+        require $this->resolve('layout/layout.php');
     }
 
     public function resolve(string $path)

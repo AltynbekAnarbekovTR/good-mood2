@@ -4,7 +4,7 @@
 
     <label class="block">
       <span class="text-gray-700">Description</span>
-      <input value="<?php echo escape($article['description']); ?>" name="description" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+      <input value="<?php echo escapeInjection($article['description']); ?>" name="description" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
 
       <?php if (array_key_exists('description', $errors)) : ?>
         <div class="bg-gray-100 mt-2 p-2 text-red-500">
@@ -14,7 +14,7 @@
     </label>
     <label class="block">
       <span class="text-gray-700">Title</span>
-      <input value="<?php echo escape($article['title']); ?>" name="title" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
+      <input value="<?php echo escapeInjection($article['title']); ?>" name="title" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
       <?php if (array_key_exists('title', $errors)) : ?>
         <div class="bg-gray-100 mt-2 p-2 text-red-500">
           <?php echo $errors['title'][0]; ?>
@@ -23,7 +23,7 @@
     </label>
       <label class="block">
           <span class="text-gray-700">Article text</span>
-          <input value="<?php echo escape($article['article_text']); ?>" name="article_text" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+          <input value="<?php echo escapeInjection($article['article_text']); ?>" name="article_text" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
 
           <?php if (array_key_exists('article_text', $errors)) : ?>
               <div class="bg-gray-100 mt-2 p-2 text-red-500">

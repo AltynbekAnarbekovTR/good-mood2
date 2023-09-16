@@ -4,6 +4,10 @@
         <!-- Navigation Links -->
         <div class="flex lg:gap-x-10">
             <a href="/about" class="text-gray-300 hover:text-white transition">About</a>
+          <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
+              <a href="/manageUsers" class="text-gray-300 hover:text-white transition">Users</a>
+              <a href="/manageArticles" class="text-gray-300 hover:text-white transition">Articles</a>
+          <?php endif; ?>
             <?php
             if (isset($_SESSION['user'])) : ?>
                 <a href="/logout" class="text-gray-300 hover:text-white transition">

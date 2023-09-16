@@ -18,14 +18,13 @@ use Framework\Rules\{
   PasswordRule
 };
 
-class ValidatorService
+class FormValidatorService
 {
   private Validator $validator;
 
   public function __construct()
   {
     $this->validator = new Validator();
-
     $this->validator->add('required', new RequiredRule());
     $this->validator->add('email', new EmailRule());
     $this->validator->add('match', new MatchRule());

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo escape($title); ?> - Positive News</title>
+
+    <title><?php echo escapeInjection($title); ?> - Positive News</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,8 +18,7 @@
 <!-- End Header -->
 
 <!-- Start Main Content -->
-<?php
-echo $content; ?>
+<?php include $this->resolve($template); ?>
 <!-- End Main Content -->
 
 <!-- Start Footer -->
