@@ -3,6 +3,7 @@
         <a href="/" class="-m-1.5 p-1.5 text-white text-2xl font-bold">Positive News</a>
         <!-- Navigation Links -->
         <div class="flex lg:gap-x-10">
+            <a href="/" class="text-gray-300 hover:text-white transition">Home</a>
             <a href="/about" class="text-gray-300 hover:text-white transition">About</a>
           <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
               <a href="/manageUsers" class="text-gray-300 hover:text-white transition">Users</a>
