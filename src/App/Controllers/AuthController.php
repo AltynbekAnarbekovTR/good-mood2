@@ -32,7 +32,7 @@ class AuthController
     $authenticationCode = md5((string)rand());
     $this->userModel->setAuthCode($authenticationCode, $_POST['email']);
     $this->emailService->sendVerificationEmail($authenticationCode, $_POST['email']);
-    redirectTo('/');
+    $this->view->render("auth/emailSent.php");
   }
 
   public function renderLoginUser()

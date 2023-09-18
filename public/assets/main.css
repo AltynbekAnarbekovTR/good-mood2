@@ -61,6 +61,12 @@ img {
   padding-bottom: 363px;
 }
 
+/* Email Sent */
+.email-success {
+  margin-top: 50px;
+  text-align: center;
+}
+
 /* Hero */
 .main__article {
   clear: both;
