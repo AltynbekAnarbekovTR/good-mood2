@@ -55,7 +55,6 @@ img {
 .wrapper {
   width: 100%;
   overflow: hidden;
-  padding-top: 140px;
   min-height: 100%;
   height: auto !important;
   height: 100%;
@@ -258,6 +257,14 @@ a:hover img {
   background: #f1efef;
   z-index: 1;
 }
+
+.hero--contained {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 1003px) {
   .main__article {
     margin-top: 10px;
@@ -1840,6 +1847,11 @@ a:hover img {
 }
 .article {
   margin-bottom: 40px;
+}
+.article .article__title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 50px;
 }
 .article .article__content > :last-child {
   margin-bottom: 0;

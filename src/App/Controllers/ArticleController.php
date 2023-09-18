@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Config\Paths;
 use App\Models\Articles\ArticleModel;
 use Framework\TemplateEngine;
 use App\Services\{UploadFileService, FormValidatorService};
@@ -123,13 +124,14 @@ class ArticleController
   }
 
   public function renderReadArticle($params) {
-    $article = $this->articleModel->getUserArticle(
+    $article = $this->articleModel->getArticleById(
             $params['article']
     );
+    $article = $this->articleModel->attachImageToArticle($article);
     $this->view->render(
             'articles/article.php',
             [
-                    'article' => $article,
+                    'article' => $article
             ]
     );
   }

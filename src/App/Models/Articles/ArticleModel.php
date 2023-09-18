@@ -24,7 +24,7 @@ class ArticleModel extends Model
   {
     $fileExtension = pathinfo($coverImage['name'], PATHINFO_EXTENSION);
     $newFilename = bin2hex(random_bytes(16)).".".$fileExtension;
-    $uploadPath = Paths::STORAGE_UPLOADS . "/" . $newFilename;
+    $uploadPath = Paths::STORAGE_UPLOADS."/".$newFilename;
     if (!move_uploaded_file($coverImage['tmp_name'], $uploadPath)) {
       throw new ValidationException(['cover' => ['Failed to upload file']]);
     }
@@ -58,27 +58,7 @@ class ArticleModel extends Model
       LIMIT {$length} OFFSET {$offset}",
             $params
     )->findAll();
-
-    $articles = array_map(
-            function (array $article) {
-              $article['receipts'] = $this->db->query(
-                      "SELECT * FROM receipts WHERE article_id = :article_id",
-                      ['article_id' => $article['id']]
-              )->findAll();
-
-              $filename = $article['storage_filename'];
-              $fileDir = Paths::STORAGE_UPLOADS;
-              $file = $fileDir.$filename;
-              if (file_exists($file)) {
-                $b64image = base64_encode(file_get_contents($file));
-                $article['b64image'] = $b64image;
-              }
-
-              return $article;
-            },
-            $articles
-    );
-
+    $articles = $this->attachImagesToArticlesArray($articles);
     $articleCount = $this->db->query(
             "SELECT COUNT(*)
       FROM articles 
@@ -106,25 +86,7 @@ class ArticleModel extends Model
             $params
     )->findAll();
 
-    $articles = array_map(
-            function (array $article) {
-              $article['receipts'] = $this->db->query(
-                      "SELECT * FROM receipts WHERE article_id = :article_id",
-                      ['article_id' => $article['id']]
-              )->findAll();
-
-              $filename = $article['storage_filename'];
-              $fileDir = Paths::STORAGE_UPLOADS;
-              $file = $fileDir.$filename;
-              if (file_exists($file)) {
-                $b64image = base64_encode(file_get_contents($file));
-                $article['b64image'] = $b64image;
-              }
-
-              return $article;
-            },
-            $articles
-    );
+    $articles = $this->attachImagesToArticles($articles);
 
     $articleCount = $this->db->query(
             "SELECT COUNT(*)
@@ -137,14 +99,31 @@ class ArticleModel extends Model
     return [$articles, $articleCount];
   }
 
-  public function getUserArticle(string $id)
+  public function attachImagesToArticlesArray($articles): array
   {
-    return $this->db->query(
-            "SELECT *
-      FROM articles 
-      WHERE id = :id",
+    return array_map(function($article) {
+      return $this->attachImageToArticle($article);
+    }, $articles);
+  }
+
+  public function attachImageToArticle($article): array {
+
+    $filename = $article['storage_filename'];
+    $fileDir = Paths::STORAGE_UPLOADS;
+    $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
+    if (file_exists($file)) {
+      $b64image = base64_encode(file_get_contents($file));
+      $article['b64image'] = $b64image;
+    }
+    return $article;
+  }
+
+  public function getArticleById(string $id)
+  {
+    return $article = $this->db->query(
+            "SELECT * FROM articles WHERE id = :id",
             [
-                    'id'      => $id
+                    'id' => $id,
             ]
     )->find();
   }
@@ -171,7 +150,7 @@ class ArticleModel extends Model
     $this->db->query(
             "DELETE FROM articles WHERE id = :id",
             [
-                    'id'      => $id,
+                    'id' => $id,
             ]
     );
   }
