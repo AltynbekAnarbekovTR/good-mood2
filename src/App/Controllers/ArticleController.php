@@ -73,6 +73,8 @@ class ArticleController
 
   public function createArticle()
   {
+    $this->formValidatorService->addRulesToField('titleRules', ['required']);
+    $this->formValidatorService->addRulesToField('descriptionRules', ['required', 'lengthMax:1000']);
     $this->formValidatorService->validateArticle($_POST);
     if ($_FILES['cover']) {
       $this->uploadFileService->checkUploadIsImage($_FILES['cover']);

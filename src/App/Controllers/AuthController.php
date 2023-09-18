@@ -26,6 +26,9 @@ class AuthController
 
   public function registerUser()
   {
+    $this->formValidatorService->addRulesToField('emailRules', ['required', 'email']);
+    $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
+    $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
     $this->formValidatorService->validateRegister($_POST);
     $this->userModel->isEmailTaken($_POST['email']);
     $this->userModel->create($_POST);
@@ -42,8 +45,9 @@ class AuthController
 
   public function login()
   {
+    $this->formValidatorService->addRulesToField('emailRules', ['required']);
+    $this->formValidatorService->addRulesToField('passwordRules', ['required']);
     $this->formValidatorService->validateLogin($_POST);
-
     $user = $this->userModel->login($_POST);
 
     if ($user->role === 'admin') {

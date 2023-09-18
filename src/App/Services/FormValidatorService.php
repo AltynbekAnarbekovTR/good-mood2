@@ -21,6 +21,11 @@ use Framework\Rules\{
 class FormValidatorService
 {
   private Validator $validator;
+  public array $emailRules = [];
+  public array $passwordRules = [];
+  public array $confirmPasswordRules = [];
+  public array $titleRules = [];
+  public array $descriptionRules = [];
 
   public function __construct()
   {
@@ -33,28 +38,43 @@ class FormValidatorService
     $this->validator->add('password', new PasswordRule());
   }
 
+  public function addRulesToField(string $formField, array $rules) {
+    foreach ($rules as $rule) {
+      if (!in_array($rule, $this->$formField)) {
+        array_push($this->$formField, $rule);
+      }
+    }
+  }
+
+  public function removeRuleFromField(string $formField, string $rule) {
+    $index = array_search($rule, $this->$formField);
+    if($index !== FALSE){
+      unset($this->$formField[$index]);
+    }
+  }
+
   public function validateRegister(array $formData)
   {
     $this->validator->validate($formData, [
-      'email' => ['required', 'email'],
-      'password' => ['required', 'password'],
-      'confirmPassword' => ['required', 'match:password'],
+      'email' => $this->emailRules,
+      'password' => $this->passwordRules,
+      'confirmPassword' => $this->confirmPasswordRules,
     ]);
   }
 
   public function validateLogin(array $formData)
   {
     $this->validator->validate($formData, [
-      'email' => ['required', 'email'],
-      'password' => ['required']
+      'email' => $this->emailRules,
+      'password' => $this->passwordRules
     ]);
   }
 
   public function validateArticle(array $formData)
   {
     $this->validator->validate($formData, [
-      'title' => ['required'],
-      'description' => ['required', 'lengthMax:255']
+      'title' => $this->titleRules,
+      'description' => $this->descriptionRules
     ]);
   }
 }
