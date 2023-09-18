@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Config\Paths;
 use App\Models\Articles\ArticleModel;
+use App\Models\Comments\CommentModel;
 use Framework\TemplateEngine;
 use App\Services\{UploadFileService, FormValidatorService};
 
@@ -15,7 +16,8 @@ class ArticleController
           private TemplateEngine $view,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
-          private ArticleModel $articleModel
+          private ArticleModel $articleModel,
+          private CommentModel $commentModel
   ) {
   }
 
@@ -129,11 +131,15 @@ class ArticleController
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
+    $comments = $this->commentModel->getCommentsOfArticle(
+            $article['id']
+    );
     $article = $this->articleModel->attachImageToArticle($article);
     $this->view->render(
             'articles/article.php',
             [
-                    'article' => $article
+                    'article' => $article,
+                    'comments' => $comments
             ]
     );
   }

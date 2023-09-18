@@ -29,6 +29,7 @@ use App\Controllers\{
         AboutController,
         AuthController,
         ArticleController,
+        CommentsController
 };
 
 $app = new App(Paths::SOURCE."App/container-definitions.php");
@@ -49,6 +50,7 @@ $app->get('/editArticle/{article}', [ArticleController::class, 'renderEditArticl
 $app->post('/editArticle/{article}', [ArticleController::class, 'editArticle'])->add(AdminOnlyMiddleware::class);
 $app->delete('/deleteArticle/{article}', [ArticleController::class, 'deleteArticle'])->add(AdminOnlyMiddleware::class);
 $app->get('/article/{article}', [ArticleController::class, 'renderReadArticle']);
+$app->post('/article/{article}', [CommentsController::class, 'createComment'])->add(AuthRequiredMiddleware::class);;
 $app->get('/verifyAccount', [AuthController::class, 'checkAccountVerification']);
 
 $app->addMiddleware(CsrfGuardMiddleware::class);

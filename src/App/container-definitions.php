@@ -7,6 +7,7 @@ use App\Config\Paths;
 use App\Services\{FormValidatorService, UploadFileService, EmailService};
 use App\Models\Users\UserModel;
 use App\Models\Articles\ArticleModel;
+use App\Models\Comments\CommentModel;
 return [
         TemplateEngine::class       => fn() => new TemplateEngine(Paths::VIEW),
         FormValidatorService::class => fn() => new FormValidatorService(),
@@ -26,6 +27,11 @@ return [
           $db = $container->get(Database::class);
 
           return new ArticleModel($db);
+        },
+        CommentModel::class   => function (Container $container) {
+          $db = $container->get(Database::class);
+
+          return new CommentModel($db);
         },
         UploadFileService::class   => function (Container $container) {
           $db = $container->get(Database::class);

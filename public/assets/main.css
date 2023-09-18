@@ -61,6 +61,10 @@ img {
   padding-bottom: 363px;
 }
 
+.comment {
+  border: 1px solid black;
+}
+
 /* Email Sent */
 .email-success {
   margin-top: 50px;
