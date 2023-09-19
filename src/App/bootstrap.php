@@ -35,7 +35,7 @@ use App\Controllers\{
 
 $app = new App(Paths::SOURCE."App/container-definitions.php");
 
-$app->get('/', [HomeController::class, 'renderHome'])->add(AuthRequiredMiddleware::class);
+$app->get('/', [HomeController::class, 'renderHome']);
 $app->get('/about', [AboutController::class, 'renderAbout']);
 $app->get('/register', [AuthController::class, 'renderRegisterUser'])->add(GuestOnlyMiddleware::class);
 $app->post('/register', [AuthController::class, 'registerUser'])->add(GuestOnlyMiddleware::class);
@@ -53,7 +53,7 @@ $app->delete('/deleteArticle/{article}', [ArticleController::class, 'deleteArtic
 $app->get('/article/{article}', [ArticleController::class, 'renderReadArticle']);
 $app->post('/article/{article}', [CommentsController::class, 'createComment'])->add(AuthRequiredMiddleware::class);;
 $app->get('/verifyAccount', [AuthController::class, 'checkAccountVerification']);
-$app->get('/profile', [ProfileController::class, 'renderProfile']);
+$app->get('/profile', [ProfileController::class, 'renderProfile'])->add(AuthRequiredMiddleware::class);
 
 $app->addMiddleware(CsrfGuardMiddleware::class);
 $app->addMiddleware(CsrfTokenMiddleware::class);

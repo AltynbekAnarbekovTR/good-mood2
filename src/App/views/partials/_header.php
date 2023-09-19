@@ -5,13 +5,13 @@
         <div class="flex lg:gap-x-10">
             <a href="/" class="text-gray-300 hover:text-white transition">Home</a>
             <a href="/about" class="text-gray-300 hover:text-white transition">About</a>
-            <a href="/profile" class="text-gray-300 hover:text-white transition">Profile</a>
           <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
               <a href="/manageUsers" class="text-gray-300 hover:text-white transition">Users</a>
               <a href="/manageArticles" class="text-gray-300 hover:text-white transition">Articles</a>
           <?php endif; ?>
             <?php
             if (isset($_SESSION['user'])) : ?>
+                <a href="/profile" class="text-gray-300 hover:text-white transition">Profile</a>
                 <a href="/logout" class="text-gray-300 hover:text-white transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                          stroke="currentColor" class="w-6 h-6 inline-block">
