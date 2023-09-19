@@ -34,16 +34,23 @@
                     </div>
                 </div>
             </div>
-            <div class="comments">
-                <div class="comment-form">
-                    <form enctype="multipart/form-data" method="POST" class="grid grid-cols-1 gap-6">
-                      <?php include $this->resolve("partials/_csrf.php"); ?>
-                        <textarea name="comment_text" type="text"></textarea>
-                        <button type="submit" class="block w-full py-2 bg-indigo-600 text-white rounded">
+            <div class="comments pb--medium">
+                <form enctype="multipart/form-data" method="POST" class="grid grid-cols-1 gap-6 comment-form">
+                  <?php
+                  include $this->resolve("partials/_csrf.php"); ?>
+                    <textarea required name="comment_text" type="text" placeholder="Type your comment..."
+                              class="comment-form__text"></textarea>
+                    <div class="comment-form__buttons">
+                        <button disabled type="button"
+                                class="px-3 py-2 bg-indigo-600 text-white rounded comment-form__button">
+                            Edit
+                        </button>
+                        <button type="submit" class="px-3 py-2 bg-indigo-600 text-white rounded comment-form__button">
                             Submit
                         </button>
-                    </form>
-                </div>
+                    </div>
+
+                </form>
                 <div class="comments-list">
                   <?php
                   foreach ($comments as $comment) : ?>

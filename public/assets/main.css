@@ -71,8 +71,58 @@ img {
   display: block;
 }
 
+/*Comments*/
+.comments {
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 1px solid gainsboro;
+}
+
+.comment-form {
+  display: flex;
+  width: 100%;
+  background-color: transparent;
+}
+
+.comment-form__text {
+  display: block;
+  width: 100%;
+  max-height: 100px;
+  max-width: 100%;
+}
+
+.comment-form__buttons {
+  display: flex;
+  justify-content: end;
+}
+
+.comment-form__button:not(:last-child) {
+  max-width: 100px;
+  margin-right: 10px;
+}
+
+.comment-form__button:hover {
+  background-color: rgb(99, 96, 229 );
+}
+
+.comments-list {
+  width: 100%;
+}
+
 .comment {
-  border: 1px solid black;
+  margin-top: 20px;
+  padding: 10px;
+  display: flex;
+  border: 1px solid #c6c6c6;
+}
+
+.comment-info__date {
+  font-size: 0.7rem;
+  color: #9ca3af;
 }
 
 /* Email Sent */
