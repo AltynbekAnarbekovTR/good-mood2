@@ -26,6 +26,7 @@ class AuthController
 
   public function registerUser()
   {
+    $this->formValidatorService->addRulesToField('usernameRules', ['required', 'lengthMax:50']);
     $this->formValidatorService->addRulesToField('emailRules', ['required', 'email']);
     $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);

@@ -29,7 +29,8 @@ use App\Controllers\{
         AboutController,
         AuthController,
         ArticleController,
-        CommentsController
+        CommentsController,
+        ProfileController
 };
 
 $app = new App(Paths::SOURCE."App/container-definitions.php");
@@ -52,6 +53,7 @@ $app->delete('/deleteArticle/{article}', [ArticleController::class, 'deleteArtic
 $app->get('/article/{article}', [ArticleController::class, 'renderReadArticle']);
 $app->post('/article/{article}', [CommentsController::class, 'createComment'])->add(AuthRequiredMiddleware::class);;
 $app->get('/verifyAccount', [AuthController::class, 'checkAccountVerification']);
+$app->get('/profile', [ProfileController::class, 'renderProfile']);
 
 $app->addMiddleware(CsrfGuardMiddleware::class);
 $app->addMiddleware(CsrfTokenMiddleware::class);
