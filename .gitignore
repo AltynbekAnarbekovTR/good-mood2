@@ -2,4 +2,6 @@ tmp.txt
 .idea
 quit
 .env
-storage/uploads/
+/storage/uploads/*.jpg
+!/storage/uploads/070bf4fa5667a748a461eccf5a9cbc32.jpg
+!/storage/uploads/f5307c35df6b26ff37c00ffa6478b360.jpg
