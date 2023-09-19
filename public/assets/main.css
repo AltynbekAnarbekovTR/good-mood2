@@ -61,6 +61,16 @@ img {
   padding-bottom: 363px;
 }
 
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile__info__field {
+  display: block;
+}
+
 .comment {
   border: 1px solid black;
 }

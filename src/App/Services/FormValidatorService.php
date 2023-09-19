@@ -21,6 +21,7 @@ use Framework\Rules\{
 class FormValidatorService
 {
   private Validator $validator;
+  public array $usernameRules = [];
   public array $emailRules = [];
   public array $passwordRules = [];
   public array $confirmPasswordRules = [];
@@ -56,6 +57,7 @@ class FormValidatorService
   public function validateRegister(array $formData)
   {
     $this->validator->validate($formData, [
+      'username' => $this->usernameRules,
       'email' => $this->emailRules,
       'password' => $this->passwordRules,
       'confirmPassword' => $this->confirmPasswordRules,

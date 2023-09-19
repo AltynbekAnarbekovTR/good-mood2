@@ -34,10 +34,11 @@ class UserModel extends Model
   {
     $password = password_hash($formData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
     $this->db->query(
-            "INSERT INTO users(email,password) VALUES(:email, :password )",
+            "INSERT INTO users(username, email,password) VALUES(:username, :email, :password )",
             [
+                    'username' => $formData['username'],
                     'email'    => $formData['email'],
-                    'password' => $password
+                    'password' => $password,
             ]
     );
     session_regenerate_id();
@@ -51,8 +52,8 @@ class UserModel extends Model
             "INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code )",
             [
                     'user_id' => $lastCreatedUser,
-                    'email' => $email,
-                    'code'  => $authCode,
+                    'email'   => $email,
+                    'code'    => $authCode,
             ]
     );
   }
@@ -65,6 +66,7 @@ class UserModel extends Model
                     'email' => $email,
             ]
     )->find();
+
     return $accountVerificationRow['code'];
   }
 
@@ -149,4 +151,5 @@ class UserModel extends Model
 
     return [$users, $userCount];
   }
+
 }
