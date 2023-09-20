@@ -23,9 +23,32 @@ class CommentModel extends Model
             VALUES(:comment_text, :username, :user_id, :article_id)",
             [
                     'comment_text' => $formData['comment_text'],
-                    'username'      => $_SESSION['user']['username'],
+                    'username'     => $_SESSION['user']['username'],
                     'user_id'      => $_SESSION['user']['id'],
-                    'article_id'   => $articleId
+                    'article_id'   => $articleId,
+            ]
+    );
+  }
+
+  public function edit(array $formData, int $commentId)
+  {
+    $this->db->query(
+            "UPDATE comments
+      SET comment_text = :comment_text
+      WHERE id = :id",
+            [
+                    'comment_text' => $formData['comment_text'],
+                    'id'           => $commentId,
+            ]
+    );
+  }
+
+  public function delete(int $commentId)
+  {
+    $this->db->query(
+            "DELETE FROM comments WHERE id = :id",
+            [
+                    'id' => $commentId,
             ]
     );
   }

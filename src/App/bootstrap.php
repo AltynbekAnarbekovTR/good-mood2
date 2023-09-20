@@ -54,6 +54,8 @@ $app->get('/article/{article}', [ArticleController::class, 'renderReadArticle'])
 $app->post('/article/{article}', [CommentsController::class, 'createComment'])->add(AuthRequiredMiddleware::class);;
 $app->get('/verifyAccount', [AuthController::class, 'checkAccountVerification']);
 $app->get('/profile', [ProfileController::class, 'renderProfile'])->add(AuthRequiredMiddleware::class);
+$app->get('/editComment/{commentId}', [CommentsController::class, 'editComment'])->add(AuthRequiredMiddleware::class);
+$app->get('/deleteComment/{commentId}', [CommentsController::class, 'deleteComment'])->add(AuthRequiredMiddleware::class);
 
 $app->addMiddleware(CsrfGuardMiddleware::class);
 $app->addMiddleware(CsrfTokenMiddleware::class);

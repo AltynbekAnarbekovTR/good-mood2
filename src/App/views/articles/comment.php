@@ -14,8 +14,14 @@
 
   if (isset($_SESSION['user']) && $_SESSION['user']['id'] === $comment['user_id']) : ?>
       <div class="comment-actions">
-          <img class="comment-actions__icon comment-actions__edit" src="../assets/img/icons8-edit.svg" alt="">
-          <img class="comment-actions__icon comment-actions__delete" src="../assets/img/icons8-trash.svg" alt="">
+          <a href="/editComment/<?php
+          echo $comment['id'] ?>" class="comment-actions__icon comment-actions__edit">
+              <img src="../assets/img/icons8-edit.svg" alt="">
+          </a>
+          <a href="/deleteComment/<?php
+          echo $comment['id'] ?>" class="comment-actions__icon comment-actions__edit">
+              <img src="../assets/img/icons8-trash.svg" alt="">
+          </a>
       </div>
   <?php
   endif; ?>
