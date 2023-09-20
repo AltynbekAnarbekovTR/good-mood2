@@ -20,6 +20,6 @@ class CommentsController
   public function createComment(array $params)
   {
     $this->commentModel->create($_POST, (int) $params['article']);
-    redirectTo('/manageArticles');
+    redirectTo($_SERVER['HTTP_REFERER']);
   }
 }

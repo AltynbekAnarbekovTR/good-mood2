@@ -41,10 +41,6 @@
                     <textarea required name="comment_text" type="text" placeholder="Type your comment..."
                               class="comment-form__text"></textarea>
                     <div class="comment-form__buttons">
-                        <button disabled type="button"
-                                class="px-3 py-2 bg-indigo-600 text-white rounded comment-form__button">
-                            Edit
-                        </button>
                         <button type="submit" class="px-3 py-2 bg-indigo-600 text-white rounded comment-form__button">
                             Submit
                         </button>
