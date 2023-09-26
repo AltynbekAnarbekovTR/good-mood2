@@ -15,7 +15,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class EmailService
 {
-  public function sendVerificationEmail(string $authCode, string $email)
+  public function sendEmail(string $emailText, string $email)
   {
     $mail = new PHPMailer(true);
     try {
@@ -31,7 +31,7 @@ class EmailService
       $mail->addAddress($email);
       $mail->isHTML(true);
       $mail->Subject = 'Email verification from Good Mood';
-      $mail->Body = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verifyAccount?code=$authCode&email=$email'>Click to verify your email</a>";
+      $mail->Body = $emailText;
       $mail->send();
     } catch (Exception $e) {
       echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";

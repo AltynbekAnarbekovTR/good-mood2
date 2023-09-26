@@ -31,11 +31,13 @@ class AuthController
     $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
     $this->formValidatorService->validateRegister($_POST);
-    $this->userModel->isEmailTaken($_POST['email']);
+    $email = $_POST['email'];
+    $this->userModel->isEmailTaken($email);
     $this->userModel->create($_POST);
     $authenticationCode = md5((string)rand());
-    $this->userModel->setAuthCode($authenticationCode, $_POST['email']);
-    $this->emailService->sendVerificationEmail($authenticationCode, $_POST['email']);
+    $this->userModel->setAuthCode($authenticationCode, $email);
+    $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verifyAccount?code=$authenticationCode&email=$email'>Click to verify your email</a>";
+    $this->emailService->sendEmail($emailText, $email);
     $this->view->render("auth/emailSent.php");
   }
 
