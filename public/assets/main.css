@@ -71,6 +71,10 @@ img {
   display: block;
 }
 
+.forgot-password {
+  text-decoration: underline!important;
+}
+
 /*Comments*/
 .comments {
   padding: 20px 20px;

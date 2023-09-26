@@ -152,4 +152,16 @@ class UserModel extends Model
     return [$users, $userCount];
   }
 
+  public function restorePassword(array $formData) {
+    $user = $this->db->query(
+            "SELECT * FROM users WHERE email = :email",
+            [
+                    'email' => $formData['email'],
+            ]
+    )->find();
+    if (!$user) {
+      throw new ValidationException(['email' => ['Such user doesn\'t exist']]);
+    }
+    return $user;
+  }
 }

@@ -76,4 +76,15 @@ class AuthController
       }
     }
   }
+
+  public function renderRestorePassword()
+  {
+    $this->view->render("auth/restorePassword.php");
+  }
+
+  public function restorePassword()
+  {
+    $user = $this->userModel->restorePassword($_POST);
+    //code for sending email with password here
+  }
 }

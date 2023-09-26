@@ -41,6 +41,8 @@ $app->get('/register', [AuthController::class, 'renderRegisterUser'])->add(Guest
 $app->post('/register', [AuthController::class, 'registerUser'])->add(GuestOnlyMiddleware::class);
 $app->get('/login', [AuthController::class, 'renderLoginUser'])->add(GuestOnlyMiddleware::class);
 $app->post('/login', [AuthController::class, 'login'])->add(GuestOnlyMiddleware::class);
+$app->get('/restore-password', [AuthController::class, 'renderRestorePassword'])->add(GuestOnlyMiddleware::class);
+$app->post('/restore-password', [AuthController::class, 'restorePassword'])->add(GuestOnlyMiddleware::class);
 $app->get('/logout', [AuthController::class, 'logout'])->add(AuthRequiredMiddleware::class);
 $app->get('/manageArticles', [ArticleController::class, 'renderManageArticles'])->add(AdminOnlyMiddleware::class);
 $app->get('/createArticle', [ArticleController::class, 'renderCreateArticle'])->add(AdminOnlyMiddleware::class);
