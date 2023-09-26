@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Framework;
 
+use App\Config\Paths;
+
 class TemplateEngine
 {
     private array $globalTemplateData = [];
+    private string $pathToPublic = Paths::SCRIPTS;
 
     public function __construct(private string $basePath)
     {
@@ -22,6 +25,10 @@ class TemplateEngine
     public function resolve(string $path)
     {
         return "{$this->basePath}/{$path}";
+    }
+
+    public function resolvePathToScripts(string $path) {
+      return "{$this->pathToPublic}/{$path}";
     }
 
     public function addGlobal(string $key, mixed $value)

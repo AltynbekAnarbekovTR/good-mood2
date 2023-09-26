@@ -21,7 +21,6 @@ class CommentsController
 
   public function editComment(array $params) {
     $this->commentModel->edit($_POST, (int) $params['commentId']);
-    redirectTo($_SERVER['HTTP_REFERER']);
   }
 
   public function deleteComment(array $params) {
