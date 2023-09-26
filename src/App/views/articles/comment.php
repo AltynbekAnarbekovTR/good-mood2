@@ -1,4 +1,5 @@
-<div class="comment">
+<div id="<?php echo $comment['id']?>" class="comment">
+  <?php include $this->resolve("partials/_csrf.php"); ?>
     <div class="comment__left">
         <div class="comment-avatar">
             <img src="../assets/img/user.webp" alt="profile picture">
@@ -8,7 +9,7 @@
         <div class="comment-info">
             <h4 class="comment-info__username"><?php
               echo escapeInjection($comment['username']); ?></h4>
-            <textarea readonly class="comment-info__text"><?php
+            <textarea maxlength="500" readonly class="comment-info__text"><?php
               echo escapeInjection($comment['comment_text']); ?></textarea>
             <p class="comment-info__date"><?php
               echo escapeInjection($comment['created_at']); ?></p>
