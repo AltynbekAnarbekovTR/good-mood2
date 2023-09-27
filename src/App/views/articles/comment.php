@@ -2,7 +2,8 @@
   <?php include $this->resolve("partials/_csrf.php"); ?>
     <div class="comment__left">
         <div class="comment-avatar">
-            <img src="../assets/img/user.webp" alt="profile picture">
+            <img class="comment-avatar" src="data:image/png;base64,<?php
+            echo $comment['b64image']; ?>" alt="profile picture">
         </div>
     </div>
     <div class="comment__right">

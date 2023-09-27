@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Config\Paths;
 use App\Models\Articles\ArticleModel;
 use App\Models\Comments\CommentModel;
+use App\Models\Users\UserModel;
 use Framework\TemplateEngine;
 use App\Services\{UploadFileService, FormValidatorService};
 
@@ -17,7 +18,8 @@ class ArticleController
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
           private ArticleModel $articleModel,
-          private CommentModel $commentModel
+          private CommentModel $commentModel,
+          private UserModel $userModel
   ) {
   }
 
@@ -131,10 +133,20 @@ class ArticleController
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
+    $article = $this->articleModel->attachImageToArticle($article);
     $comments = $this->commentModel->getCommentsOfArticle(
             $article['id']
     );
-    $article = $this->articleModel->attachImageToArticle($article);
+    foreach ($comments as &$comment) {
+      $user = $this->userModel->getUserById($comment['user_id']);
+      $filename = $user['storage_filename'];
+      $fileDir = Paths::STORAGE_UPLOADS;
+      $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
+      if (file_exists($file)) {
+        $b64image = base64_encode(file_get_contents($file));
+        $comment['b64image'] = $b64image;
+      }
+    }
     $this->view->render(
             'articles/article.php',
             [

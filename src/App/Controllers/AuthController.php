@@ -72,7 +72,7 @@ class AuthController
     $email = $_GET['email'] ?? null;
     if ($codeFromEmail && $email) {
       $codeInDb = $this->userModel->getAuthCode($email);
-      if($codeInDb === $codeFromEmail) {
+      if ($codeInDb === $codeFromEmail) {
         $this->userModel->verifyAccount($email);
         redirectTo('/');
       }
@@ -86,7 +86,25 @@ class AuthController
 
   public function restorePassword()
   {
-    $user = $this->userModel->restorePassword($_POST);
-    //code for sending email with password here
+    $email = $_POST['email'];
+    $this->userModel->checkUserExist($email);
+    $emailText = "<p>Follow the link below to set the new password:</p><br/><a href='http://localhost/reset-password?email=$email'>Click to reset password</a>";
+    $this->emailService->sendEmail($emailText, $_POST['email']);
+    $this->view->render("auth/emailSent.php");
+  }
+
+  public function renderResetPassword()
+  {
+    $this->view->render("auth/resetPassword.php");
+  }
+
+  public function resetPassword()
+  {
+    $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
+    $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
+    $this->formValidatorService->validateRegister($_POST);
+    $this->userModel->changePassword($_POST['password'], $_GET['email']);
+
+    redirectTo('/');
   }
 }
