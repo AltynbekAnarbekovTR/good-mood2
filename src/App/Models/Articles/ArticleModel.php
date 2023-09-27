@@ -39,7 +39,7 @@ class ArticleModel extends Model
                     'article_text'      => $formData['article_text'],
                     'original_filename' => $coverImage['name'],
                     'storage_filename'  => $newFilename,
-                    'media_type'        => $coverImage['type'],
+                    'media_type'        => $coverImage['type']
             ]
     );
   }
@@ -108,7 +108,6 @@ class ArticleModel extends Model
   }
 
   public function attachImageToArticle($article): array {
-
     $filename = $article['storage_filename'];
     $fileDir = Paths::STORAGE_UPLOADS;
     $file = $fileDir.DIRECTORY_SEPARATOR.$filename;

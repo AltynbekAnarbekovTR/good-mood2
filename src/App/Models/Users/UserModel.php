@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Users;
 
+use App\Config\Paths;
 use Framework\Exceptions\ValidationException;
 use Framework\Model;
 
@@ -48,12 +49,15 @@ class UserModel extends Model
   public function setAuthCode(string $authCode, string $email)
   {
     $lastCreatedUser = $this->db->lastInsertId();
+    if(!$lastCreatedUser) {
+      $lastCreatedUser = $_SESSION['user']['id'];
+    }
     $this->db->query(
             "INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code )",
             [
                     'user_id' => $lastCreatedUser,
                     'email'   => $email,
-                    'code'    => $authCode,
+                    'code'    => $authCode
             ]
     );
   }
@@ -152,16 +156,83 @@ class UserModel extends Model
     return [$users, $userCount];
   }
 
-  public function restorePassword(array $formData) {
+  public function checkUserExist(string $email)
+  {
     $user = $this->db->query(
             "SELECT * FROM users WHERE email = :email",
             [
-                    'email' => $formData['email'],
+                    'email' => $email,
             ]
     )->find();
     if (!$user) {
       throw new ValidationException(['email' => ['Such user doesn\'t exist']]);
     }
+  }
+
+  public function changePassword(string $password, string $email)
+  {
+    $password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+    $this->db->query(
+            "UPDATE users SET password = :password WHERE email =:email",
+            [
+                    'password' => $password,
+                    'email'    => $email,
+            ]
+    )->find();
+  }
+
+  public function changeAvatar($img, string $newFilename, int $userId)
+  {
+    $this->db->query(
+            "UPDATE users
+      SET original_filename = :original_filename,
+        storage_filename = :storage_filename,
+        media_type = :media_type
+      WHERE id = :id",
+            [
+                    'original_filename' => $img['name'],
+                    'storage_filename'  => $newFilename,
+                    'media_type'        => $img['type'],
+                    'id'                => $userId,
+            ]
+    );
+  }
+
+  public function getUserById(int $id)
+  {
+    $user = $this->db->query(
+            "SELECT * FROM users WHERE id = :id",
+            [
+                    'id' => $id,
+            ]
+    )->find();
+
     return $user;
+  }
+
+  public function changeUsername(string $username, int $userId)
+  {
+    $this->db->query(
+            "UPDATE users
+      SET username = :username
+      WHERE id = :id",
+            [
+                    'username' => $username,
+                    'id'       => $userId,
+            ]
+    );
+  }
+
+  public function changeEmail(string $email, int $userId)
+  {
+    $this->db->query(
+            "UPDATE users
+      SET email = :email
+      WHERE id = :id",
+            [
+                    'email' => $email,
+                    'id'       => $userId,
+            ]
+    );
   }
 }

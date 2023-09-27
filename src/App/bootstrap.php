@@ -43,6 +43,8 @@ $app->get('/login', [AuthController::class, 'renderLoginUser'])->add(GuestOnlyMi
 $app->post('/login', [AuthController::class, 'login'])->add(GuestOnlyMiddleware::class);
 $app->get('/restore-password', [AuthController::class, 'renderRestorePassword'])->add(GuestOnlyMiddleware::class);
 $app->post('/restore-password', [AuthController::class, 'restorePassword'])->add(GuestOnlyMiddleware::class);
+$app->get('/reset-password', [AuthController::class, 'renderResetPassword']);
+$app->post('/reset-password', [AuthController::class, 'resetPassword']);
 $app->get('/logout', [AuthController::class, 'logout'])->add(AuthRequiredMiddleware::class);
 $app->get('/manageArticles', [ArticleController::class, 'renderManageArticles'])->add(AdminOnlyMiddleware::class);
 $app->get('/createArticle', [ArticleController::class, 'renderCreateArticle'])->add(AdminOnlyMiddleware::class);
@@ -58,6 +60,12 @@ $app->get('/verifyAccount', [AuthController::class, 'checkAccountVerification'])
 $app->get('/profile', [ProfileController::class, 'renderProfile'])->add(AuthRequiredMiddleware::class);
 $app->post('/editComment/{commentId}', [CommentsController::class, 'editComment'])->add(AuthRequiredMiddleware::class);
 $app->get('/deleteComment/{commentId}', [CommentsController::class, 'deleteComment'])->add(AuthRequiredMiddleware::class);
+$app->post('/profile', [ProfileController::class, 'changeAvatar'])->add(AuthRequiredMiddleware::class);
+$app->get('/profile/changeUsername', [ProfileController::class, 'renderChangeUsername'])->add(AuthRequiredMiddleware::class);
+$app->post('/profile/changeUsername', [ProfileController::class, 'changeUsername'])->add(AuthRequiredMiddleware::class);
+$app->get('/profile/changeEmail', [ProfileController::class, 'renderChangeEmail'])->add(AuthRequiredMiddleware::class);
+$app->post('/profile/changeEmail', [ProfileController::class, 'changeEmail'])->add(AuthRequiredMiddleware::class);
+$app->get('/verifyEmailChange', [ProfileController::class, 'verifyEmailChange']);
 
 $app->addMiddleware(CsrfGuardMiddleware::class);
 $app->addMiddleware(CsrfTokenMiddleware::class);

@@ -1,7 +1,8 @@
 $(document).ready(function () {
+    $(".profile-image")
     // Create submit button for comment
     let submitButtonContainer = $('<div>').addClass('comment__submit-container');
-    let submitButton = $('<button>').attr('type', 'button').addClass('block py-2 px-3 bg-indigo-600 text-white rounded comment__submit-button').text('Submit');
+    let submitButton = $('<button>').attr('type', 'submit').addClass('block py-2 px-3 bg-indigo-600 text-white rounded submit-button').text('Submit');
     submitButtonContainer.append(submitButton);
     // Variables for saving data of previous comment that was being edited
     let prevCommentId;
@@ -35,7 +36,7 @@ $(document).ready(function () {
         prevCommentId = commentContainer[0].id;
         prevCommentTextContainer = commentTextContainer;
         prevCommentText = commentText;
-        commentContainer.find('.comment__submit-button').click(function () {
+        commentContainer.find('.submit-button').click(function () {
             if (commentTextContainer.val().trim()) {
                 let commentId = commentContainer.attr('id');
                 $.ajax({
@@ -52,4 +53,18 @@ $(document).ready(function () {
             }
         })
     })
+
+    $('.avatar-input').change(function () {
+        let file = this.files[0];
+        let allowed = ['jpg','jpeg','png'];
+        let ext = file.name.split(".").pop();
+
+        if(!allowed.includes(ext.toLowerCase()))
+        {
+            alert('Only files of this type allowed: '+ allowed.toString(", "));
+            return;
+        }
+        $(".profile-image").attr("src", URL.createObjectURL(file));
+        $(".profile__image__container").append(submitButton);
+    });
 });
