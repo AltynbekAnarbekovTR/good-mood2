@@ -531,8 +531,6 @@ a:hover img {
   h1 {
     font-size: 30px;
     font-size: 1.875rem;
-    line-height: 39px;
-    line-height: 2.4375rem;
     margin-bottom: 30px;
   }
   .h2 {
@@ -1332,15 +1330,12 @@ ul {
 ul {
   list-style: disc;
 }
-.footer {
+footer {
   background-color: #09394f;
   color: #fff;
+  margin-top: 40px;
   padding-top: 30px;
   padding-bottom: 40px;
-  overflow: hidden;
-  clear: both;
-  position: relative;
-  margin-top: -363px;
 }
 .footer a {
   text-decoration: none;
@@ -1774,8 +1769,6 @@ h1 {
 h1 {
   font-size: 56px;
   font-size: 3.5rem;
-  line-height: 70px;
-  line-height: 4.375rem;
   margin-bottom: 50px;
 }
 ::selection {
@@ -2063,7 +2056,6 @@ blockquote:after {
   border-color: #e5e7eb;
 }
 html {
-  line-height: 1.5;
   -webkit-text-size-adjust: 100%;
   -moz-tab-size: 4;
   -o-tab-size: 4;
@@ -2671,6 +2663,9 @@ select {
 .border-transparent {
   border-color: transparent;
 }
+.light-grey {
+  color: #9ca3af;
+}
 .bg-amber-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(255 251 235 / var(--tw-bg-opacity));
@@ -2714,6 +2709,9 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+.lh-0 {
+  line-height: 0;
 }
 .p-1 {
   padding: 0.25rem;

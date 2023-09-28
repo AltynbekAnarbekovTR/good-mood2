@@ -27,6 +27,7 @@ class FormValidatorService
   public array $confirmPasswordRules = [];
   public array $titleRules = [];
   public array $descriptionRules = [];
+  public array $textRules = [];
 
   public function __construct()
   {
@@ -76,7 +77,8 @@ class FormValidatorService
   {
     $this->validator->validate($formData, [
       'title' => $this->titleRules,
-      'description' => $this->descriptionRules
+      'description' => $this->descriptionRules,
+      'article_text' => $this->textRules
     ]);
   }
 }

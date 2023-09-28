@@ -27,7 +27,7 @@ class AuthController
   public function registerUser()
   {
     $this->formValidatorService->addRulesToField('usernameRules', ['required', 'lengthMax:50']);
-    $this->formValidatorService->addRulesToField('emailRules', ['required', 'email']);
+    $this->formValidatorService->addRulesToField('emailRules', ['required', 'email', 'lengthMax:100']);
     $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
     $this->formValidatorService->validateRegister($_POST);
@@ -103,8 +103,13 @@ class AuthController
     $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
     $this->formValidatorService->validateRegister($_POST);
-    $this->userModel->changePassword($_POST['password'], $_GET['email']);
+    $email =  $_GET['email'] ?? '';
+    if (!strlen($email)) {
+      $user = $this->userModel->getUserById($_SESSION['user']['userId']);
+      $email = $user['email'];
+    }
+    $this->userModel->changePassword($_POST['password'], $email);
 
-    redirectTo('/');
+    redirectTo('/profile');
   }
 }

@@ -38,7 +38,8 @@
                 <form enctype="multipart/form-data" method="POST" class="grid grid-cols-1 gap-6 comment-form">
                   <?php
                   include $this->resolve("partials/_csrf.php"); ?>
-                    <textarea required name="comment_text" type="text" placeholder="Type your comment..."
+                    <span class="lh-0 light-grey">(Max: 500 symbols)</span>
+                    <textarea maxlength="500" required name="comment_text" type="text" placeholder="Type your comment..."
                               class="comment-form__text"></textarea>
                     <div class="comment-form__buttons">
                         <button type="submit" class="px-3 py-2 bg-indigo-600 text-white rounded comment-form__button">

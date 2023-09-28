@@ -18,13 +18,13 @@
     </div>
 
   <?php
-  if (isset($_SESSION['user']) && $_SESSION['user']['id'] === $comment['user_id']) : ?>
+  if (isset($_SESSION['user']) && $_SESSION['user']['userId'] === $comment['user_id']) : ?>
       <div class="comment-actions">
           <button class="comment-actions__icon comment-actions__edit">
               <img src="../assets/img/icons8-edit.svg" alt="">
           </button>
           <a href="/deleteComment/<?php
-          echo $comment['id'] ?>" class="comment-actions__icon comment-actions__edit">
+          echo $comment['id'] ?>" class="comment-actions__icon">
               <img src="../assets/img/icons8-trash.svg" alt="">
           </a>
       </div>

@@ -31,6 +31,7 @@
                 echo escapeInjection($user['email']); ?></span>
                 <a href="/profile/changeEmail" class="profile__info__change">Change</a>
             </label>
+            <a href="/reset-password">Change password</a>
         </div>
     </div>
 

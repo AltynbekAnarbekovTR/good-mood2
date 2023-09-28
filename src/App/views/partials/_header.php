@@ -1,6 +1,6 @@
 <header class="bg-indigo-900">
     <nav class="mx-auto flex container items-center justify-between py-4" aria-label="Global">
-        <a href="/" class="-m-1.5 p-1.5 text-white text-2xl font-bold">Positive News</a>
+        <a href="/" class="-m-1.5 p-1.5 text-white text-2xl font-bold">Good Mood</a>
         <!-- Navigation Links -->
         <div class="flex lg:gap-x-10">
             <a href="/" class="text-gray-300 hover:text-white transition">Home</a>
@@ -10,7 +10,7 @@
               <a href="/manageArticles" class="text-gray-300 hover:text-white transition">Articles</a>
           <?php endif; ?>
             <?php
-            if (isset($_SESSION['user'])) : ?>
+            if (isset($_SESSION['user']['loggedIn']) && $_SESSION['user']['loggedIn'] === true) : ?>
                 <a href="/profile" class="text-gray-300 hover:text-white transition">Profile</a>
                 <a href="/logout" class="text-gray-300 hover:text-white transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

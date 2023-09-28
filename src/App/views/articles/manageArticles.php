@@ -47,12 +47,10 @@
         </td>
         <!-- Receipt List -->
         <td class="p-4 text-sm text-gray-600">
-          <?php foreach ($article['receipts'] as $receipt) : ?>
             <div class="inline-block relative cursor-pointer">
               <a href="/article/<?php echo escapeInjection($article['id']); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(109 40 217)" class="w-10 h-10">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M9 16.5v.75m3-3v3M15 12v5.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                </svg>
+                  <img src="data:image/png;base64,<?php
+                  echo $article['b64image']; ?>" alt="">
               </a>
               <form action="/article/<?php echo escapeInjection($article['id']); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>" method="POST">
                 <?php include $this->resolve("partials/_csrf.php"); ?>
@@ -64,7 +62,6 @@
                 </button>
               </form>
             </div>
-          <?php endforeach; ?>
         </td>
         <!-- Date -->
         <td class="p-4 text-sm text-gray-600">
@@ -117,7 +114,6 @@
           <?php echo $pageNum + 1; ?>
         </a>
       <?php endforeach; ?>
-      <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
     </div>
     <!-- Next Page Link -->
     <div class="-mt-px flex w-0 flex-1 justify-end">

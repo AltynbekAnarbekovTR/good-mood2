@@ -24,8 +24,8 @@ class CommentModel extends Model
             [
                     'comment_text' => $formData['comment_text'],
                     'username'     => $_SESSION['user']['username'],
-                    'user_id'      => $_SESSION['user']['id'],
-                    'article_id'   => $articleId,
+                    'user_id'      => $_SESSION['user']['userId'],
+                    'article_id'   => $articleId
             ]
     );
   }

@@ -39,18 +39,18 @@ class UserModel extends Model
             [
                     'username' => $formData['username'],
                     'email'    => $formData['email'],
-                    'password' => $password,
+                    'password' => $password
             ]
     );
     session_regenerate_id();
-    $_SESSION['user'] = $this->db->lastInsertId();
+    $_SESSION['user'] = ['userId' => $this->db->lastInsertId()];
   }
 
   public function setAuthCode(string $authCode, string $email)
   {
     $lastCreatedUser = $this->db->lastInsertId();
     if(!$lastCreatedUser) {
-      $lastCreatedUser = $_SESSION['user']['id'];
+      $lastCreatedUser = $_SESSION['user']['userId'];
     }
     $this->db->query(
             "INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code )",
@@ -82,16 +82,17 @@ class UserModel extends Model
                     'email' => $email,
             ]
     )->find();
-
     $user = $this->db->query(
             "SELECT * FROM users WHERE email = :email",
             [
                     'email' => $email,
             ]
     )->find();
-
     session_regenerate_id();
-    $_SESSION['user'] = $user;
+    $_SESSION['user'] = ['userId' => $user['id']];
+    $_SESSION['user']['loggedIn'] = true;
+    $_SESSION['user']['username'] = $user['username'];
+    $_SESSION['user']['role'] = $user['role'];
   }
 
   public function login(array $formData)
@@ -115,17 +116,17 @@ class UserModel extends Model
     if (!$user['email_verified']) {
       throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
     }
-
     session_regenerate_id();
-    $_SESSION['user'] = $user;
-
+    $_SESSION['user'] = ['userId' => $user['id']];
+    $_SESSION['user']['loggedIn'] = true;
+    $_SESSION['user']['username'] = $user['username'];
+    $_SESSION['user']['role'] = $user['role'];
     return $user;
   }
 
   public function logout()
   {
     unset($_SESSION['user']);
-
     session_regenerate_id();
   }
 

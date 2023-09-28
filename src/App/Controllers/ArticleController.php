@@ -34,6 +34,7 @@ class ArticleController
             $length,
             $offset
     );
+    $articles = $this->articleModel->attachImagesToArticlesArray($articles);
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];
 
@@ -77,8 +78,9 @@ class ArticleController
 
   public function createArticle()
   {
-    $this->formValidatorService->addRulesToField('titleRules', ['required']);
-    $this->formValidatorService->addRulesToField('descriptionRules', ['required', 'lengthMax:1000']);
+    $this->formValidatorService->addRulesToField('titleRules', ['required', 'lengthMax:100']);
+    $this->formValidatorService->addRulesToField('descriptionRules', ['required', 'lengthMax:500']);
+    $this->formValidatorService->addRulesToField('textRules', ['required', 'lengthMax:2000']);
     $this->formValidatorService->validateArticle($_POST);
     if ($_FILES['cover']) {
       $this->uploadFileService->checkUploadIsImage($_FILES['cover']);
@@ -89,7 +91,7 @@ class ArticleController
 
   public function renderEditArticle(array $params)
   {
-    $article = $this->articleModel->getUserArticle(
+    $article = $this->articleModel->getArticleById(
             $params['article']
     );
 
@@ -107,18 +109,14 @@ class ArticleController
 
   public function editArticle(array $params)
   {
-    $article = $this->articleModel->getUserArticle(
+    $article = $this->articleModel->getArticleById(
             $params['article']
     );
-
     if (!$article) {
       redirectTo('/');
     }
-
     $this->formValidatorService->validateArticle($_POST);
-
     $this->articleModel->update($_POST, $article['id']);
-
     redirectTo('manageArticles');
   }
 

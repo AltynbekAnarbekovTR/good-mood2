@@ -33,7 +33,7 @@ class ArticleModel extends Model
             "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type) 
             VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
             [
-                    'user_id'           => $_SESSION['user']['id'],
+                    'user_id'           => $_SESSION['user']['userId'],
                     'title'             => $formData['title'],
                     'description'       => $formData['description'],
                     'article_text'      => $formData['article_text'],
@@ -49,13 +49,13 @@ class ArticleModel extends Model
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
     $params = [
 
-            'description' => "%{$searchTerm}%",
+            'title' => "%{$searchTerm}%"
     ];
 
     $articles = $this->db->query(
             "SELECT *
       FROM articles 
-      WHERE description LIKE :description
+      WHERE title LIKE :title
       LIMIT {$length} OFFSET {$offset}",
             $params
     )->findAll();
@@ -63,7 +63,7 @@ class ArticleModel extends Model
     $articleCount = $this->db->query(
             "SELECT COUNT(*)
       FROM articles 
-      WHERE description LIKE :description",
+      WHERE title LIKE :title",
             $params
     )->count();
 
@@ -74,7 +74,7 @@ class ArticleModel extends Model
   {
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
     $params = [
-            'user_id'     => $_SESSION['user'],
+            'user_id'     => $_SESSION['user']['userId'],
             'description' => "%{$searchTerm}%",
     ];
 
@@ -137,7 +137,7 @@ class ArticleModel extends Model
         article_text = :article_text
       WHERE id = :id",
             [
-                    'title'        => $formData['description'],
+                    'title'        => $formData['title'],
                     'description'  => $formData['description'],
                     'article_text' => $formData['article_text'],
                     'id'           => $id,

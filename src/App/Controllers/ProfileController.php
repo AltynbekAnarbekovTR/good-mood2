@@ -27,7 +27,7 @@ class ProfileController
 
   public function renderProfile()
   {
-    $user = $this->userModel->getUserById($_SESSION['user']['id']);
+    $user = $this->userModel->getUserById($_SESSION['user']['userId']);
     if ($user['storage_filename']) {
       $user = $this->articleModel->attachImageToArticle($user);
     }
@@ -43,7 +43,7 @@ class ProfileController
   {
     $this->uploadFileService->checkUploadIsImage($_FILES['avatar']);
     $newFilename = $this->uploadFileService->uploadImageToStorage($_FILES['avatar']);
-    $this->userModel->changeAvatar($_FILES['avatar'], $newFilename, $_SESSION['user']['id']);
+    $this->userModel->changeAvatar($_FILES['avatar'], $newFilename, $_SESSION['user']['userId']);
     redirectTo($_SERVER['HTTP_REFERER']);
   }
 
@@ -58,7 +58,7 @@ class ProfileController
   {
     $this->formValidatorService->addRulesToField('usernameRules', ['required', 'lengthMax:50']);
     $this->formValidatorService->validateRegister($_POST);
-    $this->userModel->changeUsername($_POST['username'], $_SESSION['user']['id']);
+    $this->userModel->changeUsername($_POST['username'], $_SESSION['user']['userId']);
     redirectTo('/profile');
   }
 
@@ -89,9 +89,8 @@ class ProfileController
     if ($codeFromEmail && $email) {
       $codeInDb = $this->userModel->getAuthCode($email);
       if ($codeInDb === $codeFromEmail) {
-        $this->userModel->changeEmail($email, $_SESSION['user']['id']);
-        $_SESSION['user']['email'] = $email;
-        redirectTo('/');
+        $this->userModel->changeEmail($email, $_SESSION['user']['userId']);
+        redirectTo('/profile');
       }
     }
   }
