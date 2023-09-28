@@ -25,7 +25,7 @@ class ArticleModel extends Model
   {
     $fileExtension = pathinfo($coverImage['name'], PATHINFO_EXTENSION);
     $newFilename = bin2hex(random_bytes(16)).".".$fileExtension;
-    $uploadPath = Paths::STORAGE_UPLOADS."/".$newFilename;
+    $uploadPath = Paths::STORAGE_UPLOADS.$newFilename;
     if (!move_uploaded_file($coverImage['tmp_name'], $uploadPath)) {
       throw new ValidationException(['cover' => ['Failed to upload file']]);
     }
