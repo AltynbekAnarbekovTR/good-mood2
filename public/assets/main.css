@@ -72,7 +72,18 @@ img {
 }
 
 .profile__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 50px;
   padding-top: 100px;
+}
+
+.profile__avatar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-image {
@@ -233,8 +244,9 @@ img {
 .card__image__link {
   display: block;
   position: relative;
-  overflow: hidden;
   margin-bottom: 20px;
+  max-width: 400px;
+  max-height: 250px;
 }
 
 .col--7 {
@@ -327,6 +339,8 @@ a:hover img {
   margin-bottom: 20px;
 }
 .card__image__link img {
+  max-height: 250px;
+  object-fit: contain;
   -webkit-transition-duration: 1s;
   transition-duration: 1s;
   -webkit-transition-property: opacity, -webkit-transform;

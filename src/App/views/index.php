@@ -3,10 +3,10 @@
         <div class="container">
             <div class="main__article">
                 <a href="https://www.positive.news/society/electric-van-summer-holidays-with-children/"
-                   class="card__image__link col--7 col--12--bp3">
+                   class="ol--7 col--12--bp3">
                     <img
                             src="https://www.positive.news/wp-content/uploads/2023/07/1-4-1320x880-c-center.jpg"
-                            class="card__image main__article--img img100"
+                            class="main__article--img"
                             alt="Image for How an electric van changed our summer holidays forever"
                     />
                 </a>
@@ -27,29 +27,23 @@
 
             <!-- Articles list -->
             <div class="latest__articles cols--3--2--2">
-              <?php
-              foreach ($articles as $article) : ?>
+              <?php foreach ($articles as $article) : ?>
                   <div class="column card">
-                      <a href='/article/<?php
-                      echo $article['id'] ?>' class="card__image__link">
+                      <a href='/article/<?php echo $article['id'] ?>' class="card__image__link">
                         <?php
                         $image = $article['b64image'] ?? '';
-                        echo "<img  src='data:image/png;base64,$image'
-              class='card__image main__article--img img100'
-              alt='Image for How to live longer: eight habits that could add years to your life'
-            />" ?>
+                        echo "<img  src='data:image/png;base64,$image' 
+                        class='card__image' alt='Image for How to live longer: eight habits that could add years to your life'/>"
+                        ?>
                       </a>
-
                       <div class="card__content">
-                          <a <a href='/article/<?php
-                        echo $article['id'] ?>'
-                                class="card__title h3">
-                          <?php
-                          echo escapeInjection($article['title']); ?></a>
+                          <a href='/article/<?php echo $article['id'] ?>'
+                            class="card__title h3">
+                            <?php echo escapeInjection($article['title']); ?>
+                          </a>
                           <span class="card__text">
-              <?php
-              echo escapeInjection($article['description']); ?>
-            </span>
+                            <?php echo escapeInjection($article['description']);?>
+                          </span>
                       </div>
                   </div>
               <?php
