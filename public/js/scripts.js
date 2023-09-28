@@ -64,7 +64,7 @@ $(document).ready(function () {
             alert('Only files of this type allowed: '+ allowed.toString(", "));
             return;
         }
-        $(".profile-image").attr("src", URL.createObjectURL(file));
+        $(".profile__avatar").attr("src", URL.createObjectURL(file));
         $(".profile__image__container").append(submitButton);
     });
 });

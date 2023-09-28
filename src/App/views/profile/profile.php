@@ -1,14 +1,16 @@
 <div class="profile">
     <div class="profile__left">
-        <img alt="avatar" class="profile-image rounded-circle m-4" src='<?php
-        echo array_key_exists(
-                'b64image',
-                $user
-        ) ? "data:image/png;base64,".$user['b64image'] : '/assets/img/user.webp'; ?>'>
+        <div class="profile__avatar-container">
+            <img alt="avatar" class="profile__avatar rounded-circle m-4" src='<?php
+            echo array_key_exists(
+                    'b64image',
+                    $user
+            ) ? "data:image/png;base64,".$user['b64image'] : '/assets/img/user.webp'; ?>'>
+        </div>
         <form enctype="multipart/form-data" method="POST" class="profile__image__container">
           <?php
           include $this->resolve('partials/_csrf.php'); ?>
-            <label class="profile__avatar-container">
+            <label class="profile__avatar-input">
                 <span class="text-gray-700">Avatar Image</span>
                 <input name="avatar" type="file" class="avatar-input block text-sm text-slate-500 mt-4 file:mr-4 file:py-2 file:px-8 file:border-0 file:text-sm file:font-semibold file:bg-violet-100 file:text-violet-700 hover:file:bg-violet-200" />
               <?php if (array_key_exists('cover', $errors)) : ?>

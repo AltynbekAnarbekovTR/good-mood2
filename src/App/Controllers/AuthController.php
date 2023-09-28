@@ -74,7 +74,7 @@ class AuthController
       $codeInDb = $this->userModel->getAuthCode($email);
       if ($codeInDb === $codeFromEmail) {
         $this->userModel->verifyAccount($email);
-        redirectTo('/');
+        redirectTo('/profile');
       }
     }
   }
