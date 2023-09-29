@@ -23,7 +23,7 @@
           <button class="comment-actions__icon comment-actions__edit">
               <img src="../assets/img/icons8-edit.svg" alt="">
           </button>
-          <a href="/deleteComment/<?php
+          <a href="/delete-comment/<?php
           echo $comment['id'] ?>" class="comment-actions__icon">
               <img src="../assets/img/icons8-trash.svg" alt="">
           </a>

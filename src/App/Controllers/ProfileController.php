@@ -77,7 +77,7 @@ class ProfileController
     $this->userModel->isEmailTaken($email);
     $authenticationCode = md5((string)rand());
     $this->userModel->setAuthCode($authenticationCode, $email);
-    $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://localhost/verifyEmailChange?code=$authenticationCode&email=$email'>Click to verify your email</a>";
+    $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://localhost/verify-email-change?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
     $this->view->render("auth/emailSent.php");
   }

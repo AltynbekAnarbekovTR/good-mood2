@@ -33,11 +33,11 @@
         <div class="profile__info">
             <label class="profile__info__field"><b>Username: </b><span><?php
                 echo escapeInjection($user['username']); ?></span>
-                <a href="/profile/changeUsername" class="profile__info__change">Change</a>
+                <a href="/profile/change-username" class="profile__info__change">Change</a>
             </label>
             <label class="profile__info__field"><b>Email: </b><span><?php
                 echo escapeInjection($user['email']); ?></span>
-                <a href="/profile/changeEmail" class="profile__info__change">Change</a>
+                <a href="/profile/change-email" class="profile__info__change">Change</a>
             </label>
             <a href="/reset-password">Change password</a>
         </div>

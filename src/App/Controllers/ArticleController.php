@@ -86,7 +86,7 @@ class ArticleController
       $this->uploadFileService->checkUploadIsImage($_FILES['cover']);
     }
     $this->articleModel->create($_POST, $_FILES['cover']);
-    redirectTo('/manageArticles');
+    redirectTo('/manage-articles');
   }
 
   public function renderEditArticle(array $params)
@@ -96,7 +96,7 @@ class ArticleController
     );
 
     if (!$article) {
-      redirectTo('/manageArticles');
+      redirectTo('/manage-articles');
     }
 
     $this->view->render(
@@ -117,14 +117,14 @@ class ArticleController
     }
     $this->formValidatorService->validateArticle($_POST);
     $this->articleModel->update($_POST, $article['id']);
-    redirectTo('manageArticles');
+    redirectTo('manage-articles');
   }
 
   public function deleteArticle(array $params)
   {
     $this->articleModel->delete((int)$params['article']);
 
-    redirectTo('/manageArticles');
+    redirectTo('/manage-articles');
   }
 
   public function renderReadArticle($params) {

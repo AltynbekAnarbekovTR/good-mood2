@@ -6,8 +6,7 @@
             <a href="/" class="text-gray-300 hover:text-white transition">Home</a>
             <a href="/about" class="text-gray-300 hover:text-white transition">About</a>
           <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
-              <a href="/manageUsers" class="text-gray-300 hover:text-white transition">Users</a>
-              <a href="/manageArticles" class="text-gray-300 hover:text-white transition">Articles</a>
+              <a href="/manage-articles" class="text-gray-300 hover:text-white transition">Articles</a>
           <?php endif; ?>
             <?php
             if (isset($_SESSION['user']['loggedIn']) && $_SESSION['user']['loggedIn'] === true) : ?>

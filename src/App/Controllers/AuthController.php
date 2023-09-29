@@ -36,7 +36,7 @@ class AuthController
     $this->userModel->create($_POST);
     $authenticationCode = md5((string)rand());
     $this->userModel->setAuthCode($authenticationCode, $email);
-    $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verifyAccount?code=$authenticationCode&email=$email'>Click to verify your email</a>";
+    $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verify-account?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
     $this->view->render("auth/emailSent.php");
   }
