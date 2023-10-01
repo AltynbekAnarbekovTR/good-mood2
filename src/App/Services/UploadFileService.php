@@ -10,7 +10,7 @@ use App\Config\Paths;
 
 class UploadFileService
 {
-  public function __construct(private Database $db)
+  public function __construct()
   {
   }
 
@@ -66,28 +66,5 @@ class UploadFileService
     }
 
     return $newFilename;
-  }
-
-  public function attachImagesToArray(array $array): array
-  {
-    return array_map(
-            function ($article) {
-              return $this->attachImageToArticle($article);
-            },
-            $articles
-    );
-  }
-
-  public function attachImageToArticle($article): array
-  {
-    $filename = $article['storage_filename'];
-    $fileDir = Paths::STORAGE_UPLOADS;
-    $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
-    if (file_exists($file)) {
-      $b64image = base64_encode(file_get_contents($file));
-      $article['b64image'] = $b64image;
-    }
-
-    return $article;
   }
 }

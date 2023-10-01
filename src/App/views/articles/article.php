@@ -4,32 +4,30 @@
             <div class="">
                 <img
                         src='data:image/png;base64,<?php
-                        echo $article['b64image']; ?>'
+                        echo $articleImage; ?>'
                         class="featured__image"
                         alt="article image"
                 />
-                <img src="<?php
-                echo escapeInjection($articleImage); ?>" alt="">
             </div>
 
             <div class="article">
                 <h1 class="article__title col--12 text__align--left pb--medium">
                   <?php
-                  echo escapeInjection($article['title']); ?>
+                  echo escapeInjection($article->getTitle()); ?>
                 </h1>
                 <!-- main content -->
                 <div class="article__content col--8--last col--12--bp3">
                     <div class="intro__paragraph pb--medium">
                         <p>
                           <?php
-                          echo escapeInjection($article['description']); ?>
+                          echo escapeInjection($article->getDescription()); ?>
                         </p>
                     </div>
 
                     <div class="text__block margin--flex pb--medium">
                         <p>
                           <?php
-                          echo escapeInjection($article['article_text']); ?>
+                          echo escapeInjection($article->getArticleText()); ?>
                         </p>
                     </div>
                 </div>

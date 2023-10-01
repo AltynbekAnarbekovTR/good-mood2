@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Models\AuthCode;
 use Framework\TemplateEngine;
 use App\Services\{FormValidatorService, EmailService};
-use App\Models\Users\UserModel;
+use App\Models\User;
 
 
 class AuthController
@@ -14,8 +15,9 @@ class AuthController
   public function __construct(
           private TemplateEngine $view,
           private FormValidatorService $formValidatorService,
-          private UserModel $userModel,
-          private EmailService $emailService
+          private User $userModel,
+          private EmailService $emailService,
+          private AuthCode $authCodeModel
   ) {
   }
 
@@ -35,7 +37,7 @@ class AuthController
     $this->userModel->isEmailTaken($email);
     $this->userModel->create($_POST);
     $authenticationCode = md5((string)rand());
-    $this->userModel->setAuthCode($authenticationCode, $email);
+    $this->authCodeModel->setAuthCode($authenticationCode, $email);
     $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verify-account?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
     $this->view->render("auth/emailSent.php");
@@ -53,8 +55,8 @@ class AuthController
     $this->formValidatorService->validateLogin($_POST);
     $user = $this->userModel->login($_POST);
 
-    if ($user->role === 'admin') {
-      redirectTo('/articles');
+    if ($user->getRole() === 'admin') {
+      redirectTo('/manage-articles');
     } else {
       redirectTo('/');
     }
@@ -71,8 +73,8 @@ class AuthController
     $codeFromEmail = $_GET['code'] ?? null;
     $email = $_GET['email'] ?? null;
     if ($codeFromEmail && $email) {
-      $codeInDb = $this->userModel->getAuthCode($email);
-      if ($codeInDb === $codeFromEmail) {
+      $authCode = $this->authCodeModel->getAuthCode($email);
+      if ($authCode->getCode() === $codeFromEmail) {
         $this->userModel->verifyAccount($email);
         redirectTo('/profile');
       }
@@ -106,7 +108,7 @@ class AuthController
     $email =  $_GET['email'] ?? '';
     if (!strlen($email)) {
       $user = $this->userModel->getUserById($_SESSION['user']['userId']);
-      $email = $user['email'];
+      $email = $user->getEmail();
     }
     $this->userModel->changePassword($_POST['password'], $email);
 

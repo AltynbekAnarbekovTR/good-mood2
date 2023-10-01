@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
-use App\Services\{FormValidatorService, UploadFileService, EmailService};
-use App\Models\Users\UserModel;
-use App\Models\Articles\ArticleModel;
-use App\Models\Comments\CommentModel;
+use App\Services\{FormValidatorService, UploadFileService, EmailService, ImageService};
+use App\Models\User;
+use App\Models\Article;
+use App\Models\Comment;
+use App\Models\AuthCode;
 return [
         TemplateEngine::class       => fn() => new TemplateEngine(Paths::VIEW),
         FormValidatorService::class => fn() => new FormValidatorService(),
         EmailService::class => fn() => new EmailService(),
+        ImageService::class => fn() => new ImageService(),
         Database::class             => fn() => new Database(
                 getenv('DRIVER'), [
                 'host'   => getenv('HOST'),
@@ -19,24 +21,27 @@ return [
                 'dbname' => getenv('DBNAME'),
         ], getenv('USERNAME'), getenv('PASSWORD')
         ),
-        UserModel::class            => function (Container $container) {
+        User::class            => function (Container $container) {
           $db = $container->get(Database::class);
-          return new UserModel($db);
+          return new User($db);
         },
-        ArticleModel::class   => function (Container $container) {
+        Article::class => function (Container $container) {
+          $db = $container->get(Database::class);
+          return new Article($db);
+        },
+        Comment::class => function (Container $container) {
           $db = $container->get(Database::class);
 
-          return new ArticleModel($db);
+          return new Comment($db);
         },
-        CommentModel::class   => function (Container $container) {
+        AuthCode::class   => function (Container $container) {
           $db = $container->get(Database::class);
-
-          return new CommentModel($db);
+          return new AuthCode($db);
         },
         UploadFileService::class   => function (Container $container) {
           $db = $container->get(Database::class);
 
           return new UploadFileService($db);
-        },
+        }
 
 ];

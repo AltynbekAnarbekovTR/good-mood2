@@ -12,10 +12,10 @@ class Database
     private PDOStatement $stmt;
 
     public function __construct(
-        string $driver,
-        array $config,
-        string $username,
-        string $password
+        string $driver = null,
+        array $config = null,
+        string $username = null,
+        string $password = null
     ) {
         $config = http_build_query(data: $config, arg_separator: ';');
 
@@ -44,9 +44,10 @@ class Database
         return $this->stmt->fetchColumn();
     }
 
-    public function find()
+    public function find($className = 'stdClass')
     {
-        return $this->stmt->fetch();
+      $this->stmt->setFetchMode(PDO::FETCH_CLASS, $className, [$this]);
+      return $this->stmt->fetch();
     }
 
     public function lastInsertId()
@@ -54,8 +55,8 @@ class Database
         return $this->connection->lastInsertId();
     }
 
-    public function findAll()
+    public function findAll($className = 'stdClass')
     {
-        return $this->stmt->fetchAll();
+        return $this->stmt->fetchAll(PDO::FETCH_CLASS, $className,[$this]);
     }
 }

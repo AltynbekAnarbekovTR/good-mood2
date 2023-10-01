@@ -25,7 +25,7 @@
 <?php include $this->resolve("partials/_footer.php"); ?>
 <!-- End Footer -->
 
-<script src="/js/jquery-3.7.1.min.js"></script>
-<script src="/js/scripts.js"></script>
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

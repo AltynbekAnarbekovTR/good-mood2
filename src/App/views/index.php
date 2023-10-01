@@ -29,20 +29,20 @@
             <div class="latest__articles cols--3--2--2">
               <?php foreach ($articles as $article) : ?>
                   <div class="column card">
-                      <a href='/article/<?php echo $article['id'] ?>' class="card__image__link">
+                      <a href='/article/<?php echo $article->getId(); ?>' class="card__image__link">
                         <?php
-                        $image = $article['b64image'] ?? '';
+                        $image = $articleImages[$article->getId()] ?? '';
                         echo "<img  src='data:image/png;base64,$image' 
                         class='card__image' alt='Image for How to live longer: eight habits that could add years to your life'/>"
                         ?>
                       </a>
                       <div class="card__content">
-                          <a href='/article/<?php echo $article['id'] ?>'
+                          <a href='/article/<?php echo $article->getId(); ?>'
                             class="card__title h3">
-                            <?php echo escapeInjection($article['title']); ?>
+                            <?php echo escapeInjection($article->getTitle()); ?>
                           </a>
                           <span class="card__text">
-                            <?php echo escapeInjection($article['description']);?>
+                            <?php echo escapeInjection($article->getDescription());?>
                           </span>
                       </div>
                   </div>

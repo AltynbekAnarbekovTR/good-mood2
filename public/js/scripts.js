@@ -39,9 +39,13 @@ $(document).ready(function () {
         commentContainer.find('.submit-button').click(function () {
             if (commentTextContainer.val().trim()) {
                 let commentId = commentContainer.attr('id');
+                console.log(commentTextContainer.val());
+                for(let i = 0; i<10000; i++) {
+
+                }
                 $.ajax({
                     type: 'POST',
-                    url: `/editComment/${commentId}`,
+                    url: `/edit-comment/${commentId}`,
                     data: {id: commentId, comment_text: commentTextContainer.val(), token: $("input[name='token']").val()},
                     success: function () {
                         location.reload();

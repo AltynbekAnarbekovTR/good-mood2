@@ -2,24 +2,69 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Articles;
+namespace App\Models;
 
 use Framework\Exceptions\ValidationException;
 use App\Config\Paths;
-use Framework\Model;
+use Framework\ActiveRecordEntity;
 
-class ArticleModel extends Model
+class Article extends ActiveRecordEntity
 {
-  public int $id;
-  public string $title;
-  public string $description;
-  public string $articleText;
-  public string $createdAt;
-  public string $updatedAt;
-  public int $userId;
-  public string $originalFilename;
-  public string $storageFilename;
-  public string $mediaType;
+  protected int $id;
+  protected string $title;
+  protected string $description;
+  protected string $articleText;
+  protected string $createdAt;
+  protected string $updatedAt;
+  protected int $userId;
+  protected string $originalFilename;
+  protected string $storageFilename;
+  protected string $mediaType;
+
+  public function getId(): int
+  {
+    return $this->id;
+  }
+
+  public function getTitle(): string
+  {
+    return $this->title;
+  }
+
+  public function getDescription(): string
+  {
+    return $this->description;
+  }
+
+  public function getArticleText(): string
+  {
+    return $this->articleText;
+  }
+
+  public function getCreatedAt(): string
+  {
+    return $this->createdAt;
+  }
+
+  public function getUserId(): int
+  {
+    return $this->userId;
+  }
+
+  public function getOriginalFilename(): string
+  {
+    return $this->originalFilename;
+  }
+
+  public function getStorageFilename(): string
+  {
+    return $this->storageFilename;
+  }
+
+  public function getMediaType(): string
+  {
+    return $this->mediaType;
+  }
 
   public function create(array $formData, $coverImage = null)
   {
@@ -51,15 +96,14 @@ class ArticleModel extends Model
 
             'title' => "%{$searchTerm}%"
     ];
-
     $articles = $this->db->query(
             "SELECT *
       FROM articles 
       WHERE title LIKE :title
       LIMIT {$length} OFFSET {$offset}",
             $params
-    )->findAll();
-    $articles = $this->attachImagesToArticlesArray($articles);
+    )->findAll(Article::class);
+
     $articleCount = $this->db->query(
             "SELECT COUNT(*)
       FROM articles 
@@ -85,10 +129,7 @@ class ArticleModel extends Model
       AND description LIKE :description
       LIMIT {$length} OFFSET {$offset}",
             $params
-    )->findAll();
-
-    $articles = $this->attachImagesToArticles($articles);
-
+    )->findAll(Article::class);
     $articleCount = $this->db->query(
             "SELECT COUNT(*)
       FROM articles 
@@ -100,24 +141,6 @@ class ArticleModel extends Model
     return [$articles, $articleCount];
   }
 
-  public function attachImagesToArticlesArray($articles): array
-  {
-    return array_map(function($article) {
-      return $this->attachImageToArticle($article);
-    }, $articles);
-  }
-
-  public function attachImageToArticle($article): array {
-    $filename = $article['storage_filename'];
-    $fileDir = Paths::STORAGE_UPLOADS;
-    $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
-    if (file_exists($file)) {
-      $b64image = base64_encode(file_get_contents($file));
-      $article['b64image'] = $b64image;
-    }
-    return $article;
-  }
-
   public function getArticleById(string $id)
   {
     return $article = $this->db->query(
@@ -125,7 +148,7 @@ class ArticleModel extends Model
             [
                     'id' => $id,
             ]
-    )->find();
+    )->find(Article::class);
   }
 
   public function update(array $formData, int $id)

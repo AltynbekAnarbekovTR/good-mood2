@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Models\Comments\CommentModel;
+use App\Models\Comment;
 
 class CommentsController
 {
   public function __construct(
-          private CommentModel $commentModel
+          private Comment $commentModel
   ) {
   }
 

@@ -2,19 +2,40 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Comments;
+namespace App\Models;
 
-use App\Config\Paths;
-use Framework\Model;
+use Framework\ActiveRecordEntity;
 
-class CommentModel extends Model
+class Comment extends ActiveRecordEntity
 {
-  public int $id;
-  public string $commentText;
-  public string $createdAt;
-  public string $updatedAt;
-  public int $userId;
-  public int $articleId;
+  protected int $id;
+  protected string $username;
+  protected string $commentText;
+  protected string $createdAt;
+  protected string $updatedAt;
+  protected int $userId;
+  protected int $articleId;
+
+  public function getId(): int
+  {
+    return $this->id;
+  }
+  public function getUsername(): string
+  {
+    return $this->username;
+  }
+  public function getCommentText(): string
+  {
+    return $this->commentText;
+  }
+  public function getCreatedAt(): string
+  {
+    return $this->createdAt;
+  }
+  public function getUserId(): int
+  {
+    return $this->userId;
+  }
 
   public function create(array $formData, int $articleId)
   {
@@ -58,7 +79,7 @@ class CommentModel extends Model
     return $this->db->query(
             "SELECT * FROM comments WHERE article_id = :article_id",
             ['article_id' => $articleId]
-    )->findAll();
+    )->findAll(Comment::class);
   }
 
 }
