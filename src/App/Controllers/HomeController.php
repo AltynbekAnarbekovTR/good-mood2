@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Services\ImageService;
 use Framework\TemplateEngine;
-use App\Models\Articles\ArticleModel;
+use App\Models\Article;
 
 class HomeController
 {
   public function __construct(
           private TemplateEngine $view,
-          private ArticleModel $articleModel
+          private Article $articleModel,
+          private ImageService $imageService
   ) {
   }
 
@@ -27,7 +29,7 @@ class HomeController
             $length,
             $offset
     );
-
+    $articleImages = $this->imageService->createB64ImageArray($articles);
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];
 
@@ -44,6 +46,7 @@ class HomeController
             'index.php',
             [
                     'articles'          => $articles,
+                    'articleImages'    => $articleImages,
                     'currentPage'       => $page,
                     'previousPageQuery' => http_build_query(
                             [

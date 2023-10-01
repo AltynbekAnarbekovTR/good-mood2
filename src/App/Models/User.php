@@ -2,20 +2,64 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Users;
+namespace App\Models;
 
-use App\Config\Paths;
 use Framework\Exceptions\ValidationException;
-use Framework\Model;
+use Framework\ActiveRecordEntity;
 
-class UserModel extends Model
+class User extends ActiveRecordEntity
 {
-  public int $id;
-  public string $email;
-  public string $password;
-  public string $role;
-  public string $createdAt;
-  public int $emailVerified;
+  protected int $id;
+  protected string $username;
+  protected string $email;
+  protected string $password;
+  protected string $role;
+  protected string $createdAt;
+  protected int $emailVerified;
+  protected string|null $originalFilename;
+  protected string|null $storageFilename;
+  protected string|null $mediaType;
+
+  public function getId(): int
+  {
+    return $this->id;
+  }
+  public function getUsername(): string
+  {
+    return $this->username;
+  }
+  public function getEmail(): string
+  {
+    return $this->email;
+  }
+  public function getPassword(): string
+  {
+    return $this->password;
+  }
+  public function getRole(): string
+  {
+    return $this->role;
+  }
+  public function getCreatedAt(): string
+  {
+    return $this->createdAt;
+  }
+  public function getEmailVerified(): int
+  {
+    return $this->emailVerified;
+  }
+  public function getOriginalFilename(): string|null
+  {
+    return $this->originalFilename;
+  }
+  public function getStorageFilename(): string|null
+  {
+    return $this->storageFilename;
+  }
+  public function getMediaType(): string|null
+  {
+    return $this->mediaType;
+  }
 
   public function isEmailTaken(string $email)
   {
@@ -46,34 +90,6 @@ class UserModel extends Model
     $_SESSION['user'] = ['userId' => $this->db->lastInsertId()];
   }
 
-  public function setAuthCode(string $authCode, string $email)
-  {
-    $lastCreatedUser = $this->db->lastInsertId();
-    if(!$lastCreatedUser) {
-      $lastCreatedUser = $_SESSION['user']['userId'];
-    }
-    $this->db->query(
-            "INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code )",
-            [
-                    'user_id' => $lastCreatedUser,
-                    'email'   => $email,
-                    'code'    => $authCode
-            ]
-    );
-  }
-
-  public function getAuthCode($email)
-  {
-    $accountVerificationRow = $this->db->query(
-            "SELECT * FROM auth_codes WHERE email = :email",
-            [
-                    'email' => $email,
-            ]
-    )->find();
-
-    return $accountVerificationRow['code'];
-  }
-
   public function verifyAccount($email)
   {
     $this->db->query(
@@ -81,18 +97,18 @@ class UserModel extends Model
             [
                     'email' => $email,
             ]
-    )->find();
+    );
     $user = $this->db->query(
             "SELECT * FROM users WHERE email = :email",
             [
                     'email' => $email,
             ]
-    )->find();
+    )->find(User::class);
     session_regenerate_id();
-    $_SESSION['user'] = ['userId' => $user['id']];
+    $_SESSION['user'] = ['userId' => $user->getId()];
     $_SESSION['user']['loggedIn'] = true;
-    $_SESSION['user']['username'] = $user['username'];
-    $_SESSION['user']['role'] = $user['role'];
+    $_SESSION['user']['username'] = $user->getUsername();
+    $_SESSION['user']['role'] = $user->getRole();
   }
 
   public function login(array $formData)
@@ -102,25 +118,25 @@ class UserModel extends Model
             [
                     'email' => $formData['email'],
             ]
-    )->find();
-
-    $passwordsMatch = password_verify(
-            $formData['password'],
-            $user['password'] ?? ''
-    );
-
+    )->find(User::class);
+    if($user) {
+      $passwordsMatch = password_verify(
+              $formData['password'],
+              $user->getPassword() ?? ''
+      );
+    }
     if (!$user || !$passwordsMatch) {
       throw new ValidationException(['password' => ['Invalid credentials']]);
     }
 
-    if (!$user['email_verified']) {
+    if (!$user->getEmailVerified()) {
       throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
     }
     session_regenerate_id();
-    $_SESSION['user'] = ['userId' => $user['id']];
+    $_SESSION['user'] = ['userId' => $user->getId()];
     $_SESSION['user']['loggedIn'] = true;
-    $_SESSION['user']['username'] = $user['username'];
-    $_SESSION['user']['role'] = $user['role'];
+    $_SESSION['user']['username'] = $user->getUsername();
+    $_SESSION['user']['role'] = $user->getRole();
     return $user;
   }
 
@@ -144,7 +160,7 @@ class UserModel extends Model
       WHERE description LIKE :description
       LIMIT {$length} OFFSET {$offset}",
             $params
-    )->findAll();
+    )->findAll(User::class);
 
 
     $userCount = $this->db->query(
@@ -164,7 +180,7 @@ class UserModel extends Model
             [
                     'email' => $email,
             ]
-    )->find();
+    )->find(User::class);
     if (!$user) {
       throw new ValidationException(['email' => ['Such user doesn\'t exist']]);
     }
@@ -179,7 +195,7 @@ class UserModel extends Model
                     'password' => $password,
                     'email'    => $email,
             ]
-    )->find();
+    );
   }
 
   public function changeAvatar($img, string $newFilename, int $userId)
@@ -206,7 +222,7 @@ class UserModel extends Model
             [
                     'id' => $id,
             ]
-    )->find();
+    )->find(User::class);
 
     return $user;
   }

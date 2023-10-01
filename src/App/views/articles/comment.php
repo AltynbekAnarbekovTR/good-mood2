@@ -1,30 +1,30 @@
-<div id="<?php echo $comment['id']?>" class="comment">
+<div id="<?php echo $comment->getId();?>" class="comment">
   <?php include $this->resolve("partials/_csrf.php"); ?>
     <div class="comment__left">
         <div class="comment-avatar">
-            <img class="comment-avatar" src="data:image/png;base64,<?php
-            echo $comment['b64image']; ?>" alt="profile picture">
+            <img class="comment-avatar" src='<?php
+            echo $userAvatars[$comment->getUserId()] ? "data:image/png;base64,".$userAvatars[$comment->getUserId()] : '/assets/img/user.webp'; ?>'>
         </div>
     </div>
     <div class="comment__right">
         <div class="comment-info">
             <h4 class="comment-info__username"><?php
-              echo escapeInjection($comment['username']); ?></h4>
+              echo escapeInjection($comment->getUsername()); ?></h4>
             <textarea maxlength="500" readonly class="comment-info__text"><?php
-              echo escapeInjection($comment['comment_text']); ?></textarea>
+              echo escapeInjection($comment->getCommentText()); ?></textarea>
             <p class="comment-info__date"><?php
-              echo escapeInjection($comment['created_at']); ?></p>
+              echo escapeInjection($comment->getCreatedAt()); ?></p>
         </div>
     </div>
 
   <?php
-  if (isset($_SESSION['user']) && $_SESSION['user']['userId'] === $comment['user_id']) : ?>
+  if (isset($_SESSION['user']) && $_SESSION['user']['userId'] === $comment->getUserId()) : ?>
       <div class="comment-actions">
           <button class="comment-actions__icon comment-actions__edit">
               <img src="../assets/img/icons8-edit.svg" alt="">
           </button>
           <a href="/delete-comment/<?php
-          echo $comment['id'] ?>" class="comment-actions__icon">
+          echo $comment->getId() ?>" class="comment-actions__icon">
               <img src="../assets/img/icons8-trash.svg" alt="">
           </a>
       </div>

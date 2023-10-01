@@ -5,7 +5,7 @@
         <label class="block">
             <span class="text-gray-700">Title <span class="light-grey">(Max: 100 symbols)</span></span>
             <input value="<?php
-            echo escapeInjection($article['title']); ?>" name="title" type="text"
+            echo escapeInjection($article->getTitle()); ?>" name="title" type="text"
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
           <?php
           if (array_key_exists('title', $errors)) : ?>
@@ -19,7 +19,7 @@
         <label class="block">
             <span class="text-gray-700">Description <span class="light-grey">(Max: 500 symbols)</span></span>
             <input value="<?php
-            echo escapeInjection($article['description']); ?>" name="description" type="text"
+            echo escapeInjection($article->getDescription()); ?>" name="description" type="text"
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
 
           <?php
@@ -35,7 +35,7 @@
             <span class="text-gray-700">Article text <span class="light-grey">(Max: 2000 symbols)</span></span>
             <textarea name="article_text" type="text"
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"><?php
-              echo escapeInjection($article['article_text']); ?></textarea>
+              echo escapeInjection($article->getArticleText()); ?></textarea>
           <?php
           if (array_key_exists('article_text', $errors)) : ?>
               <div class="bg-gray-100 mt-2 p-2 text-red-500">

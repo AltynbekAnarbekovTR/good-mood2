@@ -2,10 +2,7 @@
     <div class="profile__left">
         <div class="profile__avatar-container">
             <img alt="avatar" class="profile__avatar rounded-circle m-4" src='<?php
-            echo array_key_exists(
-                    'b64image',
-                    $user
-            ) ? "data:image/png;base64,".$user['b64image'] : '/assets/img/user.webp'; ?>'>
+            echo $userAvatar ? "data:image/png;base64,".$userAvatar : '/assets/img/user.webp'; ?>'>
         </div>
         <form enctype="multipart/form-data" method="POST" class="profile__image__container">
           <?php
@@ -32,11 +29,11 @@
     <div class="profile__right">
         <div class="profile__info">
             <label class="profile__info__field"><b>Username: </b><span><?php
-                echo escapeInjection($user['username']); ?></span>
+                echo escapeInjection($user->getUsername()); ?></span>
                 <a href="/profile/change-username" class="profile__info__change">Change</a>
             </label>
             <label class="profile__info__field"><b>Email: </b><span><?php
-                echo escapeInjection($user['email']); ?></span>
+                echo escapeInjection($user->getEmail()); ?></span>
                 <a href="/profile/change-email" class="profile__info__change">Change</a>
             </label>
             <a href="/reset-password">Change password</a>

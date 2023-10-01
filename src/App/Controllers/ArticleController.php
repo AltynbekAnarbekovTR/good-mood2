@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Config\Paths;
-use App\Models\Articles\ArticleModel;
-use App\Models\Comments\CommentModel;
-use App\Models\Users\UserModel;
+use App\Models\Article;
+use App\Models\Comment;
+use App\Models\User;
 use Framework\TemplateEngine;
-use App\Services\{UploadFileService, FormValidatorService};
+use App\Services\{ImageService, UploadFileService, FormValidatorService};
 
 class ArticleController
 {
@@ -17,9 +17,10 @@ class ArticleController
           private TemplateEngine $view,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
-          private ArticleModel $articleModel,
-          private CommentModel $commentModel,
-          private UserModel $userModel
+          private Article $articleModel,
+          private Comment $commentModel,
+          private User $userModel,
+          private ImageService $imageService
   ) {
   }
 
@@ -34,7 +35,7 @@ class ArticleController
             $length,
             $offset
     );
-    $articles = $this->articleModel->attachImagesToArticlesArray($articles);
+    $articleImages = $this->imageService->createB64ImageArray($articles);
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];
 
@@ -51,6 +52,7 @@ class ArticleController
             "articles/manageArticles.php",
             [
                     'articles'          => $articles,
+                    'articleImages'    => $articleImages,
                     'currentPage'       => $page,
                     'previousPageQuery' => http_build_query(
                             [
@@ -109,14 +111,8 @@ class ArticleController
 
   public function editArticle(array $params)
   {
-    $article = $this->articleModel->getArticleById(
-            $params['article']
-    );
-    if (!$article) {
-      redirectTo('/');
-    }
     $this->formValidatorService->validateArticle($_POST);
-    $this->articleModel->update($_POST, $article['id']);
+    $this->articleModel->update($_POST,(int) $params['article']);
     redirectTo('manage-articles');
   }
 
@@ -131,25 +127,25 @@ class ArticleController
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
-    $article = $this->articleModel->attachImageToArticle($article);
+    $articleImage = $this->imageService->createB64Image($article);
     $comments = $this->commentModel->getCommentsOfArticle(
-            $article['id']
+            $article->getId()
     );
-    foreach ($comments as &$comment) {
-      $user = $this->userModel->getUserById($comment['user_id']);
-      $filename = $user['storage_filename'];
-      $fileDir = Paths::STORAGE_UPLOADS;
-      $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
-      if (file_exists($file)) {
-        $b64image = base64_encode(file_get_contents($file));
-        $comment['b64image'] = $b64image;
+    $userAvatars = [];
+    foreach ($comments as $comment) {
+      $user = $this->userModel->getUserById($comment->getUserId());
+      if($user->getStorageFilename()) {
+        $userAvatar = $this->imageService->createB64Image($user);
+        $userAvatars[$user->getId()] = $userAvatar;
       }
     }
     $this->view->render(
             'articles/article.php',
             [
                     'article' => $article,
-                    'comments' => $comments
+                    'articleImage' => $articleImage,
+                    'comments' => $comments,
+                    'userAvatars' => $userAvatars
             ]
     );
   }
