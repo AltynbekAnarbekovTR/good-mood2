@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Models\AuthCode;
 use App\Models\User;
 use App\Services\EmailService;
+use App\Services\ErrorMessagesService;
 use App\Services\FormValidatorService;
 use App\Services\ImageService;
 use App\Services\UploadFileService;
@@ -23,7 +24,8 @@ class ProfileController
           private FormValidatorService $formValidatorService,
           private EmailService $emailService,
           private ImageService $imageService,
-          private AuthCode $authCodeModel
+          private AuthCode $authCodeModel,
+          private ErrorMessagesService $errorMessagesService
   ) {
   }
 
@@ -45,8 +47,14 @@ class ProfileController
 
   public function changeAvatar()
   {
-    $this->uploadFileService->checkUploadIsImage($_FILES['avatar']);
-    $newFilename = $this->uploadFileService->uploadImageToStorage($_FILES['avatar']);
+    $errorMessage = $this->uploadFileService->checkUploadedImage($_FILES['avatar']);
+    if ($errorMessage) {
+      $this->errorMessagesService->setErrorMessage($errorMessage);
+    }
+    [$newFilename, $fileIsUploaded] = $this->uploadFileService->uploadImageToStorage($_FILES['avatar']);
+    if (!$fileIsUploaded) {
+      $this->errorMessagesService->setErrorMessage(['cover' => ['Failed to upload file']]);
+    }
     $this->userModel->changeAvatar($_FILES['avatar'], $newFilename, $_SESSION['user']['userId']);
     redirectTo($_SERVER['HTTP_REFERER']);
   }
@@ -60,8 +68,8 @@ class ProfileController
 
   public function changeUsername()
   {
-    $this->formValidatorService->addRulesToField('usernameRules', ['required', 'lengthMax:50']);
-    $this->formValidatorService->validateRegister($_POST);
+    $this->formValidatorService->addRulesToField('username', ['required', 'lengthMax:50']);
+    $this->formValidatorService->validate($_POST);
     $this->userModel->changeUsername($_POST['username'], $_SESSION['user']['userId']);
     redirectTo('/profile');
   }
@@ -75,10 +83,12 @@ class ProfileController
 
   public function changeEmail()
   {
-    $this->formValidatorService->addRulesToField('emailRules', ['required', 'email']);
-    $this->formValidatorService->validateRegister($_POST);
+    $this->formValidatorService->addRulesToField('email', ['required', 'email']);
+    $this->formValidatorService->validate($_POST);
     $email = $_POST['email'];
-    $this->userModel->isEmailTaken($email);
+    if($this->userModel->isEmailTaken($email)){
+      $this->errorMessagesService->setErrorMessage(['email' => ['Email taken']]);
+    }
     $authenticationCode = md5((string)rand());
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
     $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://localhost/verify-email-change?code=$authenticationCode&email=$email'>Click to verify your email</a>";

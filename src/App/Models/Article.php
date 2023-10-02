@@ -66,14 +66,8 @@ class Article extends ActiveRecordEntity
     return $this->mediaType;
   }
 
-  public function create(array $formData, $coverImage = null)
+  public function create(array $formData, $coverImage = null, $newFilename = null)
   {
-    $fileExtension = pathinfo($coverImage['name'], PATHINFO_EXTENSION);
-    $newFilename = bin2hex(random_bytes(16)).".".$fileExtension;
-    $uploadPath = Paths::STORAGE_UPLOADS.$newFilename;
-    if (!move_uploaded_file($coverImage['tmp_name'], $uploadPath)) {
-      throw new ValidationException(['cover' => ['Failed to upload file']]);
-    }
     $this->db->query(
             "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type) 
             VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
@@ -81,10 +75,10 @@ class Article extends ActiveRecordEntity
                     'user_id'           => $_SESSION['user']['userId'],
                     'title'             => $formData['title'],
                     'description'       => $formData['description'],
-                    'article_text'      => $formData['article_text'],
+                    'article_text'      => $formData['text'],
                     'original_filename' => $coverImage['name'],
                     'storage_filename'  => $newFilename,
-                    'media_type'        => $coverImage['type']
+                    'media_type'        => $coverImage['type'],
             ]
     );
   }
@@ -94,7 +88,7 @@ class Article extends ActiveRecordEntity
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
     $params = [
 
-            'title' => "%{$searchTerm}%"
+            'title' => "%{$searchTerm}%",
     ];
     $articles = $this->db->query(
             "SELECT *
@@ -162,7 +156,7 @@ class Article extends ActiveRecordEntity
             [
                     'title'        => $formData['title'],
                     'description'  => $formData['description'],
-                    'article_text' => $formData['article_text'],
+                    'article_text' => $formData['text'],
                     'id'           => $id,
             ]
     );

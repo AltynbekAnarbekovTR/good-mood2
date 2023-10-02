@@ -18,4 +18,9 @@ abstract class ActiveRecordEntity
   {
     return lcfirst(str_replace('_', '', ucwords($source, '_')));
   }
+
+  public function lastInsertId(): int
+  {
+    return $this->db->lastInsertId();
+  }
 }

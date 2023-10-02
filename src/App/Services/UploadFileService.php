@@ -14,45 +14,26 @@ class UploadFileService
   {
   }
 
-  public function checkUploadIsImage(?array $file)
+  public function checkUploadedImage(array $file)
   {
     if (!$file || !empty($file['error'])) {
-      throw new ValidationException(
-              [
-                      'cover' => ['Failed to upload file'],
-              ]
-      );
+      return ['cover' => ['Failed to upload file']];
     }
-
+    if (!strlen($file['name'])) {
+      return ['cover' => ['Image is required']];
+    }
     $maxFileSizeMB = 3 * 1024 * 1024;
-
     if ($file['size'] > $maxFileSizeMB) {
-      throw new ValidationException(
-              [
-                      'cover' => ['File upload is too large'],
-              ]
-      );
+      return ['cover' => ['File upload is too large']];
     }
-
     $originalFileName = $file['name'];
-
     if (!preg_match('/^[A-za-z0-9\s._-]+$/', $originalFileName)) {
-      throw new ValidationException(
-              [
-                      'cover' => ['Invalid filename'],
-              ]
-      );
+      return ['cover' => ['Invalid filename']];
     }
-
     $clientMimeType = $file['type'];
     $allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-
     if (!in_array($clientMimeType, $allowedMimeTypes)) {
-      throw new ValidationException(
-              [
-                      'cover' => ['Invalid file type'],
-              ]
-      );
+      return ['cover' => ['Invalid file type']];
     }
   }
 
@@ -61,10 +42,7 @@ class UploadFileService
     $fileExtension = pathinfo($img['name'], PATHINFO_EXTENSION);
     $newFilename = bin2hex(random_bytes(16)).".".$fileExtension;
     $uploadPath = Paths::STORAGE_UPLOADS."/".$newFilename;
-    if (!move_uploaded_file($img['tmp_name'], $uploadPath)) {
-      throw new ValidationException(['cover' => ['Failed to upload file']]);
-    }
-
-    return $newFilename;
+    $fileIsUploaded = move_uploaded_file($img['tmp_name'], $uploadPath);
+    return [$newFilename, $fileIsUploaded];
   }
 }

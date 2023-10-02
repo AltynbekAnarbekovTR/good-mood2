@@ -71,8 +71,9 @@ class User extends ActiveRecordEntity
     )->count();
 
     if ($emailCount > 0) {
-      throw new ValidationException(['email' => ['Email taken']]);
+      return true;
     }
+    return false;
   }
 
   public function create(array $formData)
@@ -86,8 +87,6 @@ class User extends ActiveRecordEntity
                     'password' => $password
             ]
     );
-    session_regenerate_id();
-    $_SESSION['user'] = ['userId' => $this->db->lastInsertId()];
   }
 
   public function verifyAccount($email)
@@ -125,18 +124,6 @@ class User extends ActiveRecordEntity
               $user->getPassword() ?? ''
       );
     }
-    if (!$user || !$passwordsMatch) {
-      throw new ValidationException(['password' => ['Invalid credentials']]);
-    }
-
-    if (!$user->getEmailVerified()) {
-      throw new ValidationException(['otherLoginErrors' => ['You need to verify your email']]);
-    }
-    session_regenerate_id();
-    $_SESSION['user'] = ['userId' => $user->getId()];
-    $_SESSION['user']['loggedIn'] = true;
-    $_SESSION['user']['username'] = $user->getUsername();
-    $_SESSION['user']['role'] = $user->getRole();
     return $user;
   }
 
@@ -181,9 +168,8 @@ class User extends ActiveRecordEntity
                     'email' => $email,
             ]
     )->find(User::class);
-    if (!$user) {
-      throw new ValidationException(['email' => ['Such user doesn\'t exist']]);
-    }
+    if($user) return true;
+    return false;
   }
 
   public function changePassword(string $password, string $email)

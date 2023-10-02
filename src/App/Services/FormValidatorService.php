@@ -21,13 +21,7 @@ use Framework\Rules\{
 class FormValidatorService
 {
   private Validator $validator;
-  public array $usernameRules = [];
-  public array $emailRules = [];
-  public array $passwordRules = [];
-  public array $confirmPasswordRules = [];
-  public array $titleRules = [];
-  public array $descriptionRules = [];
-  public array $textRules = [];
+  public array $appliedRules = [];
 
   public function __construct()
   {
@@ -41,10 +35,8 @@ class FormValidatorService
   }
 
   public function addRulesToField(string $formField, array $rules) {
-    foreach ($rules as $rule) {
-      if (!in_array($rule, $this->$formField)) {
-        array_push($this->$formField, $rule);
-      }
+    if(!isset($this->appliedRules[$formField])) {
+      $this->appliedRules[$formField] = $rules;
     }
   }
 
@@ -55,30 +47,7 @@ class FormValidatorService
     }
   }
 
-  public function validateRegister(array $formData)
-  {
-    $this->validator->validate($formData, [
-      'username' => $this->usernameRules,
-      'email' => $this->emailRules,
-      'password' => $this->passwordRules,
-      'confirmPassword' => $this->confirmPasswordRules,
-    ]);
-  }
-
-  public function validateLogin(array $formData)
-  {
-    $this->validator->validate($formData, [
-      'email' => $this->emailRules,
-      'password' => $this->passwordRules
-    ]);
-  }
-
-  public function validateArticle(array $formData)
-  {
-    $this->validator->validate($formData, [
-      'title' => $this->titleRules,
-      'description' => $this->descriptionRules,
-      'article_text' => $this->textRules
-    ]);
+  public function validate(array $formData) {
+      return $this->validator->validate($formData, $this->appliedRules);
   }
 }

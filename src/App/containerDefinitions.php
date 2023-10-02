@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
-use App\Services\{FormValidatorService, UploadFileService, EmailService, ImageService};
+use App\Services\{FormValidatorService, UploadFileService, EmailService, ImageService, ErrorMessagesService};
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Comment;
@@ -14,6 +14,7 @@ return [
         FormValidatorService::class => fn() => new FormValidatorService(),
         EmailService::class => fn() => new EmailService(),
         ImageService::class => fn() => new ImageService(),
+        ErrorMessagesService::class => fn() => new ErrorMessagesService(),
         Database::class             => fn() => new Database(
                 getenv('DRIVER'), [
                 'host'   => getenv('HOST'),
