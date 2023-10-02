@@ -16,7 +16,7 @@ class Validator
         $this->rules[$alias] = $rule;
     }
 
-    public function validate(array $formData, array $fields)
+    public function validate(array $formData, array $fields): array
     {
         $errors = [];
 
@@ -42,9 +42,6 @@ class Validator
                 );
             }
         }
-
-        if (count($errors)) {
-            throw new ValidationException($errors);
-        }
+            return $errors;
     }
 }

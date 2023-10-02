@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\AuthCode;
+use Framework\Exceptions\ValidationException;
 use Framework\TemplateEngine;
-use App\Services\{FormValidatorService, EmailService};
+use App\Services\{ErrorMessagesService, FormValidatorService, EmailService};
 use App\Models\User;
 
 
@@ -17,7 +18,8 @@ class AuthController
           private FormValidatorService $formValidatorService,
           private User $userModel,
           private EmailService $emailService,
-          private AuthCode $authCodeModel
+          private AuthCode $authCodeModel,
+          private ErrorMessagesService $errorMessagesService
   ) {
   }
 
@@ -28,14 +30,21 @@ class AuthController
 
   public function registerUser()
   {
-    $this->formValidatorService->addRulesToField('usernameRules', ['required', 'lengthMax:50']);
-    $this->formValidatorService->addRulesToField('emailRules', ['required', 'email', 'lengthMax:100']);
-    $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
-    $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
-    $this->formValidatorService->validateRegister($_POST);
+    $this->formValidatorService->addRulesToField('username', ['required', 'lengthMax:50']);
+    $this->formValidatorService->addRulesToField('email', ['required', 'email', 'lengthMax:100']);
+    $this->formValidatorService->addRulesToField('password', ['required', 'password']);
+    $this->formValidatorService->addRulesToField('confirmPassword', ['required', 'match:password']);
+    $errors = $this->formValidatorService->validate($_POST);
+    if(count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
+    }
     $email = $_POST['email'];
-    $this->userModel->isEmailTaken($email);
+    if($this->userModel->isEmailTaken($email)){
+      $this->errorMessagesService->setErrorMessage(['email' => ['Email taken']]);
+    }
     $this->userModel->create($_POST);
+    session_regenerate_id();
+    $_SESSION['user'] = ['userId' => $this->userModel->lastInsertId()];
     $authenticationCode = md5((string)rand());
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
     $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verify-account?code=$authenticationCode&email=$email'>Click to verify your email</a>";
@@ -50,11 +59,31 @@ class AuthController
 
   public function login()
   {
-    $this->formValidatorService->addRulesToField('emailRules', ['required']);
-    $this->formValidatorService->addRulesToField('passwordRules', ['required']);
-    $this->formValidatorService->validateLogin($_POST);
+    $this->formValidatorService->addRulesToField('email', ['required']);
+    $this->formValidatorService->addRulesToField('password', ['required']);
+    $errors = $this->formValidatorService->validate($_POST);
+    if(count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
+    }
     $user = $this->userModel->login($_POST);
+    if($user) {
+      $passwordsMatch = password_verify(
+              $_POST['password'],
+              $user->getPassword() ?? ''
+      );
+    }
+    if (!$user || !$passwordsMatch) {
+      $this->errorMessagesService->setErrorMessage(['password' => ['Invalid credentials']]);
+    }
 
+    if (!$user->getEmailVerified()) {
+      $this->errorMessagesService->setErrorMessage(['otherLoginErrors' => ['You need to verify your email']]);
+    }
+    session_regenerate_id();
+    $_SESSION['user'] = ['userId' => $user->getId()];
+    $_SESSION['user']['loggedIn'] = true;
+    $_SESSION['user']['username'] = $user->getUsername();
+    $_SESSION['user']['role'] = $user->getRole();
     if ($user->getRole() === 'admin') {
       redirectTo('/manage-articles');
     } else {
@@ -89,7 +118,10 @@ class AuthController
   public function restorePassword()
   {
     $email = $_POST['email'];
-    $this->userModel->checkUserExist($email);
+    $userExist = $this->userModel->checkUserExist($email);
+    if(!$userExist) {
+      $this->errorMessagesService->setErrorMessage(['email' => ['Such user doesn\'t exist']]);
+    }
     $emailText = "<p>Follow the link below to set the new password:</p><br/><a href='http://localhost/reset-password?email=$email'>Click to reset password</a>";
     $this->emailService->sendEmail($emailText, $_POST['email']);
     $this->view->render("auth/emailSent.php");
@@ -102,9 +134,9 @@ class AuthController
 
   public function resetPassword()
   {
-    $this->formValidatorService->addRulesToField('passwordRules', ['required', 'password']);
-    $this->formValidatorService->addRulesToField('confirmPasswordRules', ['required', 'match:password']);
-    $this->formValidatorService->validateRegister($_POST);
+    $this->formValidatorService->addRulesToField('password', ['required', 'password']);
+    $this->formValidatorService->addRulesToField('confirmPassword', ['required', 'match:password']);
+    $this->formValidatorService->validate($_POST);
     $email =  $_GET['email'] ?? '';
     if (!strlen($email)) {
       $user = $this->userModel->getUserById($_SESSION['user']['userId']);

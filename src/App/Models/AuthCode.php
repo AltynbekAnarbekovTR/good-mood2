@@ -32,7 +32,7 @@ class AuthCode extends ActiveRecordEntity
 
   public function setAuthCode(string $authCode, string $email)
   {
-    $lastCreatedUser = $this->db->lastInsertId();
+    $lastCreatedUser = $this->lastInsertId();
     if(!$lastCreatedUser) {
       $lastCreatedUser = $_SESSION['user']['userId'];
     }

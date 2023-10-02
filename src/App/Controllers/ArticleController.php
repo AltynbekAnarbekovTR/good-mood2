@@ -9,7 +9,7 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
 use Framework\TemplateEngine;
-use App\Services\{ImageService, UploadFileService, FormValidatorService};
+use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
 
 class ArticleController
 {
@@ -20,7 +20,8 @@ class ArticleController
           private Article $articleModel,
           private Comment $commentModel,
           private User $userModel,
-          private ImageService $imageService
+          private ImageService $imageService,
+          private ErrorMessagesService  $errorMessagesService
   ) {
   }
 
@@ -52,7 +53,7 @@ class ArticleController
             "articles/manageArticles.php",
             [
                     'articles'          => $articles,
-                    'articleImages'    => $articleImages,
+                    'articleImages'     => $articleImages,
                     'currentPage'       => $page,
                     'previousPageQuery' => http_build_query(
                             [
@@ -80,14 +81,22 @@ class ArticleController
 
   public function createArticle()
   {
-    $this->formValidatorService->addRulesToField('titleRules', ['required', 'lengthMax:100']);
-    $this->formValidatorService->addRulesToField('descriptionRules', ['required', 'lengthMax:500']);
-    $this->formValidatorService->addRulesToField('textRules', ['required', 'lengthMax:2000']);
-    $this->formValidatorService->validateArticle($_POST);
-    if ($_FILES['cover']) {
-      $this->uploadFileService->checkUploadIsImage($_FILES['cover']);
+    $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
+    $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
+    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
+    $errors = $this->formValidatorService->validate($_POST);
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
     }
-    $this->articleModel->create($_POST, $_FILES['cover']);
+    $errorMessage = $this->uploadFileService->checkUploadedImage($_FILES['cover']);
+    if ($errorMessage) {
+      $this->errorMessagesService->setErrorMessage($errorMessage);
+    }
+    [$newFilename, $fileIsUploaded] = $this->uploadFileService->uploadImageToStorage($_FILES['cover']);
+    if (!$fileIsUploaded) {
+      $this->errorMessagesService->setErrorMessage(['cover' => ['Failed to upload file']]);
+    }
+    $this->articleModel->create($_POST, $_FILES['cover'], $newFilename);
     redirectTo('/manage-articles');
   }
 
@@ -111,8 +120,14 @@ class ArticleController
 
   public function editArticle(array $params)
   {
-    $this->formValidatorService->validateArticle($_POST);
-    $this->articleModel->update($_POST,(int) $params['article']);
+    $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
+    $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
+    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
+    $errors = $this->formValidatorService->validate($_POST);
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
+    }
+    $this->articleModel->update($_POST, (int)$params['article']);
     redirectTo('manage-articles');
   }
 
@@ -123,7 +138,8 @@ class ArticleController
     redirectTo('/manage-articles');
   }
 
-  public function renderReadArticle($params) {
+  public function renderReadArticle($params)
+  {
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
@@ -134,7 +150,7 @@ class ArticleController
     $userAvatars = [];
     foreach ($comments as $comment) {
       $user = $this->userModel->getUserById($comment->getUserId());
-      if($user->getStorageFilename()) {
+      if ($user->getStorageFilename()) {
         $userAvatar = $this->imageService->createB64Image($user);
         $userAvatars[$user->getId()] = $userAvatar;
       }
@@ -142,10 +158,10 @@ class ArticleController
     $this->view->render(
             'articles/article.php',
             [
-                    'article' => $article,
+                    'article'      => $article,
                     'articleImage' => $articleImage,
-                    'comments' => $comments,
-                    'userAvatars' => $userAvatars
+                    'comments'     => $comments,
+                    'userAvatars'  => $userAvatars,
             ]
     );
   }
