@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Framework\Exceptions\ValidationException;
-use App\Config\Paths;
 use Framework\ActiveRecordEntity;
 
 class Article extends ActiveRecordEntity

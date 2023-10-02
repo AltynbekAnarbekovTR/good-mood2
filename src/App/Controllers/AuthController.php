@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\AuthCode;
-use Framework\Exceptions\ValidationException;
 use Framework\TemplateEngine;
 use App\Services\{ErrorMessagesService, FormValidatorService, EmailService};
 use App\Models\User;
@@ -66,7 +65,6 @@ class AuthController
       $this->errorMessagesService->setErrorMessage($errors);
     }
     $user = $this->userModel->login($_POST);
-    $this->setUserToSession($user);
     if($user) {
       $passwordsMatch = password_verify(
               $_POST['password'],
@@ -80,11 +78,7 @@ class AuthController
     if (!$user->getEmailVerified()) {
       $this->errorMessagesService->setErrorMessage(['otherLoginErrors' => ['You need to verify your email']]);
     }
-    session_regenerate_id();
-    $_SESSION['user'] = ['userId' => $user->getId()];
-    $_SESSION['user']['loggedIn'] = true;
-    $_SESSION['user']['username'] = $user->getUsername();
-    $_SESSION['user']['role'] = $user->getRole();
+    $this->setUserToSession($user);
     if ($user->getRole() === 'admin') {
       redirectTo('/manage-articles');
     } else {
