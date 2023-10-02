@@ -66,6 +66,7 @@ class AuthController
       $this->errorMessagesService->setErrorMessage($errors);
     }
     $user = $this->userModel->login($_POST);
+    $this->setUserToSession($user);
     if($user) {
       $passwordsMatch = password_verify(
               $_POST['password'],
@@ -104,7 +105,8 @@ class AuthController
     if ($codeFromEmail && $email) {
       $authCode = $this->authCodeModel->getAuthCode($email);
       if ($authCode->getCode() === $codeFromEmail) {
-        $this->userModel->verifyAccount($email);
+        $user = $this->userModel->verifyAccount($email);
+        $this->setUserToSession($user);
         redirectTo('/profile');
       }
     }
@@ -145,5 +147,13 @@ class AuthController
     $this->userModel->changePassword($_POST['password'], $email);
 
     redirectTo('/profile');
+  }
+
+  public function setUserToSession(User $user) {
+    session_regenerate_id();
+    $_SESSION['user'] = ['userId' => $user->getId()];
+    $_SESSION['user']['loggedIn'] = true;
+    $_SESSION['user']['username'] = $user->getUsername();
+    $_SESSION['user']['role'] = $user->getRole();
   }
 }

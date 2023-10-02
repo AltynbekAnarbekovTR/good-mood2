@@ -103,11 +103,7 @@ class User extends ActiveRecordEntity
                     'email' => $email,
             ]
     )->find(User::class);
-    session_regenerate_id();
-    $_SESSION['user'] = ['userId' => $user->getId()];
-    $_SESSION['user']['loggedIn'] = true;
-    $_SESSION['user']['username'] = $user->getUsername();
-    $_SESSION['user']['role'] = $user->getRole();
+    return $user;
   }
 
   public function login(array $formData)
