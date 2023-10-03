@@ -8,12 +8,16 @@ use App\Config\Paths;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
-use Framework\TemplateEngine;
+use App\Views\ArticlesView;
 use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
+use Framework\TemplateEngine;
 
 class ArticleController
 {
+//  private ManageArticlesView $manageArticlesView;
+
   public function __construct(
+          private ArticlesView $articlesView,
           private TemplateEngine $view,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
@@ -23,6 +27,7 @@ class ArticleController
           private ImageService $imageService,
           private ErrorMessagesService  $errorMessagesService
   ) {
+//    $this->manageArticlesView = new ManageArticlesView();
   }
 
   public function renderManageArticles()
@@ -49,8 +54,7 @@ class ArticleController
             ),
             $pages
     );
-    $this->view->render(
-            "articles/manageArticles.php",
+    $this->articlesView->renderManageArticles(
             [
                     'articles'          => $articles,
                     'articleImages'     => $articleImages,
@@ -76,7 +80,8 @@ class ArticleController
 
   public function renderCreateArticle()
   {
-    $this->view->render("articles/create.php");
+    $this->articlesView->renderCreateArticle();
+//    $this->view->render('articles/create.php');
   }
 
   public function createArticle()
@@ -110,8 +115,7 @@ class ArticleController
       redirectTo('/manage-articles');
     }
 
-    $this->view->render(
-            'articles/edit.php',
+    $this->articlesView->renderEditArticle(
             [
                     'article' => $article,
             ]
@@ -155,8 +159,7 @@ class ArticleController
         $userAvatars[$user->getId()] = $userAvatar;
       }
     }
-    $this->view->render(
-            'articles/article.php',
+    $this->articlesView->renderReadArticle(
             [
                     'article'      => $article,
                     'articleImage' => $articleImage,

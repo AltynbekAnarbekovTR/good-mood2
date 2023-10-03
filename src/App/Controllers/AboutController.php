@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use Framework\TemplateEngine;
+use App\Views\AboutView;
 
 class AboutController
 {
-  public function __construct(private TemplateEngine $view)
+  public function __construct( private AboutView $aboutView,)
   {
   }
 
   public function renderAbout()
   {
-    $this->view->render('about.php', [
-      'title' => 'About'
+    $this->aboutView->renderAbout([
     ]);
   }
 }

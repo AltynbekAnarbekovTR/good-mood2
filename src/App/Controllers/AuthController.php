@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\AuthCode;
-use Framework\TemplateEngine;
+use App\Views\AuthView;
 use App\Services\{ErrorMessagesService, FormValidatorService, EmailService};
 use App\Models\User;
 
@@ -13,7 +13,8 @@ use App\Models\User;
 class AuthController
 {
   public function __construct(
-          private TemplateEngine $view,
+//          private TemplateEngine $view,
+          private AuthView $authView,
           private FormValidatorService $formValidatorService,
           private User $userModel,
           private EmailService $emailService,
@@ -24,7 +25,7 @@ class AuthController
 
   public function renderRegisterUser()
   {
-    $this->view->render("auth/register.php");
+    $this->authView->renderRegisterUser();
   }
 
   public function registerUser()
@@ -34,11 +35,11 @@ class AuthController
     $this->formValidatorService->addRulesToField('password', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPassword', ['required', 'match:password']);
     $errors = $this->formValidatorService->validate($_POST);
-    if(count($errors)) {
+    if (count($errors)) {
       $this->errorMessagesService->setErrorMessage($errors);
     }
     $email = $_POST['email'];
-    if($this->userModel->isEmailTaken($email)){
+    if ($this->userModel->isEmailTaken($email)) {
       $this->errorMessagesService->setErrorMessage(['email' => ['Email taken']]);
     }
     $this->userModel->create($_POST);
@@ -48,12 +49,12 @@ class AuthController
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
     $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verify-account?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
-    $this->view->render("auth/emailSent.php");
+    $this->authView->renderEmailSent();
   }
 
   public function renderLoginUser()
   {
-    $this->view->render("auth/login.php");
+    $this->authView->renderLogin();
   }
 
   public function login()
@@ -61,11 +62,11 @@ class AuthController
     $this->formValidatorService->addRulesToField('email', ['required']);
     $this->formValidatorService->addRulesToField('password', ['required']);
     $errors = $this->formValidatorService->validate($_POST);
-    if(count($errors)) {
+    if (count($errors)) {
       $this->errorMessagesService->setErrorMessage($errors);
     }
     $user = $this->userModel->login($_POST);
-    if($user) {
+    if ($user) {
       $passwordsMatch = password_verify(
               $_POST['password'],
               $user->getPassword() ?? ''
@@ -108,24 +109,24 @@ class AuthController
 
   public function renderRestorePassword()
   {
-    $this->view->render("auth/restorePassword.php");
+    $this->authView->renderRestorePassword();
   }
 
   public function restorePassword()
   {
     $email = $_POST['email'];
     $userExist = $this->userModel->checkUserExist($email);
-    if(!$userExist) {
+    if (!$userExist) {
       $this->errorMessagesService->setErrorMessage(['email' => ['Such user doesn\'t exist']]);
     }
     $emailText = "<p>Follow the link below to set the new password:</p><br/><a href='http://localhost/reset-password?email=$email'>Click to reset password</a>";
     $this->emailService->sendEmail($emailText, $_POST['email']);
-    $this->view->render("auth/emailSent.php");
+    $this->authView->renderEmailSent();
   }
 
   public function renderResetPassword()
   {
-    $this->view->render("auth/resetPassword.php");
+    $this->authView->renderResetPassword();
   }
 
   public function resetPassword()
@@ -133,7 +134,7 @@ class AuthController
     $this->formValidatorService->addRulesToField('password', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPassword', ['required', 'match:password']);
     $this->formValidatorService->validate($_POST);
-    $email =  $_GET['email'] ?? '';
+    $email = $_GET['email'] ?? '';
     if (!strlen($email)) {
       $user = $this->userModel->getUserById($_SESSION['user']['userId']);
       $email = $user->getEmail();
@@ -143,7 +144,8 @@ class AuthController
     redirectTo('/profile');
   }
 
-  public function setUserToSession(User $user) {
+  public function setUserToSession(User $user)
+  {
     session_regenerate_id();
     $_SESSION['user'] = ['userId' => $user->getId()];
     $_SESSION['user']['loggedIn'] = true;

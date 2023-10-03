@@ -11,6 +11,8 @@ use App\Services\ErrorMessagesService;
 use App\Services\FormValidatorService;
 use App\Services\ImageService;
 use App\Services\UploadFileService;
+use App\Views\AuthView;
+use App\Views\ProfileView;
 use Framework\TemplateEngine;
 
 class ProfileController
@@ -18,7 +20,8 @@ class ProfileController
 
 
   public function __construct(
-          private TemplateEngine $view,
+          private ProfileView $profileView,
+          private AuthView $authView,
           private UploadFileService $uploadFileService,
           private User $userModel,
           private FormValidatorService $formValidatorService,
@@ -36,8 +39,7 @@ class ProfileController
     if ($user->getStorageFilename()) {
       $userAvatar = $this->imageService->createB64Image($user);
     }
-    $this->view->render(
-            'profile/profile.php',
+    $this->profileView->renderProfile(
             [
                     'user' => $user,
               'userAvatar' => $userAvatar
@@ -61,9 +63,7 @@ class ProfileController
 
   public function renderChangeUsername()
   {
-    $this->view->render(
-            'profile/changeUsername.php',
-    );
+    $this->profileView->renderChangeUsername();
   }
 
   public function changeUsername()
@@ -76,9 +76,7 @@ class ProfileController
 
   public function renderChangeEmail()
   {
-    $this->view->render(
-            'profile/changeEmail.php',
-    );
+    $this->profileView->renderChangeEmail();
   }
 
   public function changeEmail()
@@ -93,7 +91,7 @@ class ProfileController
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
     $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://localhost/verify-email-change?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
-    $this->view->render("auth/emailSent.php");
+    $this->authView->renderEmailSent();
   }
 
   public function verifyEmailChange()
