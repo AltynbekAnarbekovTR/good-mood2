@@ -12,11 +12,13 @@ $classmap = [
     'App'.DIRECTORY_SEPARATOR.'Middleware' => __DIR__ . '/src/App/Middleware',
     'App'.DIRECTORY_SEPARATOR.'Services' => __DIR__ . '/src/App/Services',
     'App'.DIRECTORY_SEPARATOR.'Exceptions' => __DIR__ . '/src/App/Exceptions',
-    'App'.DIRECTORY_SEPARATOR.'Models' => __DIR__.'/src/App/Models'
+    'App'.DIRECTORY_SEPARATOR.'Models' => __DIR__.'/src/App/Models',
+    'App'.DIRECTORY_SEPARATOR.'Views' => __DIR__.'/src/App/views/Views'
 ];
 
 spl_autoload_register(
     function (string $classname) use ($classmap) {
+
         $classname_parts = explode('\\', $classname);
         $classfile = array_pop($classname_parts) . '.php';
         $namespace = implode(DIRECTORY_SEPARATOR, $classname_parts);

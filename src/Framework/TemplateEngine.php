@@ -8,12 +8,14 @@ use App\Config\Paths;
 
 class TemplateEngine
 {
-    private array $globalTemplateData = [];
-    private string $pathToPublic = Paths::SCRIPTS;
+    protected array $globalTemplateData = [];
 
-    public function __construct(private string $basePath)
+    public function __construct(protected string $basePath)
     {
     }
+//  public function __construct()
+//    {
+//    }
 
     public function render(string $template, array $data = [])
     {
@@ -24,12 +26,16 @@ class TemplateEngine
 
     public function resolve(string $path)
     {
-        return "{$this->basePath}/{$path}";
+        return "{$this->basePath}{$path}";
     }
 
-    public function resolvePathToScripts(string $path) {
-      return "{$this->pathToPublic}/{$path}";
+    public function setBasePath(string $path) {
+      $this->basePath = $path;
     }
+
+//    public function resolvePathToScripts(string $path) {
+//      return "{$this->pathToPublic}/{$path}";
+//    }
 
     public function addGlobal(string $key, mixed $value)
     {

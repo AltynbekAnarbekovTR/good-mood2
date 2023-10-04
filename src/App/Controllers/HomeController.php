@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Services\ImageService;
-use Framework\TemplateEngine;
+use App\Views\HomeView;
 use App\Models\Article;
 
 class HomeController
 {
   public function __construct(
-          private TemplateEngine $view,
+          private HomeView $homeView,
           private Article $articleModel,
           private ImageService $imageService
   ) {
@@ -42,8 +42,7 @@ class HomeController
             ),
             $pages
     );
-    $this->view->render(
-            'index.php',
+    $this->homeView->renderHome(
             [
                     'articles'          => $articles,
                     'articleImages'    => $articleImages,
