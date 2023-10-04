@@ -33,13 +33,14 @@ class AuthController
     $this->formValidatorService->addRulesToField('email', ['required', 'email', 'lengthMax:100']);
     $this->formValidatorService->addRulesToField('password', ['required', 'password']);
     $this->formValidatorService->addRulesToField('confirmPassword', ['required', 'match:password']);
-    $errors = $this->formValidatorService->validate($_POST);
-    if (count($errors)) {
-      $this->errorMessagesService->setErrorMessage($errors);
-    }
+    $errors = [];
+    $errors += $this->formValidatorService->validate($_POST);
     $email = $_POST['email'];
     if ($this->userModel->isEmailTaken($email)) {
-      $this->errorMessagesService->setErrorMessage(['email' => ['Email taken']]);
+      $errors += ['email' => ['Email taken']];
+    }
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
     }
     $this->userModel->create($_POST);
     session_regenerate_id();
@@ -60,10 +61,8 @@ class AuthController
   {
     $this->formValidatorService->addRulesToField('email', ['required']);
     $this->formValidatorService->addRulesToField('password', ['required']);
-    $errors = $this->formValidatorService->validate($_POST);
-    if (count($errors)) {
-      $this->errorMessagesService->setErrorMessage($errors);
-    }
+    $errors = [];
+    $errors += $this->formValidatorService->validate($_POST);
     $user = $this->userModel->login($_POST);
     if ($user) {
       $passwordsMatch = password_verify(
@@ -72,9 +71,11 @@ class AuthController
       );
     }
     if (!$user || !$passwordsMatch) {
-      $this->errorMessagesService->setErrorMessage(['password' => ['Invalid credentials']]);
+      $errors += ['password' => ['Invalid credentials']];
     }
-
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
+    }
     if (!$user->getEmailVerified()) {
       $this->errorMessagesService->setErrorMessage(['otherLoginErrors' => ['You need to verify your email']]);
     }

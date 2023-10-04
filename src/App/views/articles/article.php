@@ -2,18 +2,14 @@
     <main>
         <div class="container hero--contained">
             <div class="">
-                <img
-                        src='data:image/png;base64,<?php
-                        echo $articleImage; ?>'
-                        class="featured__image"
-                        alt="article image"
+                <img src='data:image/png;base64,<?php echo $articleImage; ?>'
+                     class="featured__image"
+                     alt="article image"
                 />
             </div>
-
             <div class="article">
                 <h1 class="article__title col--12 text__align--left pb--medium">
-                  <?php
-                  echo escapeInjection($article->getTitle()); ?>
+                  <?php echo escapeInjection($article->getTitle()); ?>
                 </h1>
                 <!-- main content -->
                 <div class="article__content col--8--last col--12--bp3">
@@ -26,8 +22,7 @@
 
                     <div class="text__block margin--flex pb--medium">
                         <p>
-                          <?php
-                          echo escapeInjection($article->getArticleText()); ?>
+                          <?php echo escapeInjection($article->getArticleText()); ?>
                         </p>
                     </div>
                 </div>
@@ -37,14 +32,15 @@
                   <?php
                   include $this->resolve("partials/_csrf.php"); ?>
                     <span class="lh-0 light-grey">(Max: 500 symbols)</span>
-                    <textarea maxlength="500" required name="comment_text" type="text" placeholder="Type your comment..."
-                              class="comment-form__text"></textarea>
+                    <textarea maxlength="500" required name="comment_text"
+                              type="text" placeholder="Type your comment..."
+                              class="comment-form__text">
+                    </textarea>
                     <div class="comment-form__buttons">
                         <button type="submit" class="px-3 py-2 bg-indigo-600 text-white rounded comment-form__button">
                             Submit
                         </button>
                     </div>
-
                 </form>
                 <div class="comments-list">
                   <?php

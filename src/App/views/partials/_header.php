@@ -8,8 +8,7 @@
           <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
               <a href="/manage-articles" class="text-gray-300 hover:text-white transition">Articles</a>
           <?php endif; ?>
-            <?php
-            if (isset($_SESSION['user']['loggedIn']) && $_SESSION['user']['loggedIn'] === true) : ?>
+            <?php if (isset($_SESSION['user']['loggedIn']) && $_SESSION['user']['loggedIn'] === true) : ?>
                 <a href="/profile" class="text-gray-300 hover:text-white transition">Profile</a>
                 <a href="/logout" class="text-gray-300 hover:text-white transition">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -17,15 +16,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
                     </svg>
-
                     Logout
                 </a>
-            <?php
-            else : ?>
+            <?php else : ?>
                 <a href="/login" class="text-gray-300 hover:text-white transition">Login</a>
                 <a href="/register" class="text-gray-300 hover:text-white transition">Register</a>
-            <?php
-            endif; ?>
+            <?php endif; ?>
         </div>
     </nav>
 </header>

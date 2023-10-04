@@ -82,17 +82,15 @@ class ArticleController
     $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
     $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
     $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
-    $errors = $this->formValidatorService->validate($_POST);
-    if (count($errors)) {
-      $this->errorMessagesService->setErrorMessage($errors);
-    }
-    $errorMessage = $this->uploadFileService->checkUploadedImage($_FILES['cover']);
-    if ($errorMessage) {
-      $this->errorMessagesService->setErrorMessage($errorMessage);
-    }
+    $errors = [];
+    $errors += $this->formValidatorService->validate($_POST);
+    $errors += $this->uploadFileService->checkUploadedImage($_FILES['cover']);
     [$newFilename, $fileIsUploaded] = $this->uploadFileService->uploadImageToStorage($_FILES['cover']);
     if (!$fileIsUploaded) {
-      $this->errorMessagesService->setErrorMessage(['cover' => ['Failed to upload file']]);
+      $errors += ['cover' => ['Failed to upload file']];
+    }
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
     }
     $this->articleModel->create($_POST, $_FILES['cover'], $newFilename);
     redirectTo('/manage-articles');

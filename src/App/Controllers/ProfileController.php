@@ -41,8 +41,8 @@ class ProfileController
     }
     $this->profileView->renderProfile(
             [
-                    'user' => $user,
-              'userAvatar' => $userAvatar
+                    'user'       => $user,
+                    'userAvatar' => $userAvatar,
             ]
     );
   }
@@ -84,7 +84,7 @@ class ProfileController
     $this->formValidatorService->addRulesToField('email', ['required', 'email']);
     $this->formValidatorService->validate($_POST);
     $email = $_POST['email'];
-    if($this->userModel->isEmailTaken($email)){
+    if ($this->userModel->isEmailTaken($email)) {
       $this->errorMessagesService->setErrorMessage(['email' => ['Email taken']]);
     }
     $authenticationCode = md5((string)rand());
