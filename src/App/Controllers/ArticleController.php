@@ -4,30 +4,24 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Config\Paths;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
 use App\Views\ArticlesView;
 use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
-use Framework\TemplateEngine;
 
 class ArticleController
 {
-//  private ManageArticlesView $manageArticlesView;
-
   public function __construct(
           private ArticlesView $articlesView,
-          private TemplateEngine $view,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
           private Article $articleModel,
           private Comment $commentModel,
           private User $userModel,
           private ImageService $imageService,
-          private ErrorMessagesService  $errorMessagesService
+          private ErrorMessagesService $errorMessagesService
   ) {
-//    $this->manageArticlesView = new ManageArticlesView();
   }
 
   public function renderManageArticles()
@@ -81,7 +75,6 @@ class ArticleController
   public function renderCreateArticle()
   {
     $this->articlesView->renderCreateArticle();
-//    $this->view->render('articles/create.php');
   }
 
   public function createArticle()

@@ -13,7 +13,6 @@ use App\Models\User;
 class AuthController
 {
   public function __construct(
-//          private TemplateEngine $view,
           private AuthView $authView,
           private FormValidatorService $formValidatorService,
           private User $userModel,
