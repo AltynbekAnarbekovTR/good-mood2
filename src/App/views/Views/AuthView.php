@@ -3,28 +3,28 @@
 namespace App\Views;
 
 class AuthView extends View {
-  public function renderRegisterUser(array $data = [])
+  public function getRegisterUserTemplate(array $data = [])
   {
-    $this->templateEngine->render('auth/register.php', $data);
+    return $this->templateEngine->render('auth/register.php', $data);
   }
 
-  public function renderEmailSent(array $data = [])
+  public function getEmailSentTemplate(array $data = [])
   {
-    $this->templateEngine->render('auth/emailSent.php', $data);
+    return $this->templateEngine->render('auth/emailSent.php', $data);
   }
 
-  public function renderLogin(array $data = [])
+  public function getLoginTemplate()
   {
-    $this->templateEngine->render('auth/login.php', $data);
+    return $this->templateEngine->render('auth/login.php');
   }
 
-  public function renderRestorePassword(array $data = [])
+  public function getRestorePasswordTemplate(array $data = [])
   {
-    $this->templateEngine->render('auth/restorePassword.php', $data);
+    return $this->templateEngine->render('auth/restorePassword.php', $data);
   }
 
-  public function renderResetPassword(array $data = [])
+  public function getResetPasswordTemplate(array $data = [])
   {
-    $this->templateEngine->render('auth/resetPassword.php', $data);
+    return $this->templateEngine->render('auth/resetPassword.php', $data);
   }
 }

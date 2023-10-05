@@ -6,7 +6,7 @@ use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
 use App\Services\{FormValidatorService, UploadFileService, EmailService, ImageService, ErrorMessagesService};
 use App\Models\{User, Article, Comment, AuthCode};
-use App\Views\{ArticlesView, AboutView, AuthView, HomeView, ProfileView};
+use App\Views\{ArticlesView, AboutView, AuthView, HeroArticleView, FormView, ProfileView, LayoutView, ArticlesGridView};
 return [
         TemplateEngine::class       => fn() => new TemplateEngine(Paths::VIEW),
         FormValidatorService::class => fn() => new FormValidatorService(),
@@ -17,6 +17,10 @@ return [
           $templateEngine = $container->get(TemplateEngine::class);
           return new ArticlesView($templateEngine);
         },
+        FormView::class => function (Container $container) {
+          $templateEngine = $container->get(TemplateEngine::class);
+          return new FormView($templateEngine);
+        },
         AboutView::class => function (Container $container) {
           $templateEngine = $container->get(TemplateEngine::class);
           return new AboutView($templateEngine);
@@ -25,13 +29,21 @@ return [
           $templateEngine = $container->get(TemplateEngine::class);
           return new AuthView($templateEngine);
         },
-        HomeView::class => function (Container $container) {
-          $templateEngine = $container->get(TemplateEngine::class);
-          return new HomeView($templateEngine);
-        },
         ProfileView::class => function (Container $container) {
           $templateEngine = $container->get(TemplateEngine::class);
           return new ProfileView($templateEngine);
+        },
+        LayoutView::class => function (Container $container) {
+          $templateEngine = $container->get(TemplateEngine::class);
+          return new LayoutView($templateEngine);
+        },
+        HeroArticleView::class => function (Container $container) {
+          $templateEngine = $container->get(TemplateEngine::class);
+          return new HeroArticleView($templateEngine);
+        },
+        ArticlesGridView::class => function (Container $container) {
+          $templateEngine = $container->get(TemplateEngine::class);
+          return new ArticlesGridView($templateEngine);
         },
         Database::class             => fn() => new Database(
                 getenv('DRIVER'), [

@@ -33,6 +33,7 @@ class UploadFileService
     if (!in_array($clientMimeType, $allowedMimeTypes)) {
       return ['cover' => ['Invalid file type']];
     }
+    return [];
   }
 
   public function uploadImageToStorage($img)

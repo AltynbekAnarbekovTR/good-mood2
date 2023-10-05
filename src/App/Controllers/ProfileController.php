@@ -12,6 +12,8 @@ use App\Services\FormValidatorService;
 use App\Services\ImageService;
 use App\Services\UploadFileService;
 use App\Views\AuthView;
+use App\Views\FormView;
+use App\Views\LayoutView;
 use App\Views\ProfileView;
 use Framework\TemplateEngine;
 
@@ -20,7 +22,9 @@ class ProfileController
 
 
   public function __construct(
+          private LayoutView $layoutView,
           private ProfileView $profileView,
+          private FormView $formView,
           private AuthView $authView,
           private UploadFileService $uploadFileService,
           private User $userModel,
@@ -39,12 +43,13 @@ class ProfileController
     if ($user->getStorageFilename()) {
       $userAvatar = $this->imageService->createB64Image($user);
     }
-    $this->profileView->renderProfile(
+    $profileTemplate = $this->profileView->getProfileTemplate(
             [
                     'user'       => $user,
                     'userAvatar' => $userAvatar,
             ]
     );
+    $this->layoutView->renderPage($profileTemplate);
   }
 
   public function changeAvatar()
@@ -63,26 +68,42 @@ class ProfileController
 
   public function renderChangeUsername()
   {
-    $this->profileView->renderChangeUsername();
+    $changeUsernameForm = $this->formView->createFormTemplate(
+            [
+                    ['label' => 'Username', 'name' => 'username'],
+            ]
+    );
+    $this->layoutView->renderPage($changeUsernameForm);
   }
 
   public function changeUsername()
   {
     $this->formValidatorService->addRulesToField('username', ['required', 'lengthMax:50']);
-    $this->formValidatorService->validate($_POST);
+    $errors = $this->formValidatorService->validate($_POST);
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
+    }
     $this->userModel->changeUsername($_POST['username'], $_SESSION['user']['userId']);
     redirectTo('/profile');
   }
 
   public function renderChangeEmail()
   {
-    $this->profileView->renderChangeEmail();
+    $changeEmailTemplate = $this->formView->createFormTemplate(
+            [
+                    ['label' => 'Email', 'name' => 'email', 'type' => 'email', 'placeholder' => 'john@example.com'],
+            ]
+    );
+    $this->layoutView->renderPage($changeEmailTemplate);
   }
 
   public function changeEmail()
   {
     $this->formValidatorService->addRulesToField('email', ['required', 'email']);
-    $this->formValidatorService->validate($_POST);
+    $errors = $this->formValidatorService->validate($_POST);
+    if (count($errors)) {
+      $this->errorMessagesService->setErrorMessage($errors);
+    }
     $email = $_POST['email'];
     if ($this->userModel->isEmailTaken($email)) {
       $this->errorMessagesService->setErrorMessage(['email' => ['Email taken']]);
@@ -91,7 +112,8 @@ class ProfileController
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
     $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://localhost/verify-email-change?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
-    $this->authView->renderEmailSent();
+    $emailSentTemplate = $this->authView->getEmailSentTemplate();
+    $this->layoutView->renderPage($emailSentTemplate);
   }
 
   public function verifyEmailChange()

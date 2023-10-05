@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Services\ImageService;
-use App\Views\HomeView;
+use App\Views\ArticlesGridView;
+use App\Views\HeroArticleView;
 use App\Models\Article;
+use App\Views\LayoutView;
 
 class HomeController
 {
   public function __construct(
-          private HomeView $homeView,
+          private HeroArticleView $heroArticleView,
+          private ArticlesGridView $articlesGridView,
+          private LayoutView $layoutView,
           private Article $articleModel,
           private ImageService $imageService
   ) {
@@ -42,8 +46,9 @@ class HomeController
             ),
             $pages
     );
-    $this->homeView->renderHome(
-            [
+    $heroArticle = $this->heroArticleView->renderHeroArticle();
+    $articlesGrid = $this->articlesGridView->renderArticlesGrid(
+                [
                     'articles'          => $articles,
                     'articleImages'    => $articleImages,
                     'currentPage'       => $page,
@@ -64,5 +69,7 @@ class HomeController
                     'searchTerm'        => $searchTerm,
             ]
     );
+    $homePage = $heroArticle.$articlesGrid;
+    $this->layoutView->renderPage($homePage);
   }
 }
