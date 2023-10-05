@@ -3,18 +3,18 @@
 namespace App\Views;
 
 class ProfileView extends View {
-  public function renderProfile(array $data = [])
+  public function getProfileTemplate(array $data = []): string
   {
-    $this->templateEngine->render('profile/profile.php', $data);
+    return $this->templateEngine->render('profile/profile.php', $data);
   }
 
-  public function renderChangeUsername(array $data = [])
+  public function getChangeUsernameTemplate(array $data = []): string
   {
-    $this->templateEngine->render('profile/changeUsername.php', $data);
+    return $this->templateEngine->render('profile/changeUsername.php', $data);
   }
 
-  public function renderChangeEmail(array $data = [])
+  public function getChangeEmailTemplate(array $data = []): string
   {
-    $this->templateEngine->render('profile/changeEmail.php', $data);
+    return $this->templateEngine->render('profile/changeEmail.php', $data);
   }
 }

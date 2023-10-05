@@ -12,15 +12,15 @@
 </head>
 <body>
 <!-- Start Header -->
-<?php include $this->resolve("partials/_header.php"); ?>
+<?php require $this->resolve("partials/_header.php"); ?>
 <!-- End Header -->
 
 <!-- Start Main Content -->
-<?php include $this->resolve($template); ?>
+<?php echo $content; ?>
 <!-- End Main Content -->
 
 <!-- Start Footer -->
-<?php include $this->resolve("partials/_footer.php"); ?>
+<?php require $this->resolve("partials/_footer.php"); ?>
 <!-- End Footer -->
 
 <script src="../js/jquery-3.7.1.min.js"></script>

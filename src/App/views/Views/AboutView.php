@@ -6,8 +6,8 @@ use App\Config\Paths;
 use Framework\TemplateEngine;
 
 class AboutView extends View {
-  public function renderAbout(array $data = [])
+  public function getAboutTemplate(array $data = [])
   {
-    $this->templateEngine->render('about.php', $data);
+    return $this->templateEngine->render('about.php', $data);
   }
 }

@@ -16,7 +16,11 @@ class TemplateEngine
   {
     extract($data, EXTR_SKIP);
     extract($this->globalTemplateData, EXTR_SKIP);
-    require $this->resolve('layout/layout.php');
+    ob_start();
+    include $this->resolve($template);
+    $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
   }
 
   public function resolve(string $path)

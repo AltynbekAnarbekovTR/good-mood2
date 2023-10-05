@@ -7,13 +7,15 @@ namespace App\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
-use App\Views\ArticlesView;
+use App\Views\{FormView, LayoutView, ArticlesView};
 use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
 
 class ArticleController
 {
   public function __construct(
           private ArticlesView $articlesView,
+          private FormView $formView,
+          private LayoutView $layoutView,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
           private Article $articleModel,
@@ -48,7 +50,7 @@ class ArticleController
             ),
             $pages
     );
-    $this->articlesView->renderManageArticles(
+    $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
             [
                     'articles'          => $articles,
                     'articleImages'     => $articleImages,
@@ -70,11 +72,13 @@ class ArticleController
                     'searchTerm'        => $searchTerm,
             ]
     );
+    $this->layoutView->renderPage($manageArticlesTemplate);
   }
 
   public function renderCreateArticle()
   {
-    $this->articlesView->renderCreateArticle();
+    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate();
+    $this->layoutView->renderPage($createArticleTemplate);
   }
 
   public function createArticle()
@@ -101,16 +105,15 @@ class ArticleController
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
-
     if (!$article) {
       redirectTo('/manage-articles');
     }
-
-    $this->articlesView->renderEditArticle(
+    $editArticleTemplate = $this->articlesView->getEditArticleTemplate(
             [
                     'article' => $article,
             ]
     );
+    $this->layoutView->renderPage($editArticleTemplate);
   }
 
   public function editArticle(array $params)
@@ -150,7 +153,7 @@ class ArticleController
         $userAvatars[$user->getId()] = $userAvatar;
       }
     }
-    $this->articlesView->renderReadArticle(
+    $readArticleTemplate = $this->articlesView->getReadArticleTemplate(
             [
                     'article'      => $article,
                     'articleImage' => $articleImage,
@@ -158,6 +161,7 @@ class ArticleController
                     'userAvatars'  => $userAvatars,
             ]
     );
+    $this->layoutView->renderPage($readArticleTemplate);
   }
 
 }
