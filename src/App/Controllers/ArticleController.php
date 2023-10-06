@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\User;
 use App\Views\{ LayoutView, ArticlesView};
@@ -18,6 +19,7 @@ class ArticleController
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
           private Article $articleModel,
+          private Category $categoryModel,
           private Comment $commentModel,
           private User $userModel,
           private ImageService $imageService,
@@ -87,7 +89,8 @@ class ArticleController
 
   public function renderCreateArticle()
   {
-    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate();
+    $categories = $this->categoryModel->getCategories();
+    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate(['categories' => $categories]);
     $this->layoutView->renderPage($createArticleTemplate);
   }
 
@@ -112,6 +115,7 @@ class ArticleController
 
   public function renderEditArticle(array $params)
   {
+    $categories = $this->categoryModel->getCategories();
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
@@ -121,6 +125,7 @@ class ArticleController
     $editArticleTemplate = $this->articlesView->getEditArticleTemplate(
             [
                     'article' => $article,
+                    'categories' => $categories
             ]
     );
     $this->layoutView->renderPage($editArticleTemplate);

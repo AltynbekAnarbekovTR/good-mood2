@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
 use App\Services\{FormValidatorService, UploadFileService, EmailService, ImageService, ErrorMessagesService};
-use App\Models\{User, Article, Comment, AuthCode};
+use App\Models\{User, Article, Comment, AuthCode, Category};
 use App\Views\{ArticlesView, AboutView, AuthView, HeroArticleView, FormView, ProfileView, LayoutView, ArticlesGridView};
 return [
         TemplateEngine::class       => fn() => new TemplateEngine(Paths::VIEW),
@@ -55,6 +55,10 @@ return [
         User::class            => function (Container $container) {
           $db = $container->get(Database::class);
           return new User($db);
+        },
+        Category::class            => function (Container $container) {
+          $db = $container->get(Database::class);
+          return new Category($db);
         },
         Article::class => function (Container $container) {
           $db = $container->get(Database::class);
