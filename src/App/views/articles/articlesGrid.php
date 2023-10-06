@@ -13,6 +13,9 @@
         <span class="card__text">
           <?php echo escapeInjection($article->getDescription()); ?>
         </span>
+        <?php foreach ($article->getCategories() as $articleCategory) : ?>
+            <span class="card__category"><?php echo $articleCategory ?></span>
+        <?php endforeach; ?>
       </div>
     </div>
   <?php endforeach; ?>

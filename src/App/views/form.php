@@ -3,7 +3,6 @@
     <?php include $this->resolve('partials/_csrf.php'); ?>
     <?php echo $createdInputs;  ?>
     <?php echo $otherFormElements ?? '';  ?>
-<!--    <a href="/restore-password" class="forgot-password">Forgot password</a>-->
     <label class="block">
       <?php if (array_key_exists('otherLoginErrors', $errors)) : ?>
         <div class="bg-gray-100 mt-2 p-2 text-red-500">

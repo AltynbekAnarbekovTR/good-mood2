@@ -2,6 +2,8 @@
 
 namespace App\Views;
 
+use App\Models\Article;
+
 class HeroArticleView extends View {
   public function renderHeroArticle(array $data = [])
   {
