@@ -46,11 +46,18 @@ class HomeController
             ),
             $pages
     );
-    $heroArticle = $this->heroArticleView->renderHeroArticle();
+    $homePageMainArticle = $this->articleModel->getMainArticle('home');
+    if($homePageMainArticle) {
+      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+      $heroArticle = $this->heroArticleView->renderHeroArticle(
+              ['mainArticle' => $homePageMainArticle, 'mainArticleImage' => $homePageMainArticleImage]
+      );
+    } else $heroArticle = '';
+
     $articlesGrid = $this->articlesGridView->renderArticlesGrid(
-                [
+            [
                     'articles'          => $articles,
-                    'articleImages'    => $articleImages,
+                    'articleImages'     => $articleImages,
                     'currentPage'       => $page,
                     'previousPageQuery' => http_build_query(
                             [

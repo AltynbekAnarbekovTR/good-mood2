@@ -54,6 +54,7 @@ $app->get('/edit-article/{article}', [ArticleController::class, 'renderEditArtic
 );
 $app->post('/edit-article/{article}', [ArticleController::class, 'editArticle'])->add(AdminOnlyMiddleware::class);
 $app->delete('/delete-article/{article}', [ArticleController::class, 'deleteArticle'])->add(AdminOnlyMiddleware::class);
+$app->post('/set-main-article/{article}', [ArticleController::class, 'setMainArticle'])->add(AdminOnlyMiddleware::class);
 $app->get('/article/{article}', [ArticleController::class, 'renderReadArticle']);
 $app->post('/article/{article}', [CommentsController::class, 'createComment'])->add(AuthRequiredMiddleware::class);;
 $app->get('/verify-account', [AuthController::class, 'checkAccountVerification']);

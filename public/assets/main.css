@@ -233,11 +233,19 @@ img {
 
 /* Hero */
 .main__article {
+  width: 100%;
   clear: both;
   display: inline-block;
   overflow: visible;
   margin-top: 45px;
   margin-bottom: 60px;
+}
+
+#manage-main-article {
+  border: 1px solid black;
+}
+
+.main__article--img {
 }
 
 .main__article .card__image__link {
@@ -1318,9 +1326,6 @@ label {
   text-transform: none;
   letter-spacing: normal;
   margin-bottom: 10px;
-}
-input[type="checkbox"] {
-  display: none;
 }
 .form__inline {
   float: left;
@@ -2530,11 +2535,17 @@ select {
 .block {
   display: block;
 }
+.inline {
+  display: inline;
+}
 .inline-block {
   display: inline-block;
 }
 .flex {
   display: flex;
+}
+.dir-column {
+  flex-direction: column!important;
 }
 .inline-flex {
   display: inline-flex;
@@ -2676,7 +2687,7 @@ select {
 }
 .border-indigo-500 {
   --tw-border-opacity: 1;
-  border-color: rgb(99 102 241 / var(--tw-border-opacity));
+  border-color: rgb(99 102 241 / var(--tw-border-opacity))!important;
 }
 .border-transparent {
   border-color: transparent;
@@ -2784,6 +2795,9 @@ select {
 }
 .text-center {
   text-align: center;
+}
+.text-right {
+  text-align: right;
 }
 .font-\[\'Outfit\'\] {
   font-family: Outfit;

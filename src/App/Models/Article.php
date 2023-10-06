@@ -18,6 +18,8 @@ class Article extends ActiveRecordEntity
   protected string $originalFilename;
   protected string $storageFilename;
   protected string $mediaType;
+  protected string|null $categories;
+  protected string|null $mainFor;
 
   public function getId(): int
   {
@@ -64,11 +66,55 @@ class Article extends ActiveRecordEntity
     return $this->mediaType;
   }
 
+  public function getCategories(): array|null
+  {
+    if($this->categories !== null) {
+      return unserialize($this->categories);
+    } else return [];
+  }
+
+  public function getMainFor(): string|null
+  {
+    return $this->mainFor;
+  }
+
+  public function setMainFor($articleId, $pageName) {
+    $this->db->query(
+            "UPDATE articles
+      SET main_for = :main_for
+      WHERE main_for = :pageName",
+            [
+                    'main_for'        => null,
+                    'pageName'           => $pageName
+            ]
+    );
+    $this->db->query(
+            "UPDATE articles
+      SET main_for = :main_for
+      WHERE id = :id",
+            [
+                    'main_for'        => $pageName,
+                    'id'           => $articleId
+            ]
+    );
+  }
+
+  public function getMainArticle($pageName) {
+    return $this->db->query(
+            "SELECT * FROM articles
+      WHERE main_for = :main_for",
+            [
+                    'main_for'        => $pageName
+            ]
+    )->find(Article::class);
+  }
+
   public function create(array $formData, $coverImage = null, $newFilename = null)
   {
+    $serializedCategories = isset($formData['category']) ? serialize($formData['category']) : null;
     $this->db->query(
-            "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type) 
-            VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
+            "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type, categories) 
+            VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type, :categories)",
             [
                     'user_id'           => $_SESSION['user']['userId'],
                     'title'             => $formData['title'],
@@ -77,8 +123,30 @@ class Article extends ActiveRecordEntity
                     'original_filename' => $coverImage['name'],
                     'storage_filename'  => $newFilename,
                     'media_type'        => $coverImage['type'],
+                    'categories'        => $serializedCategories,
             ]
     );
+  }
+
+  public function setCategories(array $categories)
+  {
+    $articleId = $this->lastInsertId();
+    foreach ($categories as $category) {
+      $categoryId = $this->db->query(
+              "SELECT id FROM categories WHERE title=:category",
+              [
+                      'category' => $category,
+              ]
+      )->find();
+      $this->db->query(
+              "INSERT INTO article_categories(article_id, categorie_id) 
+            VALUES(:article_id, :categorie_id)",
+              [
+                      'article_id'   => $articleId,
+                      'categorie_id' => $categoryId['id'],
+              ]
+      );
+    }
   }
 
   public function getAllArticles(int $length = 3, int $offset = 0): array
@@ -145,17 +213,20 @@ class Article extends ActiveRecordEntity
 
   public function update(array $formData, int $id)
   {
+    $serializedCategories = isset($formData['category']) ? serialize($formData['category']) : null;
     $this->db->query(
             "UPDATE articles
       SET description = :description,
         title = :title,
-        article_text = :article_text
+        article_text = :article_text,
+        categories = :categories
       WHERE id = :id",
             [
                     'title'        => $formData['title'],
                     'description'  => $formData['description'],
                     'article_text' => $formData['text'],
                     'id'           => $id,
+                    'categories'   => $serializedCategories,
             ]
     );
   }

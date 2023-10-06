@@ -1,5 +1,5 @@
 <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-    <form method="POST" class="grid grid-cols-1 gap-6">
+    <form method="POST">
       <?php
       include $this->resolve("partials/_csrf.php"); ?>
         <label class="block">
@@ -36,6 +36,13 @@
               </div>
           <?php endif; ?>
         </label>
+          <?php
+              $categories = ['Society', 'Environment', 'Lifestyle', 'Science', 'Economics', 'Opinion', 'World'];
+              foreach ($categories as $category) {
+                $isChecked = in_array($category, $article->getCategories()) ? 'checked' : '';
+                echo '<label class="mr-3"><input type="checkbox" name="category[]" value="' . $category . '" ' . $isChecked . '> ' . $category . '</label>';
+              }
+          ?>
         <label class="block">
             <span class="text-gray-700">Cover Image</span>
             <input name="cover" type="file"

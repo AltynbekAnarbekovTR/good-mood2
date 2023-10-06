@@ -1,5 +1,5 @@
 <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-  <form enctype="multipart/form-data" method="POST" class="grid grid-cols-1 gap-6">
+  <form enctype="multipart/form-data" method="POST">
     <?php include $this->resolve("partials/_csrf.php"); ?>
     <label class="block">
       <span class="text-gray-700">Title <span class="light-grey">(Max: 100 symbols)</span></span>
@@ -35,6 +35,15 @@
               </div>
           <?php endif; ?>
       </label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Society"> Society</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Environment"> Environment</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Lifestyle"> Lifestyle</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Science"> Science</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Economics"> Economics</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Opinion"> Opinion</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="UK"> UK</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="World"> World</label>
+      <label class="mr-3"><input type="checkbox" name="category[]" value="Partners"> Partners</label>
       <label class="block">
           <span class="text-gray-700">Cover Image</span>
           <input name="cover" type="file" class="block w-full text-sm text-slate-500 mt-4 file:mr-4 file:py-2 file:px-8 file:border-0 file:text-sm file:font-semibold file:bg-violet-100 file:text-violet-700 hover:file:bg-violet-200" />

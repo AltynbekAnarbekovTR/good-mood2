@@ -6,32 +6,32 @@ namespace Framework;
 
 class Router
 {
-    private array $routes = [];
-    private array $middlewares = [];
+  private array $routes = [];
+  private array $middlewares = [];
 
-    public function add(string $method, string $path, array $controller)
-    {
-        $path = $this->normalizePath($path);
+  public function add(string $method, string $path, array $controller)
+  {
+    $path = $this->normalizePath($path);
 
-        $regexPath = preg_replace('#{[^/]+}#', '([^/]+)', $path);
+    $regexPath = preg_replace('#{[^/]+}#', '([^/]+)', $path);
 
-        $this->routes[] = [
-            'path' => $path,
-            'method' => strtoupper($method),
-            'controller' => $controller,
+    $this->routes[] = [
+            'path'        => $path,
+            'method'      => strtoupper($method),
+            'controller'  => $controller,
             'middlewares' => [],
-            'regexPath' => $regexPath
-        ];
-    }
+            'regexPath'   => $regexPath,
+    ];
+  }
 
-    private function normalizePath(string $path): string
-    {
-        $path = trim($path, '/');
-        $path = "/{$path}/";
-        $path = preg_replace('#[/]{2,}#', '/', $path);
+  private function normalizePath(string $path): string
+  {
+    $path = trim($path, '/');
+    $path = "/{$path}/";
+    $path = preg_replace('#[/]{2,}#', '/', $path);
 
-        return $path;
-    }
+    return $path;
+  }
 
   public function dispatch(string $path, string $method, Container $container = null)
   {
@@ -59,15 +59,14 @@ class Router
               $container->resolve($class) :
               new $class;
 
-      $action = fn () => $controllerInstance->{$function}($params);
-
+      $action = fn() => $controllerInstance->{$function}($params);
       $allMiddleware = [...$route['middlewares'], ...$this->middlewares];
 
       foreach ($allMiddleware as $middleware) {
         $middlewareInstance = $container ?
                 $container->resolve($middleware) :
                 new $middleware;
-        $action = fn () => $middlewareInstance->process($action);
+        $action = fn() => $middlewareInstance->process($action);
       }
 
       $action();
@@ -76,14 +75,14 @@ class Router
     }
   }
 
-    public function addMiddleware(string $middleware)
-    {
-        $this->middlewares[] = $middleware;
-    }
+  public function addMiddleware(string $middleware)
+  {
+    $this->middlewares[] = $middleware;
+  }
 
-    public function addRouteMiddleware(string $middleware)
-    {
-        $lastRouteKey = array_key_last($this->routes);
-        $this->routes[$lastRouteKey]['middlewares'][] = $middleware;
-    }
+  public function addRouteMiddleware(string $middleware)
+  {
+    $lastRouteKey = array_key_last($this->routes);
+    $this->routes[$lastRouteKey]['middlewares'][] = $middleware;
+  }
 }

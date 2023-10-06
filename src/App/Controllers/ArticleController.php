@@ -7,14 +7,13 @@ namespace App\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
-use App\Views\{FormView, LayoutView, ArticlesView};
+use App\Views\{ LayoutView, ArticlesView};
 use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
 
 class ArticleController
 {
   public function __construct(
           private ArticlesView $articlesView,
-          private FormView $formView,
           private LayoutView $layoutView,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
@@ -24,6 +23,11 @@ class ArticleController
           private ImageService $imageService,
           private ErrorMessagesService $errorMessagesService
   ) {
+  }
+
+  public function setMainArticle($params) {
+    $this->articleModel->setMainFor((int) $params['article'], 'home');
+    redirectTo('/manage-articles');
   }
 
   public function renderManageArticles()
@@ -50,8 +54,14 @@ class ArticleController
             ),
             $pages
     );
+    $homePageMainArticle = $this->articleModel->getMainArticle('home');
+    if($homePageMainArticle) {
+      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+    } else $homePageMainArticleImage = null;
     $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
             [
+                    'homePageMainArticle' => $homePageMainArticle,
+                    'homePageMainArticleImage' => $homePageMainArticleImage,
                     'articles'          => $articles,
                     'articleImages'     => $articleImages,
                     'currentPage'       => $page,
