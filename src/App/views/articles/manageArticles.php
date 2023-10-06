@@ -38,6 +38,7 @@
     </thead>
     <!-- Article Table Body -->
     <tbody class="divide-y divide-gray-200 bg-white">
+    <?php if($homePageMainArticle): ?>
         <tr class="w-full text-center col-12"><td colspan="12" class="font-semibold">Main article</td></tr>
         <tr id="manage-main-article">
             <!-- Title -->
@@ -105,6 +106,7 @@
                 </form>
             </td>
         </tr>
+    <?php endif; ?>
     <?php foreach ($articles as $article) : ?>
       <tr>
         <!-- Title -->

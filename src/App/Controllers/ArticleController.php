@@ -55,7 +55,9 @@ class ArticleController
             $pages
     );
     $homePageMainArticle = $this->articleModel->getMainArticle('home');
-    $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+    if($homePageMainArticle) {
+      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+    } else $homePageMainArticleImage = null;
     $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
             [
                     'homePageMainArticle' => $homePageMainArticle,

@@ -47,10 +47,13 @@ class HomeController
             $pages
     );
     $homePageMainArticle = $this->articleModel->getMainArticle('home');
-    $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
-    $heroArticle = $this->heroArticleView->renderHeroArticle(
-            ['mainArticle' => $homePageMainArticle, 'mainArticleImage' => $homePageMainArticleImage]
-    );
+    if($homePageMainArticle) {
+      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+      $heroArticle = $this->heroArticleView->renderHeroArticle(
+              ['mainArticle' => $homePageMainArticle, 'mainArticleImage' => $homePageMainArticleImage]
+      );
+    } else $heroArticle = '';
+
     $articlesGrid = $this->articlesGridView->renderArticlesGrid(
             [
                     'articles'          => $articles,
