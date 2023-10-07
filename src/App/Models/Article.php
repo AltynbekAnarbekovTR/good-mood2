@@ -111,10 +111,9 @@ class Article extends ActiveRecordEntity
 
   public function create(array $formData, $coverImage = null, $newFilename = null)
   {
-    $serializedCategories = isset($formData['category']) ? serialize($formData['category']) : null;
     $this->db->query(
-            "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type, categories) 
-            VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type, :categories)",
+            "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type) 
+            VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
             [
                     'user_id'           => $_SESSION['user']['userId'],
                     'title'             => $formData['title'],
@@ -122,8 +121,7 @@ class Article extends ActiveRecordEntity
                     'article_text'      => $formData['text'],
                     'original_filename' => $coverImage['name'],
                     'storage_filename'  => $newFilename,
-                    'media_type'        => $coverImage['type'],
-                    'categories'        => $serializedCategories,
+                    'media_type'        => $coverImage['type']
             ]
     );
   }
@@ -149,27 +147,52 @@ class Article extends ActiveRecordEntity
     }
   }
 
-  public function getAllArticles(int $length = 3, int $offset = 0): array
+  public function getAllArticles(int $length = 3, int $offset = 0, $category = ''): array
   {
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
-    $params = [
-
-            'title' => "%{$searchTerm}%",
-    ];
-    $articles = $this->db->query(
-            "SELECT *
-      FROM articles 
-      WHERE title LIKE :title
-      LIMIT {$length} OFFSET {$offset}",
-            $params
-    )->findAll(Article::class);
-
-    $articleCount = $this->db->query(
-            "SELECT COUNT(*)
-      FROM articles 
-      WHERE title LIKE :title",
-            $params
-    )->count();
+    if ($category) {
+      $params = [
+              'category' => $category,
+              'title'    => "%{$searchTerm}%",
+      ];
+      $articles = $this->db->query(
+              "SELECT a.*
+            FROM articles a
+            JOIN article_category ac ON a.id = ac.article_id
+            JOIN categories c ON ac.category_id = c.id
+            WHERE a.title LIKE :title
+            AND c.title = :category
+            LIMIT {$length} OFFSET {$offset}",
+              array_merge($params, ['category' => $category])
+      )->findAll(Article::class);
+      $articleCount = $this->db->query(
+              "SELECT COUNT(*)
+            FROM articles a
+            JOIN article_category ac ON a.id = ac.article_id
+            JOIN categories c ON ac.category_id = c.id
+            WHERE a.title LIKE :title
+            AND c.title = :category",
+              $params
+      )->count();
+    }
+    else {
+      $params = [
+              'title' => "%{$searchTerm}%",
+      ];
+      $articles = $this->db->query(
+              "SELECT *
+            FROM articles
+            WHERE title LIKE :title
+            LIMIT {$length} OFFSET {$offset}",
+              $params
+      )->findAll(Article::class);
+      $articleCount = $this->db->query(
+              "SELECT COUNT(*)
+            FROM articles
+            WHERE title LIKE :title",
+              $params
+      )->count();
+    }
 
     return [$articles, $articleCount];
   }
@@ -238,6 +261,40 @@ class Article extends ActiveRecordEntity
             [
                     'id' => $id,
             ]
+    );
+  }
+
+  public function addCategoriesToArticle(int $articleId, array $categoryTitles)
+  {
+    $existingCategories = $this->db->query(
+            "SELECT category_id FROM article_category WHERE article_id = :article_id",
+            [
+                    'article_id' => $articleId,
+            ]
+    )->findAll();
+    $categoryIdsToAdd = [];
+    foreach ($categoryTitles as $categoryTitle) {
+      $categoryId = $this->db->query(
+              "SELECT id FROM categories WHERE title = :categoryTitle",
+              ['categoryTitle' => $categoryTitle]
+      )->find();
+      if ($categoryId) {
+        $categoryIdsToAdd[] = $categoryId['id'];
+      }
+    }
+    $newCategories = array_diff($categoryIdsToAdd, $existingCategories);
+    foreach ($newCategories as $categoryId) {
+      $this->db->query(
+              "INSERT INTO article_category (article_id, category_id) VALUES (:article_id, :category_id)",
+              ['article_id' => $articleId, 'category_id' => $categoryId]
+      );
+    }
+  }
+
+  public function getArticleCategories(int $articleId) {
+    $this->db->query(
+            "SELECT id FROM article_cateogory WHERE article_id = :article_id JOIN ",
+            ['article_id' => $articleId, 'category_id' => $categoryId]
     );
   }
 }

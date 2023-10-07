@@ -36,13 +36,10 @@
               </div>
           <?php endif; ?>
         </label>
-          <?php
-              $categories = ['Society', 'Environment', 'Lifestyle', 'Science', 'Economics', 'Opinion', 'World'];
-              foreach ($categories as $category) {
-                $isChecked = in_array($category, $article->getCategories()) ? 'checked' : '';
-                echo '<label class="mr-3"><input type="checkbox" name="category[]" value="' . $category . '" ' . $isChecked . '> ' . $category . '</label>';
-              }
-          ?>
+              <?php foreach ($categories as $category): ?>
+                <?php $isChecked = in_array($category->getTitle(), $article->getCategories()) ? 'checked' : ''; ?>
+                  <label class="mr-3"><input type="checkbox" <?php echo $isChecked; ?> name="category[]" value="<?php echo $category->getTitle(); ?>"><?php echo $category->getTitle(); ?></label>
+                <?php endforeach; ?>
         <label class="block">
             <span class="text-gray-700">Cover Image</span>
             <input name="cover" type="file"

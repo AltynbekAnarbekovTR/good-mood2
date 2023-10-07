@@ -59,8 +59,21 @@ class Database
     return $this->connection->lastInsertId();
   }
 
-  public function findAll($className = 'stdClass')
+  public function findAll($className = null, $fetchAssoc = false)
   {
-    return $this->stmt->fetchAll(PDO::FETCH_CLASS, $className, [$this]);
+    if ($className) {
+      return $this->stmt->fetchAll(PDO::FETCH_CLASS, $className, [$this]);
+    }
+
+    if ($fetchAssoc) {
+      return $this->stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    return $this->stmt->fetchAll();
+  }
+
+  public function findAllColumn()
+  {
+    return $this->stmt->fetchAll(PDO::FETCH_COLUMN);
   }
 }

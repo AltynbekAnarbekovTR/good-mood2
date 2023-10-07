@@ -16,7 +16,9 @@
 <!-- End Header -->
 
 <!-- Start Main Content -->
-<?php echo $content; ?>
+<div class="container">
+  <?php echo $content; ?>
+</div>
 <!-- End Main Content -->
 
 <!-- Start Footer -->

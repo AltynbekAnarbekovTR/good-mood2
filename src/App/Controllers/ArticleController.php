@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\User;
-use App\Views\{ LayoutView, ArticlesView};
+use App\Views\{ArticlesGridView, HeroArticleView, LayoutView, ArticlesView};
 use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
 
 class ArticleController
@@ -15,23 +16,28 @@ class ArticleController
   public function __construct(
           private ArticlesView $articlesView,
           private LayoutView $layoutView,
+          private ArticlesGridView $articlesGridView,
           private FormValidatorService $formValidatorService,
           private UploadFileService $uploadFileService,
           private Article $articleModel,
+          private Category $categoryModel,
+          private HeroArticleView $heroArticleView,
           private Comment $commentModel,
           private User $userModel,
           private ImageService $imageService,
           private ErrorMessagesService $errorMessagesService
   ) {
+    $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
+    $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
+    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
   }
 
-  public function setMainArticle($params) {
-    $this->articleModel->setMainFor((int) $params['article'], 'home');
-    redirectTo('/manage-articles');
-  }
-
-  public function renderManageArticles()
+  public function prepareArticlesData($category = '', $provideAllCategories = false): array
   {
+    $allCategories = null;
+    if($provideAllCategories) {
+      $allCategories = $this->categoryModel->getCategories();
+    }
     $page = $_GET['p'] ?? 1;
     $page = (int)$page;
     $length = 3;
@@ -39,12 +45,11 @@ class ArticleController
     $searchTerm = $_GET['s'] ?? null;
     [$articles, $count] = $this->articleModel->getAllArticles(
             $length,
-            $offset
+            $offset,
+            $category
     );
-    $articleImages = $this->imageService->createB64ImageArray($articles);
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];
-
     $pageLinks = array_map(
             fn($pageNum) => http_build_query(
                     [
@@ -54,48 +59,104 @@ class ArticleController
             ),
             $pages
     );
-    $homePageMainArticle = $this->articleModel->getMainArticle('home');
-    if($homePageMainArticle) {
-      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
-    } else $homePageMainArticleImage = null;
-    $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
+    $articleImages = $this->imageService->createB64ImageArray($articles);
+    $articlesCategories = [];
+    foreach ($articles as $article) {
+      $categories = $this->categoryModel->getArticleCategories($article->getId());
+      $articlesCategories[$article->getId()] = $categories;
+    }
+    return
             [
-                    'homePageMainArticle' => $homePageMainArticle,
-                    'homePageMainArticleImage' => $homePageMainArticleImage,
-                    'articles'          => $articles,
-                    'articleImages'     => $articleImages,
-                    'currentPage'       => $page,
-                    'previousPageQuery' => http_build_query(
+                    'sectionTitle'       => $category === '' ? 'Latest Articles' : $category,
+                    'allCategories'      => $allCategories,
+                    'articles'           => $articles,
+                    'articlesCategories' => $articlesCategories,
+                    'articleImages'      => $articleImages,
+                    'currentPage'        => $page,
+                    'previousPageQuery'  => http_build_query(
                             [
                                     'p' => $page - 1,
                                     's' => $searchTerm,
                             ]
                     ),
-                    'lastPage'          => $lastPage,
-                    'nextPageQuery'     => http_build_query(
+                    'lastPage'           => $lastPage,
+                    'nextPageQuery'      => http_build_query(
                             [
                                     'p' => $page + 1,
                                     's' => $searchTerm,
                             ]
                     ),
-                    'pageLinks'         => $pageLinks,
-                    'searchTerm'        => $searchTerm,
+                    'pageLinks'          => $pageLinks,
+                    'searchTerm'         => $searchTerm,
             ]
+    ;
+  }
+
+  public function prepareMainArticleData(): array|null
+  {
+    $homePageMainArticle = $this->articleModel->getMainArticle('home');
+    if ($homePageMainArticle) {
+      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+      $homePageMainArticleCategories = $this->categoryModel->getArticleCategories($homePageMainArticle->getId());
+      return
+              [
+                      'mainArticle'                   => $homePageMainArticle,
+                      'mainArticleImage'              => $homePageMainArticleImage,
+                      'mainArticleCategories' => $homePageMainArticleCategories,
+              ];
+    } else return null;
+  }
+
+  public function renderHome()
+  {
+    $category = $_GET['category'] ?? '';
+    $dataForDisplayingArticles = $this->prepareArticlesData($category, true);
+    $articlesGrid = $this->articlesGridView->renderArticlesGrid($dataForDisplayingArticles);
+    $mainArticleData = $this->prepareMainArticleData();
+    if(!$mainArticleData) {
+      $heroArticle = '';
+    } else {
+      $heroArticle = $this->heroArticleView->renderHeroArticle(
+              $mainArticleData
+      );
+    }
+    $homePage = $heroArticle.$articlesGrid;
+    $this->layoutView->renderPage($homePage);
+  }
+
+  public function renderArticlesByCategory($params)
+  {
+    $category = $params['category'] === 'all-articles' ? '' : $params['category'];
+    $dataForDisplayingArticles = $this->prepareArticlesData($category);
+    $articlesGrid = $this->articlesGridView->renderArticlesGrid($dataForDisplayingArticles);
+    $this->layoutView->renderPage($articlesGrid);
+}
+
+  public function setMainArticle($params) {
+    $this->articleModel->setMainFor((int) $params['article'], 'home');
+    redirectTo('/manage-articles');
+  }
+
+  public function renderManageArticles()
+  {
+    $category = $_GET['category'] ?? '';
+    $dataForDisplayingArticles = $this->prepareArticlesData($category, true);
+    $mainArticleData = $this->prepareMainArticleData();
+    $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
+            $dataForDisplayingArticles + $mainArticleData
     );
     $this->layoutView->renderPage($manageArticlesTemplate);
   }
 
   public function renderCreateArticle()
   {
-    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate();
+    $categories = $this->categoryModel->getCategories();
+    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate(['categories' => $categories]);
     $this->layoutView->renderPage($createArticleTemplate);
   }
 
   public function createArticle()
   {
-    $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
-    $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
-    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
     $errors = [];
     $errors += $this->formValidatorService->validate($_POST);
     $errors += $this->uploadFileService->checkUploadedImage($_FILES['cover']);
@@ -107,11 +168,16 @@ class ArticleController
       $this->errorMessagesService->setErrorMessage($errors);
     }
     $this->articleModel->create($_POST, $_FILES['cover'], $newFilename);
+    $createdArticleId = $this->articleModel->lastInsertId();
+    if (isset($_POST['category'])) {
+      $this->articleModel->addCategoriesToArticle($createdArticleId, $_POST['category']);
+    }
     redirectTo('/manage-articles');
   }
 
   public function renderEditArticle(array $params)
   {
+    $categories = $this->categoryModel->getCategories();
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
@@ -121,6 +187,7 @@ class ArticleController
     $editArticleTemplate = $this->articlesView->getEditArticleTemplate(
             [
                     'article' => $article,
+                    'categories' => $categories
             ]
     );
     $this->layoutView->renderPage($editArticleTemplate);
@@ -128,9 +195,7 @@ class ArticleController
 
   public function editArticle(array $params)
   {
-    $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
-    $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
-    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
+
     $errors = $this->formValidatorService->validate($_POST);
     if (count($errors)) {
       $this->errorMessagesService->setErrorMessage($errors);
@@ -173,5 +238,4 @@ class ArticleController
     );
     $this->layoutView->renderPage($readArticleTemplate);
   }
-
 }
