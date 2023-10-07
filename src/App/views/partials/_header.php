@@ -5,6 +5,35 @@
         <div class="flex lg:gap-x-10">
             <a href="/" class="text-gray-300 hover:text-white transition">Home</a>
             <a href="/about" class="text-gray-300 hover:text-white transition">About</a>
+                <div class="header__nav__dropdown">
+                    <a class="dropdown__toggle text-gray-300 hover:text-white transition">Sections</a>
+                    <ul class="dropdown__content">
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32864">
+                            <a href="/category/all-articles" class="dropdown__nav__link">All articles</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32864">
+                            <a href="/category/Society" class="dropdown__nav__link">Society</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32865">
+                            <a href="/category/Environment" class="dropdown__nav__link">Environment</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32867">
+                            <a href="/category/Lifestyle" class="dropdown__nav__link">Lifestyle</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32870">
+                            <a href="/category/Science" class="dropdown__nav__link">Science</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32866">
+                            <a href="/category/Economics" class="dropdown__nav__link">Economics</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32869">
+                            <a href="/category/Opinion" class="dropdown__nav__link">Opinion</a>
+                        </li>
+                        <li class="dropdown__nav__item  menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32868">
+                            <a href="/category/World" class="dropdown__nav__link">World</a>
+                        </li>
+                    </ul>
+                </div>
           <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
               <a href="/manage-articles" class="text-gray-300 hover:text-white transition">Articles</a>
           <?php endif; ?>

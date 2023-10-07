@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Models\Category;
 use App\Services\ImageService;
 use App\Views\ArticlesGridView;
 use App\Views\HeroArticleView;
@@ -17,26 +18,25 @@ class HomeController
           private ArticlesGridView $articlesGridView,
           private LayoutView $layoutView,
           private Article $articleModel,
+          private Category $categoryModel,
           private ImageService $imageService
   ) {
   }
 
-  public function renderHome()
-  {
+  public function renderArticlesGrid() {
+    $category = $_GET['category'] ?? '';
     $page = $_GET['p'] ?? 1;
     $page = (int)$page;
     $length = 3;
     $offset = ($page - 1) * $length;
     $searchTerm = $_GET['s'] ?? null;
-
     [$articles, $count] = $this->articleModel->getAllArticles(
             $length,
-            $offset
+            $offset,
+            $category
     );
-    $articleImages = $this->imageService->createB64ImageArray($articles);
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];
-
     $pageLinks = array_map(
             fn($pageNum) => http_build_query(
                     [
@@ -46,17 +46,18 @@ class HomeController
             ),
             $pages
     );
-    $homePageMainArticle = $this->articleModel->getMainArticle('home');
-    if($homePageMainArticle) {
-      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
-      $heroArticle = $this->heroArticleView->renderHeroArticle(
-              ['mainArticle' => $homePageMainArticle, 'mainArticleImage' => $homePageMainArticleImage]
-      );
-    } else $heroArticle = '';
-
-    $articlesGrid = $this->articlesGridView->renderArticlesGrid(
+    $articleImages = $this->imageService->createB64ImageArray($articles);
+    $articlesCategories = [];
+    foreach ($articles as $article) {
+      $categories = $this->categoryModel->getArticleCategories($article->getId());
+      $articlesCategories[$article->getId()] = $categories;
+    }
+    return $this->articlesGridView->renderArticlesGrid(
             [
+                    'sectionTitle'      => $_GET['category'] ?? 'Latest Articles',
+                    'allCategories' => $this->categoryModel->getCategories(),
                     'articles'          => $articles,
+                    'articlesCategories' => $articlesCategories,
                     'articleImages'     => $articleImages,
                     'currentPage'       => $page,
                     'previousPageQuery' => http_build_query(
@@ -76,6 +77,19 @@ class HomeController
                     'searchTerm'        => $searchTerm,
             ]
     );
+  }
+
+  public function renderHome()
+  {
+    $articlesGrid = $this->renderArticlesGrid();
+    $homePageMainArticle = $this->articleModel->getMainArticle('home');
+    if($homePageMainArticle) {
+      $homePageMainArticleImage = $this->imageService->createB64Image($homePageMainArticle);
+      $homePageMainArticleCategories = $this->categoryModel->getArticleCategories($homePageMainArticle->getId());
+      $heroArticle = $this->heroArticleView->renderHeroArticle(
+              ['mainArticle' => $homePageMainArticle, 'mainArticleImage' => $homePageMainArticleImage, 'homePageMainArticleCategories' => $homePageMainArticleCategories]
+      );
+    } else $heroArticle = '';
     $homePage = $heroArticle.$articlesGrid;
     $this->layoutView->renderPage($homePage);
   }

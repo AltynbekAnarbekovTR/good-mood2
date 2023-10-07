@@ -38,31 +38,31 @@
     </thead>
     <!-- Article Table Body -->
     <tbody class="divide-y divide-gray-200 bg-white">
-    <?php if($homePageMainArticle): ?>
+    <?php if($mainArticle): ?>
         <tr class="w-full text-center col-12"><td colspan="12" class="font-semibold">Main article</td></tr>
         <tr id="manage-main-article">
             <!-- Title -->
             <td class="p-4 text-sm text-gray-600">
-              <?php echo escapeInjection($homePageMainArticle->getTitle()); ?>
+              <?php echo escapeInjection($mainArticle->getTitle()); ?>
             </td>
             <!-- Description -->
             <td class="p-4 text-sm text-gray-600">
-              <?php echo escapeInjection($homePageMainArticle->getDescription()); ?>
+              <?php echo escapeInjection($mainArticle->getDescription()); ?>
             </td>
             <!-- Categories -->
             <td class="p-4 text-sm text-gray-600">
-              <?php foreach ($homePageMainArticle->getCategories() as $articleCategory) : ?>
+              <?php foreach ($mainArticleCategories as $articleCategory) : ?>
                   <span class="card__category"><?php echo $articleCategory ?></span>
               <?php endforeach; ?>
             </td>
             <!-- Image -->
             <td class="p-4 text-sm text-gray-600">
                 <div class="inline-block relative cursor-pointer">
-                    <a href="/article/<?php echo escapeInjection($homePageMainArticle->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>">
+                    <a href="/article/<?php echo escapeInjection($mainArticle->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>">
                         <img src="data:image/png;base64,<?php
-                        echo $homePageMainArticleImage; ?>" alt="">
+                        echo $mainArticleImage; ?>" alt="">
                     </a>
-                    <form action="/article/<?php echo escapeInjection($homePageMainArticle->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>" method="POST">
+                    <form action="/article/<?php echo escapeInjection($mainArticle->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>" method="POST">
                       <?php include $this->resolve("partials/_csrf.php"); ?>
                         <input type="hidden" name="_METHOD" value="DELETE" />
                         <button type="submit" class="absolute -top-1 -right-1">
@@ -75,11 +75,11 @@
             </td>
             <!-- Date -->
             <td class="p-4 text-sm text-gray-600">
-              <?php echo escapeInjection($homePageMainArticle->getCreatedAt()); ?>
+              <?php echo escapeInjection($mainArticle->getCreatedAt()); ?>
             </td>
             <!-- Actions -->
             <td class="p-4 text-sm text-gray-600 flex justify-center space-x-2">
-                <form action="/set-main-article/<?php echo escapeInjection($homePageMainArticle->getId()); ?>" method="POST">
+                <form action="/set-main-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
                     <input type="hidden" name="_METHOD" value="post" />
                   <?php include $this->resolve("partials/_csrf.php"); ?>
 
@@ -89,12 +89,12 @@
                         </svg>
                     </button>
                 </form>
-                <a href="/edit-article/<?php echo escapeInjection($homePageMainArticle->getId()); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
+                <a href="/edit-article/<?php echo escapeInjection($mainArticle->getId()); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                     </svg>
                 </a>
-                <form action="/delete-article/<?php echo escapeInjection($homePageMainArticle->getId()); ?>" method="POST">
+                <form action="/delete-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
                     <input type="hidden" name="_METHOD" value="DELETE" />
                   <?php include $this->resolve("partials/_csrf.php"); ?>
 
@@ -119,7 +119,7 @@
         </td>
           <!-- Categories -->
           <td class="p-4 text-sm text-gray-600">
-            <?php foreach ($article->getCategories() as $articleCategory) : ?>
+            <?php foreach ($articlesCategories[$article->getId()] as $articleCategory) : ?>
                 <span class="card__category"><?php echo $articleCategory ?></span>
             <?php endforeach; ?>
           </td>

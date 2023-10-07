@@ -35,7 +35,7 @@ use App\Controllers\{
 
 $app = new App(Paths::SOURCE."App/containerDefinitions.php");
 
-$app->get('/', [HomeController::class, 'renderHome']);
+$app->get('/', [ArticleController::class, 'renderHome']);
 $app->get('/about', [AboutController::class, 'renderAbout']);
 $app->get('/register', [AuthController::class, 'renderRegisterUser'])->add(GuestOnlyMiddleware::class);
 $app->post('/register', [AuthController::class, 'registerUser'])->add(GuestOnlyMiddleware::class);
@@ -56,6 +56,7 @@ $app->post('/edit-article/{article}', [ArticleController::class, 'editArticle'])
 $app->delete('/delete-article/{article}', [ArticleController::class, 'deleteArticle'])->add(AdminOnlyMiddleware::class);
 $app->post('/set-main-article/{article}', [ArticleController::class, 'setMainArticle'])->add(AdminOnlyMiddleware::class);
 $app->get('/article/{article}', [ArticleController::class, 'renderReadArticle']);
+$app->get('/category/{category}', [ArticleController::class, 'renderArticlesByCategory']);
 $app->post('/article/{article}', [CommentsController::class, 'createComment'])->add(AuthRequiredMiddleware::class);;
 $app->get('/verify-account', [AuthController::class, 'checkAccountVerification']);
 $app->get('/profile', [ProfileController::class, 'renderProfile'])->add(AuthRequiredMiddleware::class);
