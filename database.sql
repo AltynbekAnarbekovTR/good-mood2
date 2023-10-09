@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Окт 06 2023 г., 15:04
+-- Время создания: Окт 09 2023 г., 18:01
 -- Версия сервера: 10.4.28-MariaDB
 -- Версия PHP: 8.2.4
 
@@ -31,7 +31,7 @@ CREATE TABLE `articles` (
                             `id` bigint(20) NOT NULL,
                             `title` varchar(255) NOT NULL,
                             `description` varchar(255) NOT NULL,
-                            `article_text` varchar(1000) NOT NULL,
+                            `article_text` varchar(5000) NOT NULL,
                             `created_at` datetime NOT NULL DEFAULT current_timestamp(),
                             `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
                             `user_id` bigint(20) UNSIGNED NOT NULL,
@@ -42,12 +42,16 @@ CREATE TABLE `articles` (
                             `main_for` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Дамп данных таблицы `articles`
+-- Структура таблицы `article_category`
 --
 
-INSERT INTO `articles` (`id`, `title`, `description`, `article_text`, `created_at`, `updated_at`, `user_id`, `original_filename`, `storage_filename`, `media_type`, `categories`, `main_for`) VALUES
-(104, '2', '2', '                     2                           ', '2023-10-06 18:58:39', '2023-10-06 18:58:39', 49, 'javascript.png', 'd8508099b5686c01e5cc78660f668120.png', 'image/png', NULL, 'home');
+CREATE TABLE `article_category` (
+                                    `article_id` bigint(20) NOT NULL,
+                                    `category_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -126,7 +130,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `username`, `role`, `created_at`, `email_verified`, `original_filename`, `storage_filename`, `media_type`) VALUES
-(49, 'altyn_312@mail.ru', '$2y$12$BfiqMtTGMi2dt.T0cLRyn.n3wWoeeBGhZLh0ngROasTxvEYgt0MmC', 'asd', 'admin', '2023-10-01 22:38:29', 1, 'javascript.png', 'bbbace2797138b074225793469a0a14f.png', 'image/png');
+(49, 'altyn_312@mail.ru', '$2y$12$BfiqMtTGMi2dt.T0cLRyn.n3wWoeeBGhZLh0ngROasTxvEYgt0MmC', 'Altyn', 'admin', '2023-10-01 22:38:29', 1, NULL, NULL, NULL);
 
 --
 -- Индексы сохранённых таблиц
@@ -138,6 +142,13 @@ INSERT INTO `users` (`id`, `email`, `password`, `username`, `role`, `created_at`
 ALTER TABLE `articles`
     ADD PRIMARY KEY (`id`),
   ADD KEY `articles_ibfk_1` (`user_id`);
+
+--
+-- Индексы таблицы `article_category`
+--
+ALTER TABLE `article_category`
+    ADD KEY `article_id` (`article_id`),
+  ADD KEY `category_id` (`category_id`);
 
 --
 -- Индексы таблицы `auth_codes`
@@ -176,7 +187,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `articles`
 --
 ALTER TABLE `articles`
-    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT для таблицы `auth_codes`
@@ -194,7 +205,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
@@ -211,6 +222,13 @@ ALTER TABLE `users`
 --
 ALTER TABLE `articles`
     ADD CONSTRAINT `articles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `article_category`
+--
+ALTER TABLE `article_category`
+    ADD CONSTRAINT `article_category_ibfk_1` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `article_category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `auth_codes`

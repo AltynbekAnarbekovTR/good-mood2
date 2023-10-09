@@ -141,9 +141,11 @@ class ArticleController
   {
     $category = $_GET['category'] ?? '';
     $dataForDisplayingArticles = $this->prepareArticlesData($category, true);
-    $mainArticleData = $this->prepareMainArticleData();
+    if($mainArticleData = $this->prepareMainArticleData()) {
+      $dataForDisplayingArticles += $mainArticleData;
+    };
     $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
-            $dataForDisplayingArticles + $mainArticleData
+            $dataForDisplayingArticles
     );
     $this->layoutView->renderPage($manageArticlesTemplate);
   }
