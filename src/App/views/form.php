@@ -10,7 +10,7 @@
         </div>
       <?php endif; ?>
     </label>
-    <button type="submit" class="block w-full py-2 bg-indigo-600 text-white rounded">
+    <button type="submit" class=" py-2 bg-indigo-600 text-white rounded">
       Submit
     </button>
   </form>

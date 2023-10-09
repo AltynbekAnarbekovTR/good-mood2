@@ -1,7 +1,7 @@
 <div class="profile">
     <div class="profile__left">
         <div class="profile__avatar-container">
-            <img alt="avatar" class="profile__avatar rounded-circle m-4"
+            <img alt="avatar" class="profile__avatar m-4"
                  src='<?php echo $userAvatar ? "data:image/png;base64,".$userAvatar : '/assets/img/user.webp'; ?>'>
         </div>
         <form enctype="multipart/form-data" method="POST" class="profile__image__container">

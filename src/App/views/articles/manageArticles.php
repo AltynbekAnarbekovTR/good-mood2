@@ -18,22 +18,19 @@
   <table class="table-auto min-w-full divide-y divide-gray-300 mt-6">
     <thead class="bg-gray-50">
     <tr>
-      <th class="p-4 text-left text-sm font-semibold text-gray-900">
+      <th class="p-4 text-center text-sm font-semibold text-gray-900">
         Title
       </th>
-      <th class="p-4 text-left text-sm font-semibold text-gray-900">
+      <th class="p-4 text-center text-sm font-semibold text-gray-900">
         Description
       </th>
-        <th class="p-4 text-left text-sm font-semibold text-gray-900">
+        <th class="p-1.5 text-center text-sm font-semibold text-gray-900">
             Categories
         </th>
-      <th class="p-4 text-left text-sm font-semibold text-gray-900">
+      <th class="p-4 text-center text-sm font-semibold text-gray-900">
         Image
       </th>
-      <th class="p-4 text-left text-sm font-semibold text-gray-900">
-        Created at
-      </th>
-      <th>Actions</th>
+      <th class="p-4 text-center text-sm font-semibold text-gray-900">Actions</th>
     </tr>
     </thead>
     <!-- Article Table Body -->
@@ -50,35 +47,22 @@
               <?php echo escapeInjection($mainArticle->getDescription()); ?>
             </td>
             <!-- Categories -->
-            <td class="p-4 text-sm text-gray-600">
+            <td class="p-1.5 text-sm text-gray-600">
               <?php foreach ($mainArticleCategories as $articleCategory) : ?>
-                  <span class="card__category"><?php echo $articleCategory ?></span>
+                  <span class="w-full card__category"><?php echo $articleCategory ?></span>
               <?php endforeach; ?>
             </td>
             <!-- Image -->
             <td class="p-4 text-sm text-gray-600">
                 <div class="inline-block relative cursor-pointer">
-                    <a href="/article/<?php echo escapeInjection($mainArticle->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>">
+                    <a href="/article/<?php echo escapeInjection($mainArticle->getId()); ?>">
                         <img src="data:image/png;base64,<?php
                         echo $mainArticleImage; ?>" alt="">
                     </a>
-                    <form action="/article/<?php echo escapeInjection($mainArticle->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>" method="POST">
-                      <?php include $this->resolve("partials/_csrf.php"); ?>
-                        <input type="hidden" name="_METHOD" value="DELETE" />
-                        <button type="submit" class="absolute -top-1 -right-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </button>
-                    </form>
                 </div>
             </td>
-            <!-- Date -->
-            <td class="p-4 text-sm text-gray-600">
-              <?php echo escapeInjection($mainArticle->getCreatedAt()); ?>
-            </td>
             <!-- Actions -->
-            <td class="p-4 text-sm text-gray-600 flex justify-center space-x-2">
+            <td class="p-4 text-sm text-gray-600 flex space-x-2">
                 <form action="/set-main-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
                     <input type="hidden" name="_METHOD" value="post" />
                   <?php include $this->resolve("partials/_csrf.php"); ?>
@@ -118,32 +102,19 @@
           <?php echo escapeInjection($article->getDescription()); ?>
         </td>
           <!-- Categories -->
-          <td class="p-4 text-sm text-gray-600">
+          <td class="p-1.5 text-sm text-gray-600">
             <?php foreach ($articlesCategories[$article->getId()] as $articleCategory) : ?>
-                <span class="card__category"><?php echo $articleCategory ?></span>
+                <span class="w-full card__category"><?php echo $articleCategory ?></span>
             <?php endforeach; ?>
           </td>
         <!-- Image -->
         <td class="p-4 text-sm text-gray-600">
             <div class="inline-block relative cursor-pointer">
-              <a href="/article/<?php echo escapeInjection($article->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>">
+              <a href="/article/<?php echo escapeInjection($article->getId()); ?>">
                   <img src="data:image/png;base64,<?php
                   echo $articleImages[$article->getId()]; ?>" alt="">
               </a>
-              <form action="/article/<?php echo escapeInjection($article->getId()); ?>/receipt/<?php echo escapeInjection($receipt['id']); ?>" method="POST">
-                <?php include $this->resolve("partials/_csrf.php"); ?>
-                <input type="hidden" name="_METHOD" value="DELETE" />
-                <button type="submit" class="absolute -top-1 -right-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="rgb(239 68 68)" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-              </form>
             </div>
-        </td>
-        <!-- Date -->
-        <td class="p-4 text-sm text-gray-600">
-          <?php echo escapeInjection($article->getCreatedAt()); ?>
         </td>
         <!-- Actions -->
         <td class="p-4 text-sm text-gray-600 flex justify-center space-x-2">

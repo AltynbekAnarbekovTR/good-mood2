@@ -1,6 +1,6 @@
 <div class="wrapper">
     <main>
-        <div class="container hero--contained">
+        <div class="hero--contained">
             <div class="">
                 <img src='data:image/png;base64,<?php echo $articleImage; ?>'
                      class="featured__image"
