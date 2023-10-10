@@ -14,8 +14,7 @@ class LengthMaxRule implements RuleInterface
     }
 
     $length = (int) $params[0];
-
-    return strlen($data[$field]) < $length;
+    return mb_strlen($data[$field]) < $length;
   }
 
   public function getMessage(array $data, string $field, array $params): string

@@ -3,7 +3,7 @@
     <div class="comment__left">
         <div class="comment-avatar">
             <img class="comment-avatar"
-                 src='<?php echo $userAvatars[$comment->getUserId()] ? "data:image/png;base64,".$userAvatars[$comment->getUserId()] : '/assets/img/user.webp'; ?>'>
+                 src='<?php echo isset($userAvatars[$comment->getUserId()]) ? "data:image/png;base64,".$userAvatars[$comment->getUserId()] : '/assets/img/user.webp'; ?>'>
         </div>
     </div>
     <div class="comment__right">
@@ -11,9 +11,7 @@
             <h4 class="comment-info__username">
               <?php echo escapeInjection($comment->getUsername()); ?>
             </h4>
-            <textarea maxlength="500" readonly class="comment-info__text">
-              <?php echo escapeInjection($comment->getCommentText()); ?>
-            </textarea>
+            <textarea maxlength="500" readonly class="comment-info__text"><?php echo escapeInjection($comment->getCommentText()); ?></textarea>
             <p class="comment-info__date">
               <?php echo escapeInjection($comment->getCreatedAt()); ?>
             </p>

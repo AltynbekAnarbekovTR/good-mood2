@@ -1,5 +1,5 @@
 <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-  <form enctype="multipart/form-data" method="POST">
+  <form enctype="multipart/form-data" method="POST" accept-charset="UTF-8">
     <?php include $this->resolve("partials/_csrf.php"); ?>
     <label class="block">
       <span class="text-gray-700">Title <span class="light-grey">(Max: 100 symbols)</span></span>
@@ -27,11 +27,11 @@
           <span class="text-gray-700">Article text <span class="light-grey">(Max: 2000 symbols)</span></span>
           <textarea  maxlength="2000" name="text" type="text"
                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-            <?php echo escapeInjection($oldFormData['article_text'] ?? ''); ?>
+            <?php echo escapeInjection($oldFormData['text'] ?? ''); ?>
           </textarea>
-          <?php if (isset($errors) && array_key_exists('description', $errors)) : ?>
+          <?php if (isset($errors) && array_key_exists('text', $errors)) : ?>
               <div class="bg-gray-100 mt-2 p-2 text-red-500">
-                  <?php echo escapeInjection($errors['description'][0]); ?>
+                  <?php echo escapeInjection($errors['text'][0]); ?>
               </div>
           <?php endif; ?>
       </label>

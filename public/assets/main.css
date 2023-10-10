@@ -191,6 +191,7 @@ img {
 
 .comment-info__text {
   height: auto;
+  text-align: left;
   border: none;
   resize: none;
   cursor: default;

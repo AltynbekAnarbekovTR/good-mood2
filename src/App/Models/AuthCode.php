@@ -37,11 +37,13 @@ class AuthCode extends ActiveRecordEntity
       $lastCreatedUser = $_SESSION['user']['userId'];
     }
     $this->db->query(
-            "INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code )",
+            "DELETE FROM auth_codes WHERE user_id = :user_id; 
+                   INSERT INTO auth_codes(user_id, email,code) VALUES(:user_id, :email, :code ) 
+                   ON DUPLICATE KEY UPDATE code = :code",
             [
                     'user_id' => $lastCreatedUser,
                     'email'   => $email,
-                    'code'    => $authCode
+                    'code'    => $authCode,
             ]
     );
   }

@@ -30,7 +30,7 @@ class Category extends ActiveRecordEntity
   }
 
   function getArticleCategories($articleId) {
-    return $categories =  $this->db->query(
+    return $this->db->query(
             "SELECT c.title
                 FROM categories c
                 JOIN article_category ac ON c.id = ac.category_id

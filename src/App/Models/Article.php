@@ -66,13 +66,6 @@ class Article extends ActiveRecordEntity
     return $this->mediaType;
   }
 
-  public function getCategories(): array|null
-  {
-    if($this->categories !== null) {
-      return unserialize($this->categories);
-    } else return [];
-  }
-
   public function getMainFor(): string|null
   {
     return $this->mainFor;
@@ -234,22 +227,25 @@ class Article extends ActiveRecordEntity
     )->find(Article::class);
   }
 
-  public function update(array $formData, int $id)
+  public function update(array $formData, int $id, $coverImage, $storageFilename)
   {
-    $serializedCategories = isset($formData['category']) ? serialize($formData['category']) : null;
     $this->db->query(
             "UPDATE articles
       SET description = :description,
         title = :title,
         article_text = :article_text,
-        categories = :categories
+        original_filename = :original_filename, 
+        storage_filename = :storage_filename, 
+        media_type = :media_type
       WHERE id = :id",
             [
                     'title'        => $formData['title'],
                     'description'  => $formData['description'],
                     'article_text' => $formData['text'],
                     'id'           => $id,
-                    'categories'   => $serializedCategories,
+                    'original_filename' => $coverImage['name'],
+                    'storage_filename'  => $storageFilename,
+                    'media_type'        => $coverImage['type']
             ]
     );
   }
@@ -289,12 +285,5 @@ class Article extends ActiveRecordEntity
               ['article_id' => $articleId, 'category_id' => $categoryId]
       );
     }
-  }
-
-  public function getArticleCategories(int $articleId) {
-    $this->db->query(
-            "SELECT id FROM article_cateogory WHERE article_id = :article_id JOIN ",
-            ['article_id' => $articleId, 'category_id' => $categoryId]
-    );
   }
 }

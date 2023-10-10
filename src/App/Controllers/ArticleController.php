@@ -29,7 +29,7 @@ class ArticleController
   ) {
     $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
     $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
-    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:2000']);
+    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:3000']);
   }
 
   public function prepareArticlesData($category = '', $provideAllCategories = false): array
@@ -183,13 +183,15 @@ class ArticleController
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
+    $articleCategories = $this->categoryModel->getArticleCategories($article->getId());
     if (!$article) {
       redirectTo('/manage-articles');
     }
     $editArticleTemplate = $this->articlesView->getEditArticleTemplate(
             [
                     'article' => $article,
-                    'categories' => $categories
+                    'categories' => $categories,
+                    'articleCategories' => $articleCategories
             ]
     );
     $this->layoutView->renderPage($editArticleTemplate);
@@ -197,13 +199,19 @@ class ArticleController
 
   public function editArticle(array $params)
   {
-
     $errors = $this->formValidatorService->validate($_POST);
+    if(isset($_FILES['cover'])) {
+      $errors += $this->uploadFileService->checkUploadedImage($_FILES['cover']);
+      [$newFilename, $fileIsUploaded] = $this->uploadFileService->uploadImageToStorage($_FILES['cover']);
+      if (!$fileIsUploaded) {
+        $errors += ['cover' => ['Failed to upload file']];
+      }
+    }
     if (count($errors)) {
       $this->errorMessagesService->setErrorMessage($errors);
     }
-    $this->articleModel->update($_POST, (int)$params['article']);
-    redirectTo('manage-articles');
+    $this->articleModel->update($_POST, (int)$params['article'], $_FILES['cover'], $newFilename);
+    redirectTo('/manage-articles');
   }
 
   public function deleteArticle(array $params)

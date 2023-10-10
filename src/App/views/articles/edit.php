@@ -1,5 +1,5 @@
 <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-    <form method="POST">
+    <form enctype="multipart/form-data"  method="POST">
       <?php
       include $this->resolve("partials/_csrf.php"); ?>
         <label class="block">
@@ -37,7 +37,7 @@
           <?php endif; ?>
         </label>
               <?php foreach ($categories as $category): ?>
-                <?php $isChecked = in_array($category->getTitle(), $article->getCategories()) ? 'checked' : ''; ?>
+                <?php $isChecked = in_array($category->getTitle(), $articleCategories) ? 'checked' : ''; ?>
                   <label class="mr-3"><input type="checkbox" <?php echo $isChecked; ?> name="category[]" value="<?php echo $category->getTitle(); ?>"><?php echo $category->getTitle(); ?></label>
                 <?php endforeach; ?>
         <label class="block">
