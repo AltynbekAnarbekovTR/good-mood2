@@ -25,10 +25,9 @@
     </label>
       <label class="block">
           <span class="text-gray-700">Article text <span class="light-grey">(Max: 2000 symbols)</span></span>
-          <textarea  maxlength="2000" name="text" type="text"
-                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-            <?php echo escapeInjection($oldFormData['text'] ?? ''); ?>
-          </textarea>
+          <textarea  maxlength="2000" name="text" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"><?php
+            echo escapeInjection($oldFormData['text'] ?? '');
+            ?></textarea>
           <?php if (isset($errors) && array_key_exists('text', $errors)) : ?>
               <div class="bg-gray-100 mt-2 p-2 text-red-500">
                   <?php echo escapeInjection($errors['text'][0]); ?>
