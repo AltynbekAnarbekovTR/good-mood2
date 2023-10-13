@@ -18,8 +18,9 @@
           <?php echo escapeInjection($errors['password'][0]); ?>
         </div>
       <?php endif; ?>
+        <p href="/restore-password" class="forgot-password">Forgot password</p>
     </label>
-      <a href="/restore-password" class="forgot-password">Forgot password</a>
+
       <label class="block">
           <?php if (array_key_exists('otherLoginErrors', $errors)) : ?>
             <div class="bg-gray-100 mt-2 p-2 text-red-500">

@@ -25,11 +25,13 @@ class ImageService
 
   public function createB64Image($object): string|null {
     $filename = $object->getStorageFilename();
-    $fileDir = Paths::STORAGE_UPLOADS;
-    $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
-    if (file_exists($file)) {
-      $b64image = base64_encode(file_get_contents($file));
-      return $b64image;
+    if($filename) {
+      $fileDir = Paths::STORAGE_UPLOADS;
+      $file = $fileDir.DIRECTORY_SEPARATOR.$filename;
+      if (file_exists($file)) {
+        $b64image = base64_encode(file_get_contents($file));
+        return $b64image;
+      }
     }
     return null;
   }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Models\AuthCode;
-use App\Views\{FormView, LayoutView, AuthView};
+use App\Views\{FormView, LayoutView, AuthView, LoginView};
 use App\Services\{ErrorMessagesService, FormValidatorService, EmailService};
 use App\Models\User;
 
@@ -15,6 +15,7 @@ class AuthController
   public function __construct(
           private AuthView $authView,
           private FormView $formView,
+          private LoginView $loginView,
           private LayoutView $layoutView,
           private FormValidatorService $formValidatorService,
           private User $userModel,
@@ -65,12 +66,7 @@ class AuthController
 
   public function renderLoginUser()
   {
-    $loginForm = $this->formView->createFormTemplate(
-            [
-                    ['label' => 'Email', 'name' => 'email', 'type' => 'email', 'placeholder' => 'john@example.com'],
-                    ['label' => 'Password', 'name' => 'password', 'type' => 'password'],
-            ]
-    );
+    $loginForm = $this->loginView->createLoginTemplate();
     $this->layoutView->renderPage($loginForm);
   }
 

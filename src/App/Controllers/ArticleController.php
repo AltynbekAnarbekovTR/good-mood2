@@ -200,7 +200,7 @@ class ArticleController
   public function editArticle(array $params)
   {
     $errors = $this->formValidatorService->validate($_POST);
-    if(isset($_FILES['cover'])) {
+    if(isset($_FILES['cover']) && $_FILES['cover']['name'] !== '') {
       $errors += $this->uploadFileService->checkUploadedImage($_FILES['cover']);
       [$newFilename, $fileIsUploaded] = $this->uploadFileService->uploadImageToStorage($_FILES['cover']);
       if (!$fileIsUploaded) {

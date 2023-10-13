@@ -555,6 +555,9 @@ a:hover img {
   }
 }
 @media screen and (max-width: 768px) {
+  .article__title {
+    font-size: 16px;
+  }
   .profile {
     flex-direction: column;
   }
@@ -601,9 +604,6 @@ a:hover img {
   }
   .article {
     margin-bottom: 20px;
-  }
-  .article .intro__paragraph:first-child {
-    display: none;
   }
   blockquote p {
     font-size: 22px;
@@ -2034,13 +2034,11 @@ a:hover img {
   margin-bottom: 0;
 }
 .article .intro__paragraph + .text__block > p:first-child:first-letter {
+  margin-top: -11px;
+  float: left;
   font-size: 46px;
   font-size: 2.875rem;
-  line-height: 30px;
-  line-height: 1.875rem;
   font-family: "colchis", serif;
-  padding-right: 6px;
-  padding-top: 12px;
   float: left;
   color: #ff594d;
 }

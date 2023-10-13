@@ -15,9 +15,9 @@ class Article extends ActiveRecordEntity
   protected string $createdAt;
   protected string $updatedAt;
   protected int $userId;
-  protected string $originalFilename;
-  protected string $storageFilename;
-  protected string $mediaType;
+  protected string|null $originalFilename;
+  protected string|null $storageFilename;
+  protected string|null $mediaType;
   protected string|null $categories;
   protected string|null $mainFor;
 
@@ -51,17 +51,17 @@ class Article extends ActiveRecordEntity
     return $this->userId;
   }
 
-  public function getOriginalFilename(): string
+  public function getOriginalFilename(): string|null
   {
     return $this->originalFilename;
   }
 
-  public function getStorageFilename(): string
+  public function getStorageFilename(): string|null
   {
     return $this->storageFilename;
   }
 
-  public function getMediaType(): string
+  public function getMediaType(): string|null
   {
     return $this->mediaType;
   }
@@ -248,6 +248,22 @@ class Article extends ActiveRecordEntity
                     'media_type'        => $coverImage['type']
             ]
     );
+    if($storageFilename) {
+      $this->db->query(
+              "UPDATE articles
+      SET 
+        original_filename = :original_filename, 
+        storage_filename = :storage_filename, 
+        media_type = :media_type
+      WHERE id = :id",
+              [
+                      'original_filename' => $coverImage['name'],
+                      'storage_filename'  => $storageFilename,
+                      'media_type'        => $coverImage['type']
+              ]
+      );
+    }
+
   }
 
   public function delete(int $id)

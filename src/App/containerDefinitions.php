@@ -6,7 +6,7 @@ use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
 use App\Services\{FormValidatorService, UploadFileService, EmailService, ImageService, ErrorMessagesService};
 use App\Models\{User, Article, Comment, AuthCode, Category};
-use App\Views\{ArticlesView, AboutView, AuthView, HeroArticleView, FormView, ProfileView, LayoutView, ArticlesGridView};
+use App\Views\{ArticlesView, AboutView, AuthView, LoginView, HeroArticleView, FormView, ProfileView, LayoutView, ArticlesGridView};
 return [
         TemplateEngine::class       => fn() => new TemplateEngine(Paths::VIEW),
         FormValidatorService::class => fn() => new FormValidatorService(),
@@ -44,6 +44,10 @@ return [
         ArticlesGridView::class => function (Container $container) {
           $templateEngine = $container->get(TemplateEngine::class);
           return new ArticlesGridView($templateEngine);
+        },
+        LoginView::class => function (Container $container) {
+          $templateEngine = $container->get(TemplateEngine::class);
+          return new LoginView($templateEngine);
         },
         Database::class             => fn() => new Database(
                 getenv('DRIVER'), [
