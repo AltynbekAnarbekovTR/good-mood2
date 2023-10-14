@@ -268,6 +268,10 @@ img {
   margin-bottom: 0;
 }
 
+.article__categories {
+  margin-bottom: 40px;
+}
+
 .card__image__link {
   display: block;
   position: relative;
@@ -426,7 +430,6 @@ a:hover img {
   font-family: "neuzeit-grotesk";
   color: #00bcdb;
   font-weight: bold;
-  float: left;
   margin-right: 5px;
   font-size: 14px;
   font-size: 0.875rem;
@@ -592,9 +595,6 @@ a:hover img {
     font-size: 0.875rem;
     line-height: 18px;
     line-height: 1.125rem;
-  }
-  .intro__paragraph {
-    margin-bottom: 20px;
   }
   .intro__paragraph p {
     font-size: 16px;
@@ -1191,16 +1191,6 @@ a:hover img {
 .card__title:hover {
   text-decoration: underline;
 }
-.card__category {
-  color: #00bcdb;
-  font-weight: bold;
-  float: left;
-  margin-right: 5px;
-  font-size: 14px;
-  font-size: 0.875rem;
-  line-height: 18px;
-  line-height: 1.125rem;
-}
 .card__category:after {
   content: "/";
   padding-left: 6px;
@@ -1315,6 +1305,10 @@ input[type="search"] {
 }
 input[type="search"] {
   -webkit-appearance: none;
+}
+input[type="checkbox"] {
+  margin-right: 5px;
+  margin-bottom: 4px;
 }
 .container {
   position: relative;
@@ -1999,7 +1993,7 @@ a:hover img {
   background: 0;
 }
 .intro__paragraph {
-  margin-bottom: 30px;
+  margin-bottom: 70px;
 }
 .intro__paragraph p {
   font-size: 18px;
@@ -2028,7 +2022,7 @@ a:hover img {
 .article .article__title {
   font-size: 3rem;
   font-weight: bold;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 .article .article__content > :last-child {
   margin-bottom: 0;

@@ -226,6 +226,7 @@ class ArticleController
     $article = $this->articleModel->getArticleById(
             $params['article']
     );
+    $articleCategories = $this->categoryModel->getArticleCategories($article->getId());
     $articleImage = $this->imageService->createB64Image($article);
     $comments = $this->commentModel->getCommentsOfArticle(
             $article->getId()
@@ -241,6 +242,7 @@ class ArticleController
     $readArticleTemplate = $this->articlesView->getReadArticleTemplate(
             [
                     'article'      => $article,
+                    'articleCategories' => $articleCategories,
                     'articleImage' => $articleImage,
                     'comments'     => $comments,
                     'userAvatars'  => $userAvatars,

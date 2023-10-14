@@ -11,6 +11,11 @@
                 <h1 class="article__title col--12 text__align--left pb--medium">
                   <?php echo escapeInjection($article->getTitle()); ?>
                 </h1>
+              <div class="article__categories">
+                <?php foreach ($articleCategories as $articleCategory) : ?>
+                    <span class="card__category"><?php echo $articleCategory ?></span>
+                <?php endforeach; ?>
+              </div>
                 <!-- main content -->
                 <div class="article__content col--8--last col--12--bp3">
                     <div class="intro__paragraph pb--medium">
