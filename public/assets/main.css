@@ -340,6 +340,9 @@ a:hover img {
 .search-form {
   display: flex;
 }
+.filters {
+  display: flex;
+}
 .search-form__submit {
   border-top-right-radius: 0.375rem;
   border-bottom-right-radius: 0.375rem;
@@ -2166,8 +2169,6 @@ textarea {
   font-weight: inherit;
   line-height: inherit;
   color: inherit;
-  margin: 0;
-  padding: 0;
 }
 button,
 select {
@@ -2291,14 +2292,10 @@ video {
 [multiple],
 textarea,
 select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
   background-color: #fff;
   border-color: #6b7280;
   border-width: 1px;
   border-radius: 0;
-  padding: 0.5rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5rem;
 }
@@ -2349,15 +2346,6 @@ textarea::placeholder {
 ::-webkit-datetime-edit-meridiem-field {
   padding-top: 0;
   padding-bottom: 0;
-}
-select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.5rem center;
-  background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
-  padding-right: 2.5rem;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
 }
 [multiple] {
   background-image: initial;

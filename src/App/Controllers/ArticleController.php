@@ -39,6 +39,7 @@ class ArticleController
       $allCategories = $this->categoryModel->getCategories();
     }
     $page = $_GET['p'] ?? 1;
+    $sortyByDate = $_GET['date'] ?? '';
     $page = (int)$page;
     $length = 3;
     $offset = ($page - 1) * $length;
@@ -46,7 +47,8 @@ class ArticleController
     [$articles, $count] = $this->articleModel->getAllArticles(
             $length,
             $offset,
-            $category
+            $category,
+            $sortyByDate
     );
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];

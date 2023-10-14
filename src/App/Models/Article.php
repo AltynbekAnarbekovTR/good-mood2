@@ -140,9 +140,15 @@ class Article extends ActiveRecordEntity
     }
   }
 
-  public function getAllArticles(int $length = 3, int $offset = 0, $category = ''): array
+  public function getAllArticles(int $length = 3, int $offset = 0, $category = '', $sortByDate='descending'): array
   {
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
+    $limit = "LIMIT {$length} OFFSET {$offset}";
+    if ($sortByDate === 'ascending') {
+      $sort = "ORDER BY created_at ASC";
+    } else {
+      $sort = "ORDER BY created_at DESC";
+    }
     if ($category) {
       $params = [
               'category' => $category,
@@ -155,7 +161,8 @@ class Article extends ActiveRecordEntity
             JOIN categories c ON ac.category_id = c.id
             WHERE a.title LIKE :title
             AND c.title = :category
-            LIMIT {$length} OFFSET {$offset}",
+            $sort
+            $limit",
               array_merge($params, ['category' => $category])
       )->findAll(Article::class);
       $articleCount = $this->db->query(
@@ -176,7 +183,8 @@ class Article extends ActiveRecordEntity
               "SELECT *
             FROM articles
             WHERE title LIKE :title
-            LIMIT {$length} OFFSET {$offset}",
+            $sort
+            $limit",
               $params
       )->findAll(Article::class);
       $articleCount = $this->db->query(
