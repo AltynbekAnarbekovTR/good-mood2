@@ -110,7 +110,7 @@ class ProfileController
     }
     $authenticationCode = md5((string)rand());
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
-    $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://localhost/verify-email-change?code=$authenticationCode&email=$email'>Click to verify your email</a>";
+    $emailText = "<p>You sent a request to change your email in Good Mood. Click the link below to verify your new email.</p><br/><a href='http://31.129.97.225/verify-email-change?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
     $emailSentTemplate = $this->authView->getEmailSentTemplate();
     $this->layoutView->renderPage($emailSentTemplate);

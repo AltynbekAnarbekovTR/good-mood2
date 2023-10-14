@@ -58,7 +58,7 @@ class AuthController
     $_SESSION['user'] = ['userId' => $this->userModel->lastInsertId()];
     $authenticationCode = md5((string)rand());
     $this->authCodeModel->setAuthCode($authenticationCode, $email);
-    $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://localhost/verify-account?code=$authenticationCode&email=$email'>Click to verify your email</a>";
+    $emailText = "<p>Welcome to Good Mood! Click the link below to verify your account</p><br/><a href='http://31.129.97.225/verify-account?code=$authenticationCode&email=$email'>Click to verify your email</a>";
     $this->emailService->sendEmail($emailText, $email);
     $emailSentTemplate = $this->authView->getEmailSentTemplate();
     $this->layoutView->renderPage($emailSentTemplate);
@@ -133,7 +133,7 @@ class AuthController
     if (!$userExist) {
       $this->errorMessagesService->setErrorMessage(['email' => ['Such user doesn\'t exist']]);
     }
-    $emailText = "<p>Follow the link below to set the new password:</p><br/><a href='http://localhost/reset-password?email=$email'>Click to reset password</a>";
+    $emailText = "<p>Follow the link below to set the new password:</p><br/><a href='http://31.129.97.225/reset-password?email=$email'>Click to reset password</a>";
     $this->emailService->sendEmail($emailText, $_POST['email']);
     $emailSentTemplate = $this->authView->getEmailSentTemplate();
     $this->layoutView->renderPage($emailSentTemplate);

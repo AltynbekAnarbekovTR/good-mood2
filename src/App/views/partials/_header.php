@@ -5,7 +5,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0 w-100 justify-content-center">
+            <ul class="navbar-nav mb-2 mb-lg-0 w-100 justify-content-end">
                 <li class="nav-item"><a href="/" class="text-gray-300 hover:text-white transition nav-link">Home</a></li>
                 <li class="nav-item"><a href="/about" class="text-gray-300 hover:text-white transition nav-link ">About</a></li>
                 <li class="nav-item dropdown">

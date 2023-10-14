@@ -3105,6 +3105,9 @@ hr {
   }
 }
 @media (min-width: 1024px) {
+  .navbar-nav {
+    padding-right: 30px;
+  }
   .lg\:gap-x-10 {
     -moz-column-gap: 2.5rem;
     column-gap: 2.5rem;
