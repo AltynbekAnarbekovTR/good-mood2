@@ -430,10 +430,10 @@ a:hover img {
   line-height: 18px;
   line-height: 1.125rem;
 }
-.card__category:after {
-  content: "/";
-  padding-left: 6px;
+.card .card__category:hover {
+  text-decoration: underline;
 }
+
 .card__category:last-of-type {
   margin-right: 0;
 }
@@ -755,12 +755,6 @@ a:hover img {
   }
   .card__text {
     display: none;
-  }
-  .card__category {
-    font-size: 12px;
-    font-size: 0.75rem;
-    line-height: 13px;
-    line-height: 0.8125rem;
   }
   .card__credit {
     font-size: 12px;
@@ -1177,6 +1171,7 @@ a:hover img {
   text-decoration: underline;
 }
 .card__category:after {
+  display:inline-block;
   content: "/";
   padding-left: 6px;
 }

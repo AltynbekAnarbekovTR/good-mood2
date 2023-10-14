@@ -13,7 +13,7 @@
                 </h1>
               <div class="article__categories">
                 <?php foreach ($articleCategories as $articleCategory) : ?>
-                    <span class="card__category"><?php echo $articleCategory ?></span>
+                    <a href="/category/<?php echo $articleCategory ?>" class="card__category"><?php echo $articleCategory ?></a>
                 <?php endforeach; ?>
               </div>
                 <!-- main content -->

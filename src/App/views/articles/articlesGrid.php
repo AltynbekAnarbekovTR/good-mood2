@@ -18,7 +18,7 @@
           <?php echo escapeInjection($article->getDescription()); ?>
         </span>
         <?php foreach ($articlesCategories[$article->getId()] as $articleCategory) : ?>
-            <span class="card__category"><?php echo $articleCategory ?></span>
+            <a href="/category/<?php echo $articleCategory ?>" class="card__category"><?php echo $articleCategory ?></a>
         <?php endforeach; ?>
       </div>
     </div>
