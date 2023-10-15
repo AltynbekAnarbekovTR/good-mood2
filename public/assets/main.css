@@ -421,6 +421,7 @@ a:hover img {
   text-decoration: underline;
 }
 .card__category {
+  word-break: normal;
   font-family: "neuzeit-grotesk";
   color: #00bcdb;
   font-weight: bold;
@@ -454,6 +455,9 @@ a:hover img {
   overflow: hidden;
   margin-bottom: 30px;
 }
+.nav-link {
+  display: inline;
+}
 .menu__trigger {
   cursor: pointer;
   position: absolute;
@@ -472,6 +476,7 @@ a:hover img {
   justify-content: center;
   align-items: center;
 }
+
 
 .container {
   min-height: 100vh;

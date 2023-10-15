@@ -132,27 +132,25 @@ class User extends ActiveRecordEntity
   {
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
     $params = [
-
-            'description' => "%{$searchTerm}%",
+            'searchTerm' => "%{$searchTerm}%",
     ];
 
     $users = $this->db->query(
             "SELECT *
       FROM users 
-      WHERE description LIKE :description
+      WHERE username LIKE :searchTerm OR email LIKE :searchTerm  OR role LIKE :searchTerm
       LIMIT {$length} OFFSET {$offset}",
             $params
     )->findAll(User::class);
 
-
-    $userCount = $this->db->query(
+    $count = $this->db->query(
             "SELECT COUNT(*)
       FROM users 
-      WHERE description LIKE :description",
+      WHERE username LIKE :searchTerm OR email LIKE :searchTerm",
             $params
     )->count();
 
-    return [$users, $userCount];
+    return [$users, $count];
   }
 
   public function checkUserExist(string $email)

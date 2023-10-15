@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Views\{ArticlesGridView, HeroArticleView, LayoutView, ArticlesView};
 use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormValidatorService};
 
-class ArticleController
+class ArticleController extends ControllerWIthPagination
 {
   public function __construct(
           private ArticlesView $articlesView,
@@ -38,58 +38,42 @@ class ArticleController
     if($provideAllCategories) {
       $allCategories = $this->categoryModel->getCategories();
     }
-    $page = $_GET['p'] ?? 1;
-    $sortyByDate = $_GET['date'] ?? '';
-    $page = (int)$page;
-    $length = 3;
-    $offset = ($page - 1) * $length;
-    $searchTerm = $_GET['s'] ?? null;
-    [$articles, $count] = $this->articleModel->getAllArticles(
-            $length,
-            $offset,
-            $category,
-            $sortyByDate
-    );
-    $lastPage = ceil($count / $length);
-    $pages = $lastPage ? range(1, $lastPage) : [];
-    $pageLinks = array_map(
-            fn($pageNum) => http_build_query(
-                    [
-                            'p' => $pageNum,
-                            's' => $searchTerm,
-                    ]
-            ),
-            $pages
-    );
-    $articleImages = $this->imageService->createB64ImageArray($articles);
+//    $page = $_GET['p'] ?? 1;
+//    $sortyByDate = $_GET['date'] ?? '';
+//    $page = (int)$page;
+//    $length = 3;
+//    $offset = ($page - 1) * $length;
+//    $searchTerm = $_GET['s'] ?? null;
+//    [$articles, $count] = $this->articleModel->getAllArticles(
+//            $length,
+//            $offset,
+//            $category,
+//            $sortyByDate
+//    );
+//    $lastPage = ceil($count / $length);
+//    $pages = $lastPage ? range(1, $lastPage) : [];
+//    $pageLinks = array_map(
+//            fn($pageNum) => http_build_query(
+//                    [
+//                            'p' => $pageNum,
+//                            's' => $searchTerm,
+//                    ]
+//            ),
+//            $pages
+//    );
+    $articlesWithPagination = $this->prepareDataWithPagination('articles', [$this->articleModel, 'getAllarticles'], $category);
+    $articleImages = $this->imageService->createB64ImageArray($articlesWithPagination['articles']);
     $articlesCategories = [];
-    foreach ($articles as $article) {
+    foreach ($articlesWithPagination['articles'] as $article) {
       $categories = $this->categoryModel->getArticleCategories($article->getId());
       $articlesCategories[$article->getId()] = $categories;
     }
     return
-            [
+            $articlesWithPagination + [
                     'sectionTitle'       => $category === '' ? 'Latest Articles' : $category,
                     'allCategories'      => $allCategories,
-                    'articles'           => $articles,
                     'articlesCategories' => $articlesCategories,
-                    'articleImages'      => $articleImages,
-                    'currentPage'        => $page,
-                    'previousPageQuery'  => http_build_query(
-                            [
-                                    'p' => $page - 1,
-                                    's' => $searchTerm,
-                            ]
-                    ),
-                    'lastPage'           => $lastPage,
-                    'nextPageQuery'      => http_build_query(
-                            [
-                                    'p' => $page + 1,
-                                    's' => $searchTerm,
-                            ]
-                    ),
-                    'pageLinks'          => $pageLinks,
-                    'searchTerm'         => $searchTerm,
+                    'articleImages'      => $articleImages
             ]
     ;
   }

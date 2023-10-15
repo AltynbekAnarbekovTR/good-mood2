@@ -15,7 +15,6 @@ if (getenv('APP_MODE') === 'development') {
 use Framework\App;
 use App\Config\Paths;
 use App\Middleware\{TemplateDataMiddleware,
-        ValidationExceptionMiddleware,
         SessionMiddleware,
         FlashMiddleware,
         AuthRequiredMiddleware,
@@ -25,7 +24,7 @@ use App\Middleware\{TemplateDataMiddleware,
         AdminOnlyMiddleware
 };
 use App\Controllers\{
-        HomeController,
+        UsersController,
         AboutController,
         AuthController,
         ArticleController,
@@ -47,6 +46,7 @@ $app->get('/reset-password', [AuthController::class, 'renderResetPassword']);
 $app->post('/reset-password', [AuthController::class, 'resetPassword']);
 $app->get('/logout', [AuthController::class, 'logout'])->add(AuthRequiredMiddleware::class);
 $app->get('/manage-articles', [ArticleController::class, 'renderManageArticles'])->add(AdminOnlyMiddleware::class);
+$app->get('/manage-users', [UsersController::class, 'renderManageUsers'])->add(AdminOnlyMiddleware::class);
 $app->get('/create-article', [ArticleController::class, 'renderCreateArticle'])->add(AdminOnlyMiddleware::class);
 $app->post('/create-article', [ArticleController::class, 'createArticle'])->add(AdminOnlyMiddleware::class);
 $app->get('/edit-article/{article}', [ArticleController::class, 'renderEditArticle'])->add(

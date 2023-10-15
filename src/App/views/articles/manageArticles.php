@@ -49,7 +49,7 @@
             <!-- Categories -->
             <td class="p-1.5 text-sm text-gray-600">
               <?php foreach ($mainArticleCategories as $articleCategory) : ?>
-                  <span class="w-full card__category"><?php echo $articleCategory ?></span>
+                  <span class="w-full card__category block"><?php echo $articleCategory ?></span>
               <?php endforeach; ?>
             </td>
             <!-- Image -->
@@ -104,7 +104,7 @@
           <!-- Categories -->
           <td class="p-1.5 text-sm text-gray-600">
             <?php foreach ($articlesCategories[$article->getId()] as $articleCategory) : ?>
-                <span class="w-full card__category"><?php echo $articleCategory ?></span>
+                <span class="w-full card__category block"><?php echo $articleCategory ?></span>
             <?php endforeach; ?>
           </td>
         <!-- Image -->
