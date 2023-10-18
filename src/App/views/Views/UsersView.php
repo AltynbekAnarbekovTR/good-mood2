@@ -14,7 +14,9 @@ class UsersView extends View {
     $deleteButton = $this->templateEngine->render(
             'partials/_deleteButton.php',
             [
-                    'action' => '/delete-article/' ]
+//                    'action' => '/delete-user/' ,
+            'method' => 'DELETE'
+            ]
     );
     $data['actionButtons'] = [$deleteButton];
 //    $tableColNames = ['ID', 'Username', 'Email', 'Role',];

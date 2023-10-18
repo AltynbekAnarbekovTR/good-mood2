@@ -41,4 +41,9 @@ class UsersController extends ControllerWIthPagination
     );
     $this->layoutView->renderPage($manageArticlesTemplate);
   }
+
+  public function deleteUser($param) {
+    customDump($param);
+    die();
+  }
 }
