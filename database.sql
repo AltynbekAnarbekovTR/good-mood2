@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Окт 09 2023 г., 18:01
+-- Время создания: Окт 20 2023 г., 20:52
 -- Версия сервера: 10.4.28-MariaDB
 -- Версия PHP: 8.2.4
 
@@ -29,16 +29,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `articles` (
                             `id` bigint(20) NOT NULL,
+                            `author_email` varchar(255) NOT NULL,
                             `title` varchar(255) NOT NULL,
                             `description` varchar(255) NOT NULL,
                             `article_text` varchar(5000) NOT NULL,
                             `created_at` datetime NOT NULL DEFAULT current_timestamp(),
                             `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
                             `user_id` bigint(20) UNSIGNED NOT NULL,
-                            `original_filename` varchar(255) NOT NULL,
-                            `storage_filename` varchar(255) NOT NULL,
-                            `media_type` varchar(255) NOT NULL,
-                            `categories` varchar(1000) DEFAULT NULL,
+                            `original_filename` varchar(255) DEFAULT NULL,
+                            `storage_filename` varchar(255) DEFAULT NULL,
+                            `media_type` varchar(255) DEFAULT NULL,
                             `main_for` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -65,6 +65,13 @@ CREATE TABLE `auth_codes` (
                               `email` varchar(50) NOT NULL,
                               `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `auth_codes`
+--
+
+INSERT INTO `auth_codes` (`id`, `user_id`, `email`, `code`) VALUES
+(23, 49, 'altynbek290697@gmail.com', '2e55fd9a91f90fe4aed9722877a1be1f');
 
 -- --------------------------------------------------------
 
@@ -130,7 +137,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `username`, `role`, `created_at`, `email_verified`, `original_filename`, `storage_filename`, `media_type`) VALUES
-(49, 'altyn_312@mail.ru', '$2y$12$BfiqMtTGMi2dt.T0cLRyn.n3wWoeeBGhZLh0ngROasTxvEYgt0MmC', 'Altyn', 'admin', '2023-10-01 22:38:29', 1, NULL, NULL, NULL);
+(49, 'altyn_312@mail.ru', '$2y$12$28alygxpRc75zPnkldOZYOWsTdvwIKEjO8JHIGuLiUroN/p3LGRUO', 'Bob', 'admin', '2023-10-01 22:38:29', 1, 'javascript.png', '410f5428316f8d1bd2cb41b9ac78eed1.png', 'image/png'),
+(53, 'kir@mail.ru', '$2y$12$28alygxpRc75zPnkldOZYOWsTdvwIKEjO8JHIGuLiUroN/p3LGRUO', 'Kir', 'author', '2023-10-20 16:19:46', 1, NULL, NULL, NULL);
 
 --
 -- Индексы сохранённых таблиц
@@ -141,7 +149,8 @@ INSERT INTO `users` (`id`, `email`, `password`, `username`, `role`, `created_at`
 --
 ALTER TABLE `articles`
     ADD PRIMARY KEY (`id`),
-  ADD KEY `articles_ibfk_1` (`user_id`);
+  ADD KEY `articles_ibfk_1` (`user_id`),
+  ADD KEY `author_email` (`author_email`);
 
 --
 -- Индексы таблицы `article_category`
@@ -187,13 +196,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `articles`
 --
 ALTER TABLE `articles`
-    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT для таблицы `auth_codes`
 --
 ALTER TABLE `auth_codes`
-    MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+    MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
@@ -205,13 +214,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT для таблицы `comments`
 --
 ALTER TABLE `comments`
-    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-    MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+    MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -221,7 +230,8 @@ ALTER TABLE `users`
 -- Ограничения внешнего ключа таблицы `articles`
 --
 ALTER TABLE `articles`
-    ADD CONSTRAINT `articles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `articles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `articles_ibfk_2` FOREIGN KEY (`author_email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `article_category`
