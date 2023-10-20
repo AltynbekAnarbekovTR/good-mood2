@@ -81,10 +81,8 @@ return [
           $db = $container->get(Database::class);
           return new AuthCode($db);
         },
-        UploadFileService::class   => function (Container $container) {
-          $db = $container->get(Database::class);
-
-          return new UploadFileService($db);
+        UploadFileService::class   => function () {
+          return new UploadFileService();
         }
 
 ];

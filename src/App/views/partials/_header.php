@@ -41,8 +41,10 @@
                 </li>
                 <li class="nav-item">
                   <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') : ?>
-                      <a aria-current="page" href="/manage-articles" class="text-gray-300 hover:text-white transition nav-link">Articles</a>
                       <a aria-current="page" href="/manage-users" class="text-gray-300 hover:text-white transition nav-link">Users</a>
+                  <?php endif; ?>
+                  <?php if (isset($_SESSION['user']['role']) && ($_SESSION['user']['role'] === 'admin' || 'author')) : ?>
+                      <a aria-current="page" href="/manage-articles" class="text-gray-300 hover:text-white transition nav-link">Articles</a>
                   <?php endif; ?>
                 </li>
               <?php if (isset($_SESSION['user']['loggedIn']) && $_SESSION['user']['loggedIn'] === true) : ?>

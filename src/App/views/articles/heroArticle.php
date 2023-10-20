@@ -1,7 +1,6 @@
 <div class="main__article">
-  <a href="/article/<?php echo $mainArticle->getId(); ?>"
-     class="">
-      <img class="main__article--img" src="data:image/png;base64,<?php echo $mainArticleImage ?>" alt="Main article">
+  <a class="main__article__img" href="/article/<?php echo $mainArticle->getId(); ?>">
+      <img src="data:image/png;base64,<?php echo $mainArticleImage ?>" alt="Main article">
   </a>
   <div class="card__content">
     <a href="https://www.positive.news/society/electric-van-summer-holidays-with-children/"

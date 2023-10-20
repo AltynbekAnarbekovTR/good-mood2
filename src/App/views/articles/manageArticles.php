@@ -1,36 +1,44 @@
-<section class="container mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-  <div class="flex items-center justify-between border-b border-gray-200 pb-4">
-    <h4 class="font-medium">Articles list</h4>
-    <div class="flex space-x-4">
-      <a href="/create-article" class="flex items-center p-2 bg-sky-50 text-xs text-sky-900 hover:bg-sky-500 hover:text-white transition rounded">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        New Article
-      </a>
+<section class="container mx-auto mt-12 py-4 bg-white shadow-md border border-gray-200 rounded">
+    <div class="p-4">
+        <div class="flex items-center justify-between border-b border-gray-200 pb-4">
+            <h4 class="font-medium">Articles list</h4>
+            <div class="flex space-x-4">
+                <a href="/create-article"
+                   class="flex items-center p-2 bg-sky-50 text-xs text-sky-900 hover:bg-sky-500 hover:text-white transition rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    New Article
+                </a>
+            </div>
+        </div>
+
+        <!-- Search Articles -->
+      <?php
+      include $this->resolve("partials/_searchBar.php"); ?>
     </div>
-  </div>
-
-  <!-- Search Articles -->
-  <?php include $this->resolve("partials/_searchBar.php"); ?>
-
   <!-- Articles list -->
   <table class="table-auto min-w-full divide-y divide-gray-300 mt-6">
     <thead class="bg-gray-50">
     <tr>
-      <th class="p-4 text-center text-sm font-semibold text-gray-900">
+        <th class="p-2 text-center text-sm font-semibold text-gray-900">
+            Author
+        </th>
+      <th class="p-2 text-center text-sm font-semibold text-gray-900">
         Title
       </th>
-      <th class="p-4 text-center text-sm font-semibold text-gray-900">
+      <th class="p-2 text-center text-sm font-semibold text-gray-900">
         Description
       </th>
         <th class="p-1.5 text-center text-sm font-semibold text-gray-900">
             Categories
         </th>
-      <th class="p-4 text-center text-sm font-semibold text-gray-900">
+      <th class="p-2 text-center text-sm font-semibold text-gray-900">
         Image
       </th>
-      <th class="p-4 text-center text-sm font-semibold text-gray-900">Actions</th>
+      <th class="text-sm text-center font-semibold text-gray-900">Actions</th>
     </tr>
     </thead>
     <!-- Article Table Body -->
@@ -38,67 +46,83 @@
     <?php if(isset($mainArticle)): ?>
         <tr class="w-full text-center col-12"><td colspan="12" class="font-semibold">Main article</td></tr>
         <tr id="manage-main-article">
+            <!-- Author -->
+            <td class="p-2 text-sm text-gray-600">
+              <?php echo escapeInjection($mainArticle->getAuthorEmail()); ?>
+            </td>
             <!-- Title -->
-            <td class="p-4 text-sm text-gray-600">
+            <td class="p-2 text-sm text-gray-600">
               <?php echo escapeInjection($mainArticle->getTitle()); ?>
             </td>
             <!-- Description -->
-            <td class="p-4 text-sm text-gray-600">
+            <td class="p-2 text-sm text-gray-600">
               <?php echo escapeInjection($mainArticle->getDescription()); ?>
             </td>
             <!-- Categories -->
-            <td class="p-1.5 text-sm text-gray-600">
+            <td class="p-2 text-sm text-gray-600">
               <?php foreach ($mainArticleCategories as $articleCategory) : ?>
                   <span class="w-full card__category block"><?php echo $articleCategory ?></span>
               <?php endforeach; ?>
             </td>
             <!-- Image -->
-            <td class="p-4 text-sm text-gray-600">
+            <td class="p-2 text-sm text-gray-600">
                 <div class="inline-block relative cursor-pointer">
                     <a href="/article/<?php echo escapeInjection($mainArticle->getId()); ?>">
-                        <img src="data:image/png;base64,<?php
-                        echo $mainArticleImage; ?>" alt="">
+                        <img class="manage-articles__image" src="data:image/png;base64,<?php
+                        echo $mainArticleImage; ?>" alt="article">
                     </a>
                 </div>
             </td>
             <!-- Actions -->
-            <td class="p-4 text-sm text-gray-600 flex space-x-2">
-                <form action="/set-main-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
-                    <input type="hidden" name="_METHOD" value="post" />
-                  <?php include $this->resolve("partials/_csrf.php"); ?>
+            <td class="text-sm text-gray-600 flex justify-center flex space-x-2">
+                <div>
+                    <form action="/set-main-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
+                        <input type="hidden" name="_METHOD" value="post" />
+                      <?php include $this->resolve("partials/_csrf.php"); ?>
+                        <button type="submit" class="p-2 bg-amber-50 text-xs text-red-900 hover:bg-amber-500 hover:text-white transition rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" />
+                            </svg>
+                        </button>
+                    </form>
+                    <form action="/edit-article/<?php
+                    echo escapeInjection($mainArticle->getId()); ?>"
+                          class="cursor-pointer p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
+                        <button type="submit" class="p-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                            </svg>
+                        </button>
+                    </form>
+                    <form action="/delete-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
+                        <input type="hidden" name="_METHOD" value="DELETE" />
+                      <?php include $this->resolve("partials/_csrf.php"); ?>
 
-                    <button type="submit" class="p-2 bg-amber-50 text-xs text-red-900 hover:bg-amber-500 hover:text-white transition rounded">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3 3m0 0l3-3m-3 3V2.25" />
-                        </svg>
-                    </button>
-                </form>
-                <a href="/edit-article/<?php echo escapeInjection($mainArticle->getId()); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                    </svg>
-                </a>
-                <form action="/delete-article/<?php echo escapeInjection($mainArticle->getId()); ?>" method="POST">
-                    <input type="hidden" name="_METHOD" value="DELETE" />
-                  <?php include $this->resolve("partials/_csrf.php"); ?>
+                        <button type="submit" class="p-2 bg-red-50 text-xs text-red-900 hover:bg-red-500 hover:text-white transition rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
 
-                    <button type="submit" class="p-2 bg-red-50 text-xs text-red-900 hover:bg-red-500 hover:text-white transition rounded">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                        </svg>
-                    </button>
-                </form>
             </td>
         </tr>
     <?php endif; ?>
     <?php foreach ($articles as $article) : ?>
       <tr>
+          <!-- Author -->
+          <td class="p-2 text-sm text-gray-600 manage-articles__author">
+            <?php echo escapeInjection($article->getAuthorEmail()); ?>
+          </td>
         <!-- Title -->
-        <td class="p-4 text-sm text-gray-600">
+        <td class="p-2 text-sm text-gray-600">
           <?php echo escapeInjection($article->getTitle()); ?>
         </td>
         <!-- Description -->
-        <td class="p-4 text-sm text-gray-600">
+        <td class="p-2 text-sm text-gray-600">
           <?php echo escapeInjection($article->getDescription()); ?>
         </td>
           <!-- Categories -->
@@ -108,16 +132,17 @@
             <?php endforeach; ?>
           </td>
         <!-- Image -->
-        <td class="p-4 text-sm text-gray-600">
+        <td class="p-2 text-sm text-gray-600">
             <div class="inline-block relative cursor-pointer">
               <a href="/article/<?php echo escapeInjection($article->getId()); ?>">
-                  <img src="data:image/png;base64,<?php
+                  <img  class="manage-articles__image"  src="data:image/png;base64,<?php
                   echo $articleImages[$article->getId()]; ?>" alt="">
               </a>
             </div>
         </td>
         <!-- Actions -->
-        <td class="p-4 text-sm text-gray-600 flex justify-center space-x-2">
+        <td class="p-2 text-sm text-gray-600 flex justify-center space-x-2">
+            <div>
             <form action="/set-main-article/<?php echo escapeInjection($article->getId()); ?>" method="POST">
                 <input type="hidden" name="_METHOD" value="post" />
               <?php include $this->resolve("partials/_csrf.php"); ?>
@@ -128,11 +153,18 @@
                     </svg>
                 </button>
             </form>
-          <a href="/edit-article/<?php echo escapeInjection($article->getId()); ?>" class="p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-            </svg>
-          </a>
+                <form action="/edit-article/<?php
+                echo escapeInjection($article->getId()); ?>"
+                      class="cursor-pointer p-2 bg-emerald-50 text-xs text-emerald-900 hover:bg-emerald-500 hover:text-white transition rounded">
+                    <button type="submit"
+                            class="p-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                        </svg>
+                    </button>
+                </form>
           <form action="/delete-article/<?php echo escapeInjection($article->getId()); ?>" method="POST">
             <input type="hidden" name="_METHOD" value="DELETE" />
             <?php include $this->resolve("partials/_csrf.php"); ?>
@@ -143,6 +175,7 @@
               </svg>
             </button>
           </form>
+            </div>
         </td>
       </tr>
     <?php endforeach; ?>

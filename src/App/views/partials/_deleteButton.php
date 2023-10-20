@@ -1,4 +1,4 @@
-<form action="<?php echo $action ?? ''; ?>" method="<?php echo $method ?? 'POST'; ?>">
+<form action="<?php echo $deleteAction ?? ''; ?>" method="<?php echo $method ?? 'POST'; ?>">
   <input type="hidden" name="_METHOD" value="DELETE" />
   <?php include $this->resolve("partials/_csrf.php"); ?>
   <button type="submit" class="p-2 bg-red-50 text-xs text-red-900 hover:bg-red-500 hover:text-white transition rounded">

@@ -133,12 +133,13 @@ class User extends ActiveRecordEntity
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
     $params = [
             'searchTerm' => "%{$searchTerm}%",
+            'role'       => "admin"
     ];
 
     $users = $this->db->query(
             "SELECT *
       FROM users 
-      WHERE username LIKE :searchTerm OR email LIKE :searchTerm  OR role LIKE :searchTerm
+      WHERE role NOT LIKE 'admin' AND (username LIKE :searchTerm OR email LIKE :searchTerm  OR role LIKE :searchTerm)
       LIMIT {$length} OFFSET {$offset}",
             $params
     )->findAll(User::class);
@@ -228,6 +229,33 @@ class User extends ActiveRecordEntity
             [
                     'email' => $email,
                     'id'       => $userId,
+            ]
+    );
+  }
+
+  public function edit(array $formData, int $id)
+  {
+    $this->db->query(
+            "UPDATE users
+      SET username = :username,
+        email = :email,
+        role = :role
+      WHERE id = :id",
+            [
+                    'username'        => $formData['username'],
+                    'email'  => $formData['email'],
+                    'role' => $formData['role'],
+                    'id'           => $id
+            ]
+    );
+  }
+
+  public function delete(int $id)
+  {
+    $this->db->query(
+            "DELETE FROM users WHERE id = :id",
+            [
+                    'id' => $id,
             ]
     );
   }

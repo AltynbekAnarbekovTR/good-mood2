@@ -6,7 +6,7 @@ namespace App\Controllers;
 
 abstract class ControllerWIthPagination
 {
-  public function prepareDataWithPagination(string $dataName, $functionToGetAllData, $category = null)
+  public function prepareDataWithPagination(string $dataName, $functionToGetAllData, array $params = [])
   {
     $page = $_GET['p'] ?? 1;
     $sortyByDate = $_GET['date'] ?? '';
@@ -14,7 +14,7 @@ abstract class ControllerWIthPagination
     $length = 3;
     $offset = ($page - 1) * $length;
     $searchTerm = $_GET['s'] ?? null;
-    [$objects, $count] = $functionToGetAllData($length, $offset, $category, $sortyByDate);
+    [$objects, $count] = $functionToGetAllData($length, $offset, $sortyByDate, ...$params);
     $lastPage = ceil($count / $length);
     $pages = $lastPage ? range(1, $lastPage) : [];
     $pageLinks = array_map(

@@ -10,6 +10,7 @@ class Article extends ActiveRecordEntity
 {
   protected int $id;
   protected string $title;
+  protected string $authorEmail;
   protected string $description;
   protected string $articleText;
   protected string $createdAt;
@@ -18,7 +19,6 @@ class Article extends ActiveRecordEntity
   protected string|null $originalFilename;
   protected string|null $storageFilename;
   protected string|null $mediaType;
-  protected string|null $categories;
   protected string|null $mainFor;
 
   public function getId(): int
@@ -30,6 +30,17 @@ class Article extends ActiveRecordEntity
   {
     return $this->title;
   }
+
+  public function getAuthorEmail(): string
+  {
+    return $this->authorEmail;
+  }
+
+  public function getUpdatedAt(): string
+  {
+    return $this->updatedAt;
+  }
+
 
   public function getDescription(): string
   {
@@ -102,13 +113,14 @@ class Article extends ActiveRecordEntity
     )->find(Article::class);
   }
 
-  public function create(array $formData, $coverImage = null, $newFilename = null)
+  public function create(array $formData, string $authorEmail, $coverImage = null, $newFilename = null )
   {
     $this->db->query(
-            "INSERT INTO articles(user_id, title, description, article_text,original_filename, storage_filename, media_type) 
-            VALUES(:user_id, :title, :description, :article_text, :original_filename, :storage_filename, :media_type)",
+            "INSERT INTO articles(user_id, title, author_email, description, article_text,original_filename, storage_filename, media_type) 
+            VALUES(:user_id, :title, :author_email, :description, :article_text, :original_filename, :storage_filename, :media_type)",
             [
                     'user_id'           => $_SESSION['user']['userId'],
+                    'author_email'      => $authorEmail,
                     'title'             => $formData['title'],
                     'description'       => $formData['description'],
                     'article_text'      => $formData['text'],
@@ -140,7 +152,7 @@ class Article extends ActiveRecordEntity
     }
   }
 
-  public function getAllArticles(int $length = 3, int $offset = 0, $category = '', $sortByDate='descending'): array
+  public function getAllArticles(int $length = 3, int $offset = 0, $sortByDate='descending', string $category = null, int $userId = null): array
   {
     $searchTerm = addcslashes($_GET['s'] ?? '', '%_');
     $limit = "LIMIT {$length} OFFSET {$offset}";
@@ -149,40 +161,42 @@ class Article extends ActiveRecordEntity
     } else {
       $sort = "ORDER BY created_at DESC";
     }
+    $matchUserID = $userId ? "AND user_id = :userId" : '';
+    $params = ['searchTerm' => "%{$searchTerm}%"];
+    if ($userId) {
+      $params['userId'] = $userId;
+    }
     if ($category) {
-      $params = [
-              'category' => $category,
-              'title'    => "%{$searchTerm}%",
-      ];
+      $params['category'] = $category;
       $articles = $this->db->query(
               "SELECT a.*
             FROM articles a
             JOIN article_category ac ON a.id = ac.article_id
             JOIN categories c ON ac.category_id = c.id
-            WHERE a.title LIKE :title
+            WHERE a.title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm
+            $matchUserID
             AND c.title = :category
             $sort
             $limit",
-              array_merge($params, ['category' => $category])
+              array_merge($params)
       )->findAll(Article::class);
       $articleCount = $this->db->query(
               "SELECT COUNT(*)
             FROM articles a
             JOIN article_category ac ON a.id = ac.article_id
             JOIN categories c ON ac.category_id = c.id
-            WHERE a.title LIKE :title
+            WHERE a.title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm
+            $matchUserID
             AND c.title = :category",
               $params
       )->count();
     }
     else {
-      $params = [
-              'title' => "%{$searchTerm}%",
-      ];
       $articles = $this->db->query(
               "SELECT *
             FROM articles
-            WHERE title LIKE :title
+            WHERE title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email LIKE :searchTerm
+            $matchUserID
             $sort
             $limit",
               $params
@@ -190,11 +204,11 @@ class Article extends ActiveRecordEntity
       $articleCount = $this->db->query(
               "SELECT COUNT(*)
             FROM articles
-            WHERE title LIKE :title",
+            WHERE title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm
+            $matchUserID",
               $params
       )->count();
     }
-
     return [$articles, $articleCount];
   }
 
@@ -267,7 +281,8 @@ class Article extends ActiveRecordEntity
               [
                       'original_filename' => $coverImage['name'],
                       'storage_filename'  => $storageFilename,
-                      'media_type'        => $coverImage['type']
+                      'media_type'        => $coverImage['type'],
+                      'id'           => $id
               ]
       );
     }

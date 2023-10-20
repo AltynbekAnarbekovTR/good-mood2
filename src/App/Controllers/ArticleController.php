@@ -32,36 +32,13 @@ class ArticleController extends ControllerWIthPagination
     $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:3000']);
   }
 
-  public function prepareArticlesData($category = '', $provideAllCategories = false): array
+  public function prepareArticlesData(array $params = [], $provideAllCategories = false): array
   {
     $allCategories = null;
     if($provideAllCategories) {
       $allCategories = $this->categoryModel->getCategories();
     }
-//    $page = $_GET['p'] ?? 1;
-//    $sortyByDate = $_GET['date'] ?? '';
-//    $page = (int)$page;
-//    $length = 3;
-//    $offset = ($page - 1) * $length;
-//    $searchTerm = $_GET['s'] ?? null;
-//    [$articles, $count] = $this->articleModel->getAllArticles(
-//            $length,
-//            $offset,
-//            $category,
-//            $sortyByDate
-//    );
-//    $lastPage = ceil($count / $length);
-//    $pages = $lastPage ? range(1, $lastPage) : [];
-//    $pageLinks = array_map(
-//            fn($pageNum) => http_build_query(
-//                    [
-//                            'p' => $pageNum,
-//                            's' => $searchTerm,
-//                    ]
-//            ),
-//            $pages
-//    );
-    $articlesWithPagination = $this->prepareDataWithPagination('articles', [$this->articleModel, 'getAllarticles'], $category);
+    $articlesWithPagination = $this->prepareDataWithPagination('articles', [$this->articleModel, 'getAllarticles'], $params);
     $articleImages = $this->imageService->createB64ImageArray($articlesWithPagination['articles']);
     $articlesCategories = [];
     foreach ($articlesWithPagination['articles'] as $article) {
@@ -70,7 +47,7 @@ class ArticleController extends ControllerWIthPagination
     }
     return
             $articlesWithPagination + [
-                    'sectionTitle'       => $category === '' ? 'Latest Articles' : $category,
+                    'sectionTitle'       => $params['category'] ?? 'Latest Articles',
                     'allCategories'      => $allCategories,
                     'articlesCategories' => $articlesCategories,
                     'articleImages'      => $articleImages
@@ -95,8 +72,8 @@ class ArticleController extends ControllerWIthPagination
 
   public function renderHome()
   {
-    $category = $_GET['category'] ?? '';
-    $dataForDisplayingArticles = $this->prepareArticlesData($category, true);
+    $category = $_GET['category'] ?? null;
+    $dataForDisplayingArticles = $this->prepareArticlesData(['category' => $category], true);
     $articlesGrid = $this->articlesGridView->renderArticlesGrid($dataForDisplayingArticles);
     $mainArticleData = $this->prepareMainArticleData();
     if(!$mainArticleData) {
@@ -113,7 +90,7 @@ class ArticleController extends ControllerWIthPagination
   public function renderArticlesByCategory($params)
   {
     $category = $params['category'] === 'all-articles' ? '' : $params['category'];
-    $dataForDisplayingArticles = $this->prepareArticlesData($category);
+    $dataForDisplayingArticles = $this->prepareArticlesData(['category' => $category]);
     $articlesGrid = $this->articlesGridView->renderArticlesGrid($dataForDisplayingArticles);
     $this->layoutView->renderPage($articlesGrid);
 }
@@ -125,9 +102,10 @@ class ArticleController extends ControllerWIthPagination
 
   public function renderManageArticles()
   {
-    $category = $_GET['category'] ?? '';
-    $dataForDisplayingArticles = $this->prepareArticlesData($category, true);
-    if($mainArticleData = $this->prepareMainArticleData()) {
+    $category = $_GET['category'] ?? null;
+    $authorId = $_SESSION['user']['role'] === 'author' ? $_SESSION['user']['userId'] : null;
+    $dataForDisplayingArticles = $this->prepareArticlesData(['category' => $category, 'userId' => $authorId], true);
+    if(!$authorId && $mainArticleData = $this->prepareMainArticleData()) {
       $dataForDisplayingArticles += $mainArticleData;
     };
     $manageArticlesTemplate = $this->articlesView->getManageArticlesTemplate(
@@ -155,7 +133,8 @@ class ArticleController extends ControllerWIthPagination
     if (count($errors)) {
       $this->errorMessagesService->setErrorMessage($errors);
     }
-    $this->articleModel->create($_POST, $_FILES['cover'], $newFilename);
+    $userEmail = $this->userModel->getUserById($_SESSION['user']['userId'])->getEmail();
+    $this->articleModel->create($_POST,  $userEmail, $_FILES['cover'], $newFilename);
     $createdArticleId = $this->articleModel->lastInsertId();
     if (isset($_POST['category'])) {
       $this->articleModel->addCategoriesToArticle($createdArticleId, $_POST['category']);
@@ -203,7 +182,6 @@ class ArticleController extends ControllerWIthPagination
   public function deleteArticle(array $params)
   {
     $this->articleModel->delete((int)$params['article']);
-
     redirectTo('/manage-articles');
   }
 
