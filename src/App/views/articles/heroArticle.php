@@ -11,7 +11,7 @@
       <?php echo $mainArticle->getDescription(); ?>
     </p>
     <?php foreach ($mainArticleCategories as $articleCategory) : ?>
-        <span class="card__category"><?php echo $articleCategory ?></span>
+        <a href="/category/<?php echo $articleCategory ?>" class="card__category"><?php echo $articleCategory ?></a>
     <?php endforeach; ?>
   </div>
 </div>

@@ -84,6 +84,7 @@ class ProfileController
       $this->errorMessagesService->setErrorMessage($errors);
     }
     $this->userModel->changeUsername($_POST['username'], $_SESSION['user']['userId']);
+    $_SESSION['user']['username'] = $_POST['username'];
     redirectTo('/profile');
   }
 

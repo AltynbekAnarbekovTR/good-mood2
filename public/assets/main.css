@@ -443,7 +443,7 @@ a:hover img {
   line-height: 18px;
   line-height: 1.125rem;
 }
-.card .card__category:hover {
+.card__category:hover {
   text-decoration: underline;
 }
 
