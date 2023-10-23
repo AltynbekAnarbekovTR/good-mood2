@@ -13,6 +13,9 @@ use App\Services\{ErrorMessagesService, ImageService, UploadFileService, FormVal
 
 class ArticleController extends ControllerWIthPagination
 {
+  private int $articleTitleMaxLength;
+  private int $articleDescriptionMaxLength;
+  private int $articleTextMaxLength;
   public function __construct(
           private ArticlesView $articlesView,
           private LayoutView $layoutView,
@@ -27,9 +30,12 @@ class ArticleController extends ControllerWIthPagination
           private ImageService $imageService,
           private ErrorMessagesService $errorMessagesService
   ) {
-    $this->formValidatorService->addRulesToField('title', ['required', 'lengthMax:100']);
-    $this->formValidatorService->addRulesToField('description', ['required', 'lengthMax:500']);
-    $this->formValidatorService->addRulesToField('text', ['required', 'lengthMax:3000']);
+    $this->articleTitleMaxLength = 100;
+    $this->articleDescriptionMaxLength = 255;
+    $this->articleTextMaxLength = 3000;
+    $this->formValidatorService->addRulesToField('title', ['required', "lengthMax:$this->articleTitleMaxLength"]);
+    $this->formValidatorService->addRulesToField('description', ['required', "lengthMax:$this->articleDescriptionMaxLength"]);
+    $this->formValidatorService->addRulesToField('text', ['required', "lengthMax:$this->articleTextMaxLength"]);
   }
 
   public function prepareArticlesData(array $params = [], $provideAllCategories = false): array
@@ -118,7 +124,7 @@ class ArticleController extends ControllerWIthPagination
   public function renderCreateArticle()
   {
     $categories = $this->categoryModel->getCategories();
-    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate(['categories' => $categories]);
+    $createArticleTemplate = $this->articlesView->getCreateArticleTemplate(['categories' => $categories, 'articleTitleMaxLength' => $this->articleTitleMaxLength, 'articleDescriptionMaxLength' => $this->articleDescriptionMaxLength, 'articleTextMaxLength' => $this->articleTextMaxLength]);
     $this->layoutView->renderPage($createArticleTemplate);
   }
 
@@ -155,9 +161,12 @@ class ArticleController extends ControllerWIthPagination
     }
     $editArticleTemplate = $this->articlesView->getEditArticleTemplate(
             [
-                    'article' => $article,
-                    'categories' => $categories,
-                    'articleCategories' => $articleCategories
+                    'article'           => $article,
+                    'categories'        => $categories,
+                    'articleCategories' => $articleCategories,
+                    'articleTitleMaxLength'       => $this->articleTitleMaxLength,
+                    'articleDescriptionMaxLength' => $this->articleDescriptionMaxLength,
+                    'articleTextMaxLength'        => $this->articleTextMaxLength,
             ]
     );
     $this->layoutView->renderPage($editArticleTemplate);
