@@ -2289,6 +2289,9 @@ video {
 [hidden] {
   display: none;
 }
+[type="text"] {
+  padding: 10px;
+}
 [type="text"],
 [type="email"],
 [type="url"],

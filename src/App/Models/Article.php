@@ -173,7 +173,7 @@ class Article extends ActiveRecordEntity
             FROM articles a
             JOIN article_category ac ON a.id = ac.article_id
             JOIN categories c ON ac.category_id = c.id
-            WHERE a.title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm
+            WHERE (a.title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm)
             $matchUserID
             AND c.title = :category
             $sort
@@ -185,7 +185,7 @@ class Article extends ActiveRecordEntity
             FROM articles a
             JOIN article_category ac ON a.id = ac.article_id
             JOIN categories c ON ac.category_id = c.id
-            WHERE a.title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm
+            WHERE (a.title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm)
             $matchUserID
             AND c.title = :category",
               $params
@@ -195,7 +195,7 @@ class Article extends ActiveRecordEntity
       $articles = $this->db->query(
               "SELECT *
             FROM articles
-            WHERE title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email LIKE :searchTerm
+            WHERE (title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email LIKE :searchTerm)
             $matchUserID
             $sort
             $limit",
@@ -204,7 +204,7 @@ class Article extends ActiveRecordEntity
       $articleCount = $this->db->query(
               "SELECT COUNT(*)
             FROM articles
-            WHERE title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm
+            WHERE (title LIKE :searchTerm OR description LIKE :searchTerm OR article_text LIKE :searchTerm OR author_email = :searchTerm)
             $matchUserID",
               $params
       )->count();

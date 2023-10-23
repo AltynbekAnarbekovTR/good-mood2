@@ -104,6 +104,7 @@ class ArticleController extends ControllerWIthPagination
   {
     $category = $_GET['category'] ?? null;
     $authorId = $_SESSION['user']['role'] === 'author' ? $_SESSION['user']['userId'] : null;
+
     $dataForDisplayingArticles = $this->prepareArticlesData(['category' => $category, 'userId' => $authorId], true);
     if(!$authorId && $mainArticleData = $this->prepareMainArticleData()) {
       $dataForDisplayingArticles += $mainArticleData;
@@ -164,6 +165,7 @@ class ArticleController extends ControllerWIthPagination
 
   public function editArticle(array $params)
   {
+
     $errors = $this->formValidatorService->validate($_POST);
     if(isset($_FILES['cover']) && $_FILES['cover']['name'] !== '') {
       $errors += $this->uploadFileService->checkUploadedImage($_FILES['cover']);
